@@ -22,10 +22,10 @@ copyright = "© Copyright"
 # disqusShortname = "ink-demo"
 
 [params]
-    subtitle = "Front-end developer, Emacs adventurer, home cook"
+    subtitle = "Front-end&nbsp;Developer, Emacs&nbsp;Adventurer, Home&nbsp;Cook"
 
     # Optional 64x64 avatar image.
-    avatar = "https://image.freepik.com/free-vector/young-man-head-with-beard-avatar-character_24877-36786.jpg"
+    avatar = "/HY_Light_and_Color_2.svg"
 
     # Content types to disable Disqus on.
     disableDisqusTypes = ["page"]
@@ -48,20 +48,20 @@ name = "All posts"
 url = "/posts"
 weight = 2
 
-[[menu.main]]
-name = "About"
-url = "/about"
-weight = 3
+# [[menu.main]]
+# name = "About"
+# url = "/about"
+# weight = 3
 
-[[menu.main]]
-name = "Tags"
-url = "/tags"
-weight = 4
+# [[menu.main]]
+# name = "Tags"
+# url = "/tags"
+# weight = 4
 
-[[params.social]]
-name = "Github"
-icon = "github"
-url = "https://github.com/knadh/hugo-ink"
+# [[params.social]]
+# name = "Github"
+# icon = "github"
+# url = "https://github.com/knadh/hugo-ink"
 
 [[params.social]]
 name = "RSS"
