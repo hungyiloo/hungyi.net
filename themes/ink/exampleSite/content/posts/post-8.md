@@ -54,34 +54,26 @@ Tables aren't part of the core Markdown spec, but Hugo supports supports them ou
 
 #### Inline Markdown within tables
 
-| Inline     | Markdown  | In                                  | Table      |
-| ---------- | --------- | -----------------                   | ---------- |
+| Inline&nbsp;&nbsp;&nbsp;     | Markdown&nbsp;&nbsp;&nbsp;  | In&nbsp;&nbsp;&nbsp;                | Table      |
+| ---------- | --------- | ----------------- | ---------- |
 | *italics*  | **bold**  | ~~strikethrough~~&nbsp;&nbsp;&nbsp; | `code`     |
 
 ## Code Blocks
 
 #### Code block with backticks
 
-``` typescript
-export class PersonMediaResultsPage implements OnInit, AfterViewInit, OnDestroy {
-  SortField = SortField;
-  SortDirection = SortDirection;
-  readonly reportMapModeToggle$ = new Subject();
-  readonly reportMapMode$ = this.reportMapModeToggle$.pipe(
-    switchMap(() => this.reportMapMode$.pipe(take(1), map(x => !x))),
-    startWith(false),
-    publishReplay(1),
-    refCount()
-  );
-  readonly investigationId$ = this.activatedRoute.paramMap.pipe(map(p => p.get('id')));
-  readonly personKey$ = this.activatedRoute.paramMap.pipe(map(p => p.get('personId')));
-  readonly sortFieldChanged$ = new Subject<SortField>();
-  readonly sortDirectionChanged$ = new Subject<SortDirection>();
-  readonly person$ = combineLatest(this.personKey$, this.investigationId$).pipe(
-    switchMap(([personKey, investigationId]) => this.personService.getPersonByObjectKey(investigationId, personKey)),
-    publishReplay(1),
-    refCount()
-  );
+```
+html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Example HTML5 Document</title>
+</head>
+<body>
+  <p>Test</p>
+</body>
+</html>
 ```
 #### Code block indented with four spaces
 
@@ -127,8 +119,8 @@ export class PersonMediaResultsPage implements OnInit, AfterViewInit, OnDestroy 
 #### Nested list
 
 * Item
-  1. First Sub-item
-  2. Second Sub-item
+1. First Sub-item
+2. Second Sub-item
 
 ## Other Elements — abbr, sub, sup, kbd, mark
 
@@ -138,7 +130,7 @@ H<sub>2</sub>O
 
 X<sup>n</sup> + Y<sup>n</sup> = Z<sup>n</sup>
 
-Press <kbd>CTRL</kbd>+<kbd>ALT</kbd>+<kbd>Delete</kbd></kbd> to end the session.
+Press <kbd><kbd>CTRL</kbd>+<kbd>ALT</kbd>+<kbd>Delete</kbd></kbd> to end the session.
 
 Most <mark>salamanders</mark> are nocturnal, and hunt for insects, worms, and other small creatures.
 
