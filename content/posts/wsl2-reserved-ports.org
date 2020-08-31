@@ -1,0 +1,36 @@
+#+title: WSL2, Hyper-V & Reserved Ports
+#+date: 2020-08-31T20:43:30+08:00
+#+tags[]: WSL2 Windows Troubleshooting
+#+draft: false
+
+For several months now, every few days when developing under [[https://docs.microsoft.com/en-us/windows/wsl/wsl2-index][WSL2]] (Windows Subsystem for Linux 2) I would be unable to connect to my locally hosted apps (e.g. Angular, .NET WebAPI). Occasionally even my X server on the Windows side, [[x410.dev][X410]], would fail to initialize citing "port already in use". Until today I had no clue what was causing this.
+
+# more
+
+Remembering that Windows had some sort of port reservation/exclusion mechanism, I dug up the command to look for excluded ports and, sure enough, Angular's port 4200 had been stolen by something else:
+
+#+BEGIN_SRC
+> netsh int ipv4 show excludedportrange protocol=tcp
+
+Protocol tcp Port Exclusion Ranges
+
+Start Port    End Port
+----------    --------
+      1583        1682
+      2480        2579
+    > 4192        4291
+      5357        5357
+      6045        6144
+      7003        7102
+     28385       28385
+       ...         ...
+#+END_SRC
+
+Allegedly [[https://stackoverflow.com/a/62359555][a botched Windows update had reset the dynamic TCP port range]] on my machine. When this happens, [[https://github.com/docker/for-win/issues/3171][Hyper-V ends up aggressively reserving]] it for its own [[https://blogs.technet.microsoft.com/wsnetdoc/2017/09/18/windows-container-networking-for-windows-10-and-windows-server-2016/][Windows Container Host Networking Service (HNS)]]. In case you're wondering, Hyper-V is used by the new WSL2, since it runs as a lightweight "virtual machine".
+
+The following steps fixed it for me:
+1. On my Windows host in PowerShell, I ran ~netsh int ipv4 set dynamic tcp start=51001 num=5000~ to reset the dynamic port range to an area which I knew none of my apps used.
+2. I also ran ~reg add HKLM\SYSTEM\CurrentControlSet\Services\hns\State /v EnableExcludedPortRange /d 0 /f~ to disable the HNS port exclusion behavior as ~netsh int ipv4 show excludedportrange protocol=tcp~ showed a lot of excluded ports that were not attributed to anything else.
+3. Reboot
+
+Hopefully things are stable from now on. If not, I'll update this post with further info.

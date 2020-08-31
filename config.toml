@@ -1,4 +1,4 @@
-baseURL = "http://example.org/"
+baseURL = "https://hungyi.net/"
 languageCode = "en-us"
 title = "Hung-Yi’s Journal"
 theme = "ink"
