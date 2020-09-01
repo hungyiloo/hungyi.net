@@ -5,12 +5,7 @@ A cottage pie that breaks some rules with the addition of sweet potato in the ma
 
 # more
 
-#+begin_export html
-<blockquote class="instagram-media"
-data-instgrm-permalink="https://www.instagram.com/p/CC2jAHwhnvj/"
-data-instgrm-version="12"></blockquote>
-<script async src="//www.instagram.com/embed.js"></script>
-#+END_EXPORT
+{{<instagram CC2jAHwhnvj hidecaption>}}
 
 * Ingredients
 Pie Filling:

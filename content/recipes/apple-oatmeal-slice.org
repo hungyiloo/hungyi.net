@@ -5,13 +5,7 @@ A healthy-ish snack or breakfast slice that packs some nutrients, but is still n
 
 # more
 
-#+BEGIN_EXPORT html
-<blockquote class="instagram-media"
-data-instgrm-permalink="https://www.instagram.com/p/CEiw7HShlUk/"
-data-instgrm-version="12"
-></blockquote>
-<script async src="//www.instagram.com/embed.js"></script>
-#+END_EXPORT
+{{<instagram CEiw7HShlUk hidecaption>}}
 
 * Ingredients
 Dry mixture:

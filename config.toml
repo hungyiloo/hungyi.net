@@ -65,10 +65,10 @@ name = "Tags"
 url = "/tags"
 weight = 4
 
-# [[params.social]]
-# name = "Github"
-# icon = "github"
-# url = "https://github.com/knadh/hugo-ink"
+[[params.social]]
+name = "Instagram"
+icon = "instagram"
+url = "https://www.instagram.com/hungyiloo/"
 
 [[params.social]]
 name = "RSS"

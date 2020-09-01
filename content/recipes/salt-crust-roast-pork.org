@@ -5,13 +5,7 @@ This is the only Chinese roast pork recipe that's ever worked for me. My two mai
 
 # more
 
-#+BEGIN_EXPORT html
-<blockquote class="instagram-media"
-data-instgrm-permalink="https://www.instagram.com/p/CCz37e-h1rQ/"
-data-instgrm-version="12"
-></blockquote>
-<script async src="//www.instagram.com/embed.js"></script>
-#+END_EXPORT
+{{<instagram CCz37e-h1rQ hidecaption>}}
 
 * Ingredients
 - 1 slab of pork belly
