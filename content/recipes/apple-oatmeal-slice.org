@@ -1,0 +1,39 @@
+#+TITLE: Apple & Oatmeal Slice
+#+DATE: 2020-08-31T14:00:00+08:00
+
+A healthy-ish snack or breakfast slice that packs some nutrients, but is still nice enough to enjoy as a treat with a good cup of tea or coffee.
+
+# more
+
+#+BEGIN_EXPORT html
+<blockquote class="instagram-media"
+data-instgrm-permalink="https://www.instagram.com/p/CEiw7HShlUk/"
+data-instgrm-version="12"
+></blockquote>
+<script async src="//www.instagram.com/embed.js"></script>
+#+END_EXPORT
+
+* Ingredients
+Dry mixture:
+- 200g self-raising flour
+  - Alternatively, 185g plain flour and 12g baking powder
+- 110g oatmeal
+- 1/2 tsp cinnamon
+- pinch of nutmeg
+- 1/2 tsp salt
+
+Wet mixture:
+- 2 apples, unpeeled and diced
+- 120g brown sugar
+- 100g oil
+- 110g milk
+- 110g plain yogurt
+  - Alternatively 110g *more* milk and 15g vinegar/lemon/lime juice
+- 1 egg
+
+* Directions
+Preheat oven to 180°C and line a 30×30cm cake tin with baking paper, leaving enough overhang to use as a sling to lift out the cake once done.
+
+Whisk all the dry ingredients until evenly combined. Separately, whisk all the wet ingredients until also well combined. Add the wet mixture to the dry mixture and fold until just combined.
+
+Pour the batter into the cake tin. Sprinkle over a thin layer of oatmeal on the top, for decoration. Bake for 25-30 minutes or until a skewer comes out clean. If unsure, bake it for longer as the oatmeal can make it mushy if underbaked.

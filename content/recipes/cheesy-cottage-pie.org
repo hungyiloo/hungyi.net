@@ -1,0 +1,55 @@
+#+TITLE: Cheesy Cottage Pie
+#+DATE: 2020-07-20
+
+A cottage pie that breaks some rules with the addition of sweet potato in the mash and a gooey cheese topping, but still keeps things nutritious with plenty of hidden veg.
+
+# more
+
+#+begin_export html
+<blockquote class="instagram-media"
+data-instgrm-permalink="https://www.instagram.com/p/CC2jAHwhnvj/"
+data-instgrm-version="12"></blockquote>
+<script async src="//www.instagram.com/embed.js"></script>
+#+END_EXPORT
+
+* Ingredients
+Pie Filling:
+- 500g minced pork
+- 2 stalks of celery
+- 2 carrots
+- 1 onion
+- 3 cloves of garlic
+- 1 zucchini
+- 1 Tbsp worcestershire sauce
+- 2 Tbsp barbecue sauce or ketchup
+- 1 Tbsp dark soy sauce (for color)
+- 1 bay leaf
+- 1/2 tsp mixed herbs
+- 1/2 tsp rosemary
+- 1 tsp salt
+- black pepper, to taste
+- 2 Tbsp flour
+- 1 stock cube
+- 1 cup of water
+- 1 cup frozen peas
+
+Potato Topping:
+- 1 large sweet potato, peeled and cubed
+- 3 potatoes, peeled and cubed
+- 1 clove of garlic, smashed
+- 1 bay leaf
+- 2 Tbsp butter
+- 1/2 tsp salt
+- black pepper, to taste
+- 1 cup shredded cheese
+
+* Directions
+Fry the mince in a large saucepan on medium heat, breaking it up as it cooks.
+
+Meanwhile, chop the celery, carrots, onion, garlic, zucchini in a food processor. Add to the pan, along with herbs, bay leaf, and continue cooking for 10-15 minutes until softened and fragrant. Add the ketchup, sauces, salt, pepper and flour, and stir until flour disappears into the mixture. Add the stock cube and enough water to cover, then bring to a simmer and cook for 20 minutes until rich and thick.
+
+While the meat mixture cooks, cook the potatoes in salted water along with the smashed clove of garlic and bay leaf until the potatoes are completely tender. Drain and mash with butter, salt and pepper to taste, discarding the bay leaf.
+
+Stir the frozen peas into the meat mixture (the heat will defrost the peas) and preheat the oven to 180°C.
+
+In a large baking dish, spread the meat mixture evenly, then top with scoops of the mashed potato. Spread the potato out gently to avoid disturbing the filling underneath. Cover with shredded cheese and bake for 15-20 min until cheese is golden and bubbly. Let cool for 20 minutes to allow the filling to set before serving.

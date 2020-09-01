@@ -131,6 +131,7 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 500;
   line-height: 1.3em;
   margin: 30px 0 20px 0;
+  font-family: "Playfair Display", serif;
 }
 
 h1 {
@@ -180,6 +181,10 @@ ul.flat li {
   margin-left: 0;
 }
 
+ul li p, ol li p {
+  margin: 0;
+}
+
 .prevent-collapse {
   min-height: .1rem
 }
@@ -202,7 +207,7 @@ ul.flat li {
 }
 
 .wrapper {
-  max-width: 760px;
+  max-width: 800px;
   margin: 0 auto;
 }
 
@@ -366,8 +371,12 @@ ul.flat li {
   font-family: "Playfair Display", serif;
 }
 
+.post {
+  position: relative;
+}
 .post .title.small {
   margin: 0 0 10px 0;
+  font-family: "Inter", sans-serif;
 }
 .post .post-header {
   margin-bottom: 30px;
@@ -493,6 +502,10 @@ ul.flat li {
   }
 }
 
+code {
+  word-break: break-word;
+}
+
 p code {
   color: #1B9B60;
   background: rgba(128, 128, 128, 0.05);
@@ -502,6 +515,34 @@ p code {
 }
 sup a {
   border-bottom: none;
+}
+.footnotes {
+  margin-bottom: 1em;
+}
+.footnote-body {
+  display: inline;
+}
+.footnote-definition {
+  margin-top: 1em;
+}
+.footnote-definition sup {
+  margin-right: 0.1em;
+}
+.footnote-body p:first-child {
+  display: inline;
+}
+
+blockquote.instagram-media, iframe.instagram-media {
+  background:#FFF;
+  border:0;
+  border-radius:3px;
+  box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15);
+  margin: 1px;
+  min-width:326px;
+  padding:0;
+  width:99.375%;
+  width:-webkit-calc(100% - 2px);
+  width:calc(100% - 2px);
 }
 
 @media screen and (max-width:600px) {

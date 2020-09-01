@@ -37,6 +37,8 @@ copyright = "© Copyright"
     # customDarkCSS = "css/custom-dark.css"  # Custom styles applied to dark mode css.
     # customJS = ["js/custom.js", "js/custom1.js"]  # Custom JS scripts.
 
+    mainSections = ["posts", "recipes"]
+
 # Nav.
 [[menu.main]]
 name = "Home"
@@ -44,9 +46,14 @@ url = "/"
 weight = 1
 
 [[menu.main]]
-name = "All posts"
+name = "Posts"
 url = "/posts"
 weight = 2
+
+[[menu.main]]
+name = "Recipes"
+url = "/recipes"
+weight = 3
 
 # [[menu.main]]
 # name = "About"

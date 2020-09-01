@@ -21,7 +21,8 @@ document.addEventListener("DOMContentLoaded", function(){
     lightscheme(toggle, container);
   }
 
-  toggle.addEventListener("click", () => {
+  toggle.addEventListener("click", event => {
+    event.preventDefault();
     if (toggle.className === "light") {
       darkscheme(toggle, container);
     } else if (toggle.className === "dark") {
