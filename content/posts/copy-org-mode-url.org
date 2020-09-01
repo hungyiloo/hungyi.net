@@ -1,0 +1,42 @@
+#+TITLE: Easily Copy an Org-mode URL
+#+TAGS[]: Emacs Doom~Emacs Code
+#+DATE: 2020-09-01T13:39:56+08:00
+
+I'm sharing a simple function to copy/kill/yank the URL of an Org-mode link at the cursor/point within Emacs. It handles plain URLs too: ones that don't have the square bracket delimiters or a description.
+
+# more
+
+It's been useful when I want the URL of a link /other/ than for browsing, for example to paste into a terminal or a messaging app.
+
+#+BEGIN_SRC emacs-lisp
+(defun my-org-retrieve-url-from-point ()
+  "Copies the URL from an org link at the point"
+  (interactive)
+  (let ((plain-url (url-get-url-at-point)))
+    (if plain-url
+        (progn
+          (kill-new plain-url)
+          (message (concat "Copied: " plain-url)))
+      (let* ((link-info (assoc :link (org-context)))
+             (text (when link-info
+                     (buffer-substring-no-properties
+                      (or (cadr link-info) (point-min))
+                      (or (caddr link-info) (point-max))))))
+        (if (not text)
+            (error "Oops! Point isn't in an org link")
+          (string-match org-link-bracket-re text)
+          (let ((url (substring text (match-beginning 1) (match-end 1))))
+            (kill-new url)
+            (message (concat "Copied: " url))))))))
+#+END_SRC
+
+In [[https://github.com/hlissner/doom-emacs][Doom Emacs]] I've bound it to ~SPC m l y~ for convenience:
+
+#+BEGIN_SRC emacs-lisp
+(use-package! org
+  :config
+  (map! :map org-mode-map
+        :localleader
+        (:prefix ("l" . "links")
+         "y" #'my-org-retrieve-url-from-point)))
+#+END_SRC

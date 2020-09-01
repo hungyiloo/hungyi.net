@@ -6,7 +6,7 @@
 	<div class="container wrapper tags">
 		{{ partial "head.html" . }}
 
-		<h1 class="page-title">{{ .Title }}</h1>
+		<h1 class="page-title">{{ replace .Title "~" " " }}</h1>
 		
 		{{ with (.Site.GetPage .Title) }}
 		<ul>

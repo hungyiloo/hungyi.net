@@ -345,6 +345,10 @@ ul li p, ol li p {
   margin-bottom: 45px;
 }
 
+.page-title {
+  margin-top: 0;
+}
+
 .post-header {
   display: flex;
 }
@@ -390,7 +394,9 @@ ul li p, ol li p {
   margin-left: 6px;
   background-color: #f9f2f4;
 }
-
+.post .tags {
+  margin-top: 1em;
+}
 .post .tags a {
   display: inline-block;
   border: 1px solid #9f3125;
@@ -515,9 +521,6 @@ p code {
 }
 sup a {
   border-bottom: none;
-}
-.footnotes {
-  margin-bottom: 1em;
 }
 .footnote-body {
   display: inline;

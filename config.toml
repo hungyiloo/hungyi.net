@@ -60,10 +60,10 @@ weight = 3
 # url = "/about"
 # weight = 3
 
-# [[menu.main]]
-# name = "Tags"
-# url = "/tags"
-# weight = 4
+[[menu.main]]
+name = "Tags"
+url = "/tags"
+weight = 4
 
 # [[params.social]]
 # name = "Github"
