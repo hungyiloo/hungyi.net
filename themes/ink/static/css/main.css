@@ -125,6 +125,10 @@ blockquote em {
   font-weight: 600;
 }
 
+figcaption {
+  font-family: Georgia,bitstream charter,serif;
+  font-style: italic;
+}
 
 h1, h2, h3, h4, h5, h6 {
   color: #333;

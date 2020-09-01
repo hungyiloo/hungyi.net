@@ -1,0 +1,36 @@
+#+TITLE: Salt Crust Chinese Roast Pork
+#+DATE: 2020-07-19
+
+This is the only Chinese roast pork recipe that's ever worked for me. My two main goals are (1) super tender layers of fat and pork with no chewiness, and (2) a loose, crunchy crackling with hardly any toughness at all. It takes a while to cook, but isn't very difficult.
+
+# more
+
+#+BEGIN_EXPORT html
+<blockquote class="instagram-media"
+data-instgrm-permalink="https://www.instagram.com/p/CCz37e-h1rQ/"
+data-instgrm-version="12"
+></blockquote>
+<script async src="//www.instagram.com/embed.js"></script>
+#+END_EXPORT
+
+* Ingredients
+- 1 slab of pork belly
+- 1.5 tsp of five spice powder
+- 1-2 tsp of salt to taste
+- a pinch or two of baking soda
+
+* Directions
+Mix the five spice powder, salt and baking soda. Cut the belly into (approx) 15cm by 20cm rectangles and season liberally with the spice mixture, meat side only. Let sit uncovered in fridge skin side up for at least 12 hours, overnight if possible.
+
+#+NAME: Roast Pork Cooking Strategies
+#+CAPTION: Cooking Strategies
+| Cook Temp | Cook Time | Puff Temp | Puff Time | Result      |
+|-----------+-----------+-----------+-----------+-------------|
+| 170°C     | 1 h       | 220°C     | 40 m      | Quicker     |
+| 120°C     | 3½ h      | 230°C     | 20 m      | More tender |
+
+Choose a cooking strategy from the table above, depending on the time you have. Preheat oven to the =Cook Temp=. Place the belly pieces on some baking paper/foil on a tray that can contain drippings, and pour salt over pork rind in a thin layer such that the rind is just visible under the salt. Make sure to go all the way to the edges if possible. Bake for the =Cook Time= (middle rack on toaster oven). Make sure that salt crust has formed.
+
+Remove belly pieces from oven and preheat to =Puff Temp=. Remove the salt crust from the pork and brush away as much excess salt as possible. Raise the belly pieces using rolled up aluminium foil, trying to achieve a flat surface with the rind. Pour a cup or two of water into the bottom of the tray to contain drippings, prevent smoke and keep the meat moist while the crackling forms. The water should not touch the meat that is sitting on the foil.
+
+Put the belly pieces back into the oven (bottom rack on toaster oven). Bake further for =Puff Time=, rotating the baking tray halfway through to ensure even roasting of the rind. If too much char, reduce temperature to 200°C. Let rest for 20 minutes (or more, up to an hour) after removing from oven, then carve.
