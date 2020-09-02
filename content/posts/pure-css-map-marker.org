@@ -9,52 +9,63 @@ A cute map marker happens to be one of the things you can easily create with pur
 
 Check it out!
 
-#+BEGIN_EXPORT html
+#+BEGIN_SRC html :noweb yes :exports results :results html
 <style>
-.marker {
-    display: inline-block;
-    width: 2rem;
-    height: 2rem;
-    border-radius: 2rem;
-    border-bottom-right-radius: 0;
-    background: #aa3300;
-    position: relative;
-    transform: rotate(45deg);
-}
-/* white dot */
-.marker::before {
-    content: "";
-    background: white;
-    width: 50%;
-    height: 50%;
-    border-radius: 100%;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    box-shadow: 0.1rem 0.1rem 0.2rem 0.1rem rgba(0, 0, 0, 0.1);
-}
-/* shadow */
-.marker::after {
-    content: "";
-    background: rgba(128, 128, 128, 0.2);
-    width: 75%;
-    height: 75%;
-    border-radius: 100%;
-    position: absolute;
-    top: 100%;
-    left: 100%;
-    transform: translate(-50%, -50%) rotate(45deg) scaleX(0.5);
-}
+  <<marker-styles>>
 </style>
 <div style="display:flex; justify-content: center; margin-bottom: 2em;">
-    <div class="marker"></div>
+  <<marker-markup>>
 </div>
-#+END_EXPORT
+#+END_SRC
+
+#+RESULTS:
+#+begin_export html
+<style>
+  .marker {
+      display: inline-block;
+      width: 2rem;
+      height: 2rem;
+      border-radius: 2rem;
+      border-bottom-right-radius: 0;
+      background: #aa3300;
+      position: relative;
+      transform: rotate(45deg);
+  }
+  /* inner circle */
+  .marker::before {
+      content: "";
+      background: white;
+      width: 50%;
+      height: 50%;
+      border-radius: 100%;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      box-shadow: 0.1rem 0.1rem 0.2rem 0.1rem rgba(0, 0, 0, 0.1);
+  }
+  /* shadow */
+  .marker::after {
+      content: "";
+      background: rgba(128, 128, 128, 0.2);
+      width: 75%;
+      height: 75%;
+      border-radius: 100%;
+      position: absolute;
+      top: 100%;
+      left: 100%;
+      transform: translate(-50%, -50%) rotate(45deg) scaleX(0.5);
+  }
+</style>
+<div style="display:flex; justify-content: center; margin-bottom: 2em;">
+  <div class="marker"></div>
+</div>
+#+end_export
 
 To get the above result, include the following CSS somewhere on the page (or in an appropriate place in your project).
 
-#+BEGIN_SRC css
+#+NAME: marker-styles
+#+BEGIN_SRC css :results silent
 .marker {
     display: inline-block;
     width: 2rem;
@@ -65,7 +76,7 @@ To get the above result, include the following CSS somewhere on the page (or in 
     position: relative;
     transform: rotate(45deg);
 }
-/* white dot */
+/* inner circle */
 .marker::before {
     content: "";
     background: white;
@@ -94,7 +105,8 @@ To get the above result, include the following CSS somewhere on the page (or in 
 
 Then place this HTML where you want the marker to appear.
 
-#+BEGIN_SRC html
+#+NAME: marker-markup
+#+BEGIN_SRC html :results silent
 <div class="marker"></div>
 #+END_SRC
 
