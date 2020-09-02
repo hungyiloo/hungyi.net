@@ -1,7 +1,8 @@
 #+TITLE: Browse URLs in Emacs under WSL
-#+DATE: 2020-09-02T20:00:00+08:00
+#+DATE: 2020-09-02T17:52:44+08:00
 #+TAGS[]: Emacs WSL Windows Code
-#+DRAFT: true
+#+LANGUAGE: en
+#+OPTIONS: ':t
 
 I use Emacs under WSL2 to take advantage of better performance compared to running it natively on Windows, but out of the box the browser integration doesn't work well. By default Emacs will try to open the browser installed within WSL, and since most people won't have one, Emacs will throw its hands in the air and give up.
 
@@ -28,10 +29,10 @@ First we check if Emacs is running under Linux. If it's running natively under W
 
 Then to see if we're specifically running under WSL, run ~string-match~ on the output of the shell command ~uname -a~ to see if it matches the regular expression[fn:1] ~Linux.*Microsoft.*Linux~.
 
-If we're in a WSL environment, then set up some global parameters for the ~browse-url-generic~ function so that it "browses" using the Windows-specific command =cmd.exe /c start {some-website}=. This command actually opens the website in your default browser in Windows.
+If we're in a WSL environment, then set up some global parameters for the ~browse-url-generic~ function so that it "browses" using the Windows-specific command[fn:2] =cmd.exe /c start {some-website}=. This command actually opens the website in your default browser in Windows.
 
 #+BEGIN_QUOTE
-Try it for yourself now!
+Try it out!
 
 Type =cmd.exe /c start "https://google.com/"= into a Windows command prompt and watch Google open in your favorite browser.
 #+END_QUOTE
@@ -39,3 +40,5 @@ Type =cmd.exe /c start "https://google.com/"= into a Windows command prompt and 
 Finally, we tell Emacs to use the ~browse-url-generic~ function to handle "browse URL" requests everywhere within Emacs.
 
 [fn:1] Emacs has its own idiosyncratic [[https://www.emacswiki.org/emacs/RegularExpression][version]] of regular expressions. If you're already familiar with the more [[https://en.wikipedia.org/wiki/Regular_expression#Standards][normal variants of regexes]], you may experience some pain. I certainly did.
+
+[fn:2] I also tried using =explorer.exe= since it should be able to open URLs and it made more sense to me to let the Windows shell handle it. This worked for a while, but I found certain YouTube URLs would just fail to be forwarded correctly, and it wasn't a problem with Emacs. Switching back to the widely recommended =cmd.exe /c start= approach has worked beautifully in all circumstances.
