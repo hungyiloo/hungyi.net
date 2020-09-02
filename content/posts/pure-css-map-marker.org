@@ -1,5 +1,5 @@
 #+TITLE: Pure CSS Map Marker
-#+DATE: 2020-09-01T23:24:47+08:00
+#+DATE:
 #+TAGS[]: Code CSS HTML Web Front-end
 #+DRAFT: true
 

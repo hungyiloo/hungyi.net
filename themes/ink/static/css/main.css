@@ -109,11 +109,12 @@ textarea {
 
 blockquote {
   margin-left: 1rem;
+  margin-block-end: 1.25em;
   font-style: italic;
   font-size: 1.4rem;
   border-left: 3px solid;
   border-color: #9f3125;
-  padding-left: 20px;
+  padding-left: 1.25rem;
 }
 blockquote code {
   font-style: normal;
@@ -187,7 +188,7 @@ ul.flat li {
   margin-left: 0;
 }
 
-ul li p, ol li p {
+.post ul li p, .post ol li p {
   margin: 0;
 }
 
@@ -209,7 +210,7 @@ ul li p, ol li p {
 
 .highlight {
   background: 0 0;
-  background-color: #150F14;
+  background-color: #20151F;
 }
 
 .wrapper {
@@ -386,7 +387,7 @@ ul li p, ol li p {
   position: relative;
 }
 .post .title.small {
-  margin: 0 0 10px 0;
+  margin: 0.5rem 0 0 0;
   font-family: "Raleway", sans-serif;
 }
 .post .post-header {
