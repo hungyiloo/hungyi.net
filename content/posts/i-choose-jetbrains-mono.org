@@ -9,7 +9,7 @@ When it comes to programming fonts[fn:1], we've seen a recent explosion of innov
 
 * Ligatures?
 
-First, a quick primer on ligatures and their use in code. In plain English, a ligature is when a *special combination of one or more characters is joined together to form a new symbol*. Look closely at the combination of the letters 'f' and 'i' below.
+First, a quick primer on ligatures and their use in code. In short, a ligature is when a *special combination of one or more characters is joined together to form a new symbol*. Look closely at the letters 'f' and 'i' below.
 
 #+begin_quote
 Let's fight fire with fire.
@@ -17,14 +17,13 @@ Let's fight fire with fire.
 
 Because the dot of the 'i' normally collides with the hook of the 'f', most good fonts will combine them such that the dot is "removed". It just looks neater that way.
 
-Programming ligatures take this to the extreme with special symbols. The most apparent example to me is the arrow operator that is often used for lambda functions: ~=>~. Most fonts with programming ligatures will combine it into an actual arrow similar to this: ⇒.
+Programming ligatures take this to the extreme with special symbols. The prime example for me is the arrow operator that is often used for lambda functions: ~=>~. Most fonts with programming ligatures will combine it into an arrow like this: ⇒.
 
 Other common programming ligatures include:
 - ~>=~ into ≥
 - ~<=~ into ≤
 - ~!=~ into ≠
 - ~|>~ into ▷
-- and many more...
 
 It's a matter of personal taste, but many programmers—myself included—find that these ligatures make code look more meaningful and easier to parse.
 
@@ -32,15 +31,15 @@ Now, on to some actual programming fonts...
 
 * Hasklig
 
-Going as far back as 2012, [[https://github.com/i-tu/Hasklig][Hasklig]] was one of the earlier programming fonts to use ligatures for code. It uses the beautiful [[https://github.com/adobe-fonts/source-code-pro][Source Code Pro]] as its base font with ligatures mainly geared towards code written in Haskell.
+Going as far back as 2012, [[https://github.com/i-tu/Hasklig][Hasklig]] was one of the earlier programming fonts to use ligatures for code. It used the beautiful [[https://github.com/adobe-fonts/source-code-pro][Source Code Pro]] as its base font, but with added ligatures on top that were mainly geared towards code written in Haskell.
 
-Sadly, this means that it does not support that many ligatures for general programming. It also hasn't received any major updates for a long time now. For those reasons, I never considered Hasklig suitable for me, even though I honestly did like Source Code Pro as a whole.
+Sadly, this meant that it did not support that many ligatures for /general/ programming. It also hadn't received any major updates for a long time. For these reasons alone, I never considered Hasklig suitable for me, even though I honestly liked the look of Source Code Pro.
 
 * Fira Code
 
-[[https://github.com/tonsky/FiraCode][Fira Code]] was the first experience I had with programming ligatures. I used it for more than 4 years and I still consider it a very solid choice today. It's based on the monospaced variant of Mozilla's [[http://mozilla.github.io/Fira/][Fira]] type family, [[https://fonts.google.com/specimen/Fira+Mono][Fira Mono]].
+[[https://github.com/tonsky/FiraCode][Fira Code]] was the first real experience I had with programming ligatures. I used it for more than 4 years and I still consider it a solid choice today. It's based on the monospaced variant of Mozilla's [[http://mozilla.github.io/Fira/][Fira]] type family, [[https://fonts.google.com/specimen/Fira+Mono][Fira Mono]].
 
-I was happy until I discovered that Fira Mono didn't have a dedicated italic variant. This deficiency was carried over into Fira Code, making it difficult for me to show true italics in Emacs, especially when using [[https://orgmode.org/][Org mode]]. So, after 4+ years of loyalty, I decided to go searching for a new programming font.
+I was happy until I discovered that Fira Mono didn't have a dedicated italic variant. This deficiency was carried over into Fira Code too, making it difficult for me to show true italics in Emacs, especially when using [[https://orgmode.org/][Org mode]]. So, in spite of years of unwavering loyalty, I went searching for a new programming font.
 
 * Cascadia Code
 
