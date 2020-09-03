@@ -1,0 +1,50 @@
+#+TITLE: Doom Emacs: How to Do a Project-wide Search & Replace
+#+TAGS[]: Doom~Emacs Emacs
+#+DATE:
+#+DRAFT: true
+
+Earlier this week I went looking for "how to search and replace in a whole project" in Emacs. I knew had [[https://github.com/hlissner/doom-emacs][Doom Emacs]] set up with [[https://github.com/emacs-evil/evil][evil]] turned on by default, and I knew to use =SPC s p= to launch Ivy's [[https://github.com/abo-abo/swiper][counsel-rg]] for searching the project. What was next...?
+
+# more
+
+I knew it was possible because I had done search & replace before, but I just /couldn't remember/ how to put the various bits of Doom Emacs together this time. I couldn't even find instructions for it on Google.
+
+So today, I'm documenting the process so that I won't forget again. Hopefully it'll help someone out there too.
+
+In one line: =SPC s p foo C-c C-e :%s/foo/bar/g RET Z Z= will replace "foo" with "bar". Magic!
+
+Would you like to know how it's done? Follow me below as I explain it step-by-step.
+
+* Here's the Explanation
+
+#+BEGIN_COMFY
+1. Make sure you're in the right project and all your open buffers/files are saved. If you're making a large change, maybe a =git commit= would make it safer.
+
+2. =SPC s p= to launch the project search. This is what you would normally use to search strings or regular expressions[fn:1] within your project. I've set ~ivy-more-chars-alist~ to not return any results until at least 3 characters have been entered[fn:2], otherwise counsel can be a little overzealous in returning results.
+
+3. Type in a search string or regular expression, =foo= in this example, to get some results (this doesn't have to be exactly what you want to replace.)
+
+4. =C-c C-e= to transform the search results into a /wgrep/ or writable grep buffer. This calls ~+ivy/woccur~, which is equivalent to pressing =C-c C-o C-c C-p= (~ivy-occur~ to turn ivy results into a buffer and ~wgrep-change-to-wgrep-mode~ to make it writable.)
+
+5. Use your preferred method of search and replace in a single file. Doom relies heavily on evil's vim emulation, so the smoothest option for me was to type ~:%s/foo/bar/g~ to preview the changes and hitting =RET= to apply.
+
+   You can also edit the buffer manually using any technique you want. =M-%= or =C-M-%= to do a regular Emacs query replace? Sure. =C-x SPC= or =C-v= to do a rectangle/visual block edit? Go for it. =g z z= for [[https://github.com/gabesoft/evil-mc][evil-mc]] multiple cursors? No worries—just be careful of the readonly region of filenames on the left.
+
+   At this stage nothing has been written to the files yet, so you can still undo easily. Go through all the lines in the search results to check if the changes are as expected.
+
+   You can also =SPC : wgrep=  or =M-x wgrep= to look at the other advanced wgrep actions.
+
+6. Hit =Z Z= to write all the changes to their respective files, or =Z Q= to abort the search and replace.
+#+END_COMFY
+
+
+[fn:1] Just a reminder that Emacs has its own idiosyncratic [[https://www.emacswiki.org/emacs/RegularExpression][version]] of regular expressions. It's weird, I know.
+
+[fn:2] I have this in my =config.el= to set the minimum characters to 3 before a search is fired.
+#+BEGIN_SRC emacs-lisp
+(after! ivy
+  (setq ivy-more-chars-alist '((counsel-grep . 3)
+                               (counsel-rg . 3)
+                               (counsel-search . 3)
+                               (t . 3))))
+#+END_SRC

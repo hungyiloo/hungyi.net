@@ -192,6 +192,10 @@ ul.flat li {
   margin: 0;
 }
 
+.post .comfy-block ul li p, .post .comfy-block ol li p {
+  margin-block-end: 1em;
+}
+
 .prevent-collapse {
   min-height: .1rem
 }
@@ -211,6 +215,8 @@ ul.flat li {
 .highlight {
   background: 0 0;
   background-color: #20151F;
+  margin-block-start: 1em;
+  margin-block-end: 1em;
 }
 
 .wrapper {
