@@ -1,0 +1,130 @@
+#+TITLE: Fonts Made for Coding
+#+DATE: 2020-09-05T17:47:39+08:00
+#+TAGS[]: Programming Power-user Typography
+
+You may have heard that there are fonts[fn:1] designed specifically for programming work, especially ones that use programming ligatures. If you haven't heard---and you cut code---then you're in for a treat today! And if you're already in the loop, maybe you'll find a new favorite font to spruce up your code. Yes, we're really spoilt for choice nowadays. Today I'll outline the programming fonts that I've come across so far and reveal why I chose [[https://www.jetbrains.com/lp/mono/][JetBrains Mono]] for myself in the end.
+
+[fn:1] In common parlance, the word 'font' is used to refer to both /typefaces/ or /fonts/ and no distinction is made between the two. Although they are technically different, I'm no typographer, so I'm sticking to the colloquial usage.
+
+
+# more
+
+* Ligatures?
+
+A ligature is when a *special combination of one or more characters is joined together to form a new symbol*. Look closely at the letters 'f' and 'i' below.
+
+#+begin_quote
+Let's fight fire with fire.
+#+end_quote
+
+Because the dot of the 'i' normally collides with the hook of the 'f', most good fonts will combine them such that the dot is "removed". It just looks neater that way.
+
+Programming ligatures take this to the extreme with special code-related combinations. The prime example for me is the arrow operator that is often used for lambda functions: ~=>~. Most fonts with programming ligatures will combine it into an arrow like this: ~⇒~.
+
+Other common programming ligatures include:
+# Exp
+#+BEGIN_SRC org :exports results :results html
+- ~>=~ into ~≥~
+- ~<=~ into ~≤~
+- ~!=~ into ~≠~
+- ~|>~ into ~▷~
+#+END_SRC
+
+#+RESULTS:
+#+begin_export html
+<ul class="org-ul">
+<li><code>&gt;=</code> into <code>≥</code></li>
+<li><code>&lt;=</code> into <code>≤</code></li>
+<li><code>!=</code> into <code>≠</code></li>
+<li><code>|&gt;</code> into <code>▷</code></li>
+</ul>
+#+end_export
+
+It's a matter of personal taste[fn:2], but many programmers---myself included---find that these ligatures make code look more meaningful and easier to parse.
+
+Now, on to some actual programming fonts...
+
+[fn:2] Don't like programming ligatures? Don't worry---all of these programming fonts have variants with the ligatures removed, so you can still enjoy all the benefits of a well-designed font while preserving character purity.
+
+For no-ligature fonts with similar names, just make sure you're installing and using the right ones as they often come packaged together or are linked right next to each other.
+
+#+BEGIN_COMPACT
+| Ligatures      | No Ligatures      |
+|----------------+-------------------|
+| Hasklig        | Source Code Pro   |
+| Fira Code      | Fira Mono         |
+| Cascadia Code  | Cascadia Mono     |
+| Iosevka        | Iosevka Fixed     |
+| JetBrains Mono | JetBrains Mono NL |
+#+END_COMPACT
+
+* Hasklig
+
+Going as far back as 2012, [[https://github.com/i-tu/Hasklig][Hasklig]] was one of the earlier programming fonts to use ligatures for code. It used the beautiful [[https://github.com/adobe-fonts/source-code-pro][Source Code Pro]] as its base font, but with added ligatures that were mainly geared towards code written in Haskell.
+
+Sadly, this meant that it did not include that many ligatures for /general/ programming. It also hadn't received any major updates for a long time. For these reasons, I never really considered using Hasklig, despite the good looks of Source Code Pro.
+
+* Fira Code
+
+[[https://github.com/tonsky/FiraCode][Fira Code]] was the first real experience I had with programming ligatures. I used it heavily for more than 4 years. It also has a solid foundation, being based on the monospaced variant of Mozilla's [[http://mozilla.github.io/Fira/][Fira]] type family, [[https://fonts.google.com/specimen/Fira+Mono][Fira Mono]]. Due to its strong community support, it's easily one of the most popular programming fonts out there and I would have no problem recommending to any programmer.
+
+I was happy until I discovered that Fira Mono didn't have a dedicated italic variant. This deficiency was carried over into Fira Code too, making it difficult for me to show true italics in Emacs, especially when using [[https://orgmode.org/][Org mode]].
+
+* Cascadia Code
+
+Microsoft's response to Fira Code was to create [[https://devblogs.microsoft.com/commandline/cascadia-code/][Cascadia Code]]. It was developed alongside Windows Terminal[fn:3] and was intended to improve both programming and command line experiences. This can be seen in its official "PL" variant which has embedded Powerline symbols in addition to many programming ligatures.
+
+I really wanted to like it, since it had such a positive community around it from the get go. Unfortunately it suffered the same [[https://github.com/microsoft/cascadia-code/issues/63][lack of true italics]] as Fira Code/Mono did. I also found that it lacked the readability that I was used to with Fira Code. This was doubly important when working in text documents such as Org mode or markdown where I'd have to read and review actual sentences and paragraphs. I couldn't really put my finger on it, but it just seemed a little clunky to me.
+
+[fn:3] [[https://github.com/Microsoft/Terminal][Windows Terminal]] is great! I actually use it daily. It provides a much nicer experience than the built in Command Prompt or Windows PowerShell. It also has a more modern look and feel compared to ConEmu and a bunch of other terminal emulators for Windows. I highly recommend you check it out if you use the command line on Windows on any sort of regular basis.
+
+* Iosevka
+
+What's a procedurally generated font? [[https://typeof.net/Iosevka/][Iosevka]] is a procedurally generated font. It's built by running code (Node.js/JavaScript in this case) which allows for a ton of customization. The [[https://github.com/be5invis/Iosevka/releases/tag/v3.4.7][current release]] has no fewer than 21 different prepackaged variants to choose from, each with subtle changes that were inspired by other fonts. As a user you can really go wild here---even if none of the 21 variants suit your fancy, you can clone the repository, configure some parameters, then build a totally customized font to call your own.
+
+I have to admit, I /really/ loved the idea of Iosevka: a coding font built with code. I used it happily for 2 solid weeks, but ultimately gave up on it because of mysterious performance issues that I only encountered in Emacs[fn:4].
+
+Another issue that put me off using Iosevka everywhere was that of its design philosophy:
+
+#+BEGIN_QUOTE
+The Iosevka’s monospace family is provided in a slender outfit by default: glyphs are exactly 1/2em wide. Compared to the competitors, you could fit more columns within the same screen width.
+
+--- https://typeof.net/Iosevka/
+#+END_QUOTE
+
+This was quite a bit more narrow than I was used to, so I was using the Extended (i.e. wide character) variant of Iosevka to get around this. It was OK, but still a little cramped.
+
+[fn:4] When using Iosevka in Emacs 28, I found that scrolling up and down documents caused some sort of memory or resource leak that would irreversibly slow things down. It had something to do with the automatic ligature composition that was in Emacs 28, since the problem didn't occur in Emacs 27.
+
+For the longest time I thought that it was a problem with Emacs 28, but after reading a [[https://github.com/hlissner/doom-emacs/issues/2217][GitHub issue on the subject]] I discovered that the font choice could actually affect performance. Sure enough, moving away from Iosevka fixed things permanently for me.
+
+* JetBrains Mono
+
+During my research, I had seen [[https://www.jetbrains.com/lp/mono/][JetBrains Mono]] mentioned every now and again. I had initially dismissed it thinking that it was more focused on JetBrains software or its users. Turns out, not at all!
+
+JetBrains Mono ticked every box for me:
+- [[https://www.marksimonson.com/notebook/view/FakevsTrueItalics][True italics]]
+- Great readability
+- General purpose programming ligatures
+- No performance issues in Emacs
+
+And even ticked a few more boxes that were on my nice-to-have list:
+- A variety of weights
+- Vertically centered asterisk
+- Zero with a central dot instead of a slash
+- Clearer programming ligatures than some of the competition
+- Scripted /f/ and /y/ for true italic feel
+
+JetBrains Mono isn't without its critics though. Some say that the increased x-height isn't proven to increase readability, and that the "functional construction" of the glyphs makes the letters look too similar, which supposedly decreases readability.
+
+But I've been using the JetBrains Mono Semi Light in Emacs for a while now. No matter what I throw at it, from huge blocks of text in Org mode to dense chains of lambdas in [[https://www.typescriptlang.org/][TypeScript]], it gets out of the way and lets me focus on my work. That's what's really important. Count me as a very happy user.
+
+* It's Your Choice
+
+Of course, your needs will be different to mine. Despite the heated debate about ligatures or no ligatures, serifs or sans-serifs, [[https://en.wikipedia.org/wiki/Consolas][Consolas]] or [[https://www.typography.com/fonts/operator/styles/operatormono][Operator Mono]], there's one point that everyone agrees on: the font you choose for programming is entirely up to you.
+
+So what suits you? Do you like ligatures? Do you hate them? Do you prefer a condensed font? Do you need true italics?
+
+Try the suggestions above, or use them as a starting point to discover your own preferences. There are actually [[https://fonts.google.com/specimen/Inconsolata][so]] [[https://input.fontbureau.com/info/][many]] [[https://github.com/source-foundry/Hack][more]] [[https://larsenwork.com/monoid/][programming]] [[https://github.com/rubjo/victor-mono][fonts]] that I just haven't had time to cover.
+
+Go forth and personalize your coding experience. Make your editor yours.

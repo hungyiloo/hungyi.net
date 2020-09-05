@@ -1,5 +1,5 @@
 #+TITLE: Doom Emacs: How to Do a Project-wide Search & Replace
-#+TAGS[]: Doom~Emacs Emacs
+#+TAGS[]: Doom~Emacs Emacs Programming
 #+DATE:
 #+DRAFT: true
 
@@ -13,7 +13,7 @@ So today, I'm documenting the process so that I won't forget again. Hopefully it
 
 In one line: =SPC s p foo C-c C-e :%s/foo/bar/g RET Z Z= will replace "foo" with "bar". Magic!
 
-Would you like to know how it's done? Follow me below as I explain it step-by-step.
+Want the dirty details? Follow me below as I explain it step-by-step.
 
 * Here's the Explanation
 
@@ -36,7 +36,6 @@ Would you like to know how it's done? Follow me below as I explain it step-by-st
 
 6. Hit =Z Z= to write all the changes to their respective files, or =Z Q= to abort the search and replace.
 #+END_COMFY
-
 
 [fn:1] Just a reminder that Emacs has its own idiosyncratic [[https://www.emacswiki.org/emacs/RegularExpression][version]] of regular expressions. It's weird, I know.
 

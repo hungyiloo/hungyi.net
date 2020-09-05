@@ -1,6 +1,6 @@
 #+TITLE: Browse URLs in Emacs under WSL
 #+DATE: 2020-09-02T17:52:44+08:00
-#+TAGS[]: Emacs WSL Windows Code
+#+TAGS[]: Emacs WSL Windows Code Power-user
 #+LANGUAGE: en
 #+OPTIONS: ':t
 

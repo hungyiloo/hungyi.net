@@ -46,7 +46,7 @@ hr {
   display: block;
   height: 1px;
   border: 0;
-  border-top: 1px solid #ccc;
+  border-top: 1px solid #f0f0f0;
   margin: 1rem 0;
   padding: 0;
 }
@@ -76,7 +76,8 @@ table {
   -ms-overflow-style: -ms-autohiding-scrollbar;
   -webkit-overflow-scrolling: touch;
   background-color: transparent;
-  margin-bottom: 1rem;
+  margin-block-start: 1em;
+  margin-block-end: 1em;
   overflow-x: auto;
   width: 100%;
 }
@@ -91,8 +92,8 @@ table td {
 table thead th {
   border-bottom-width: 2px;
   vertical-align: bottom;
-  background-color: rgba(128, 128, 128, 0.15);
-  color: black;
+  background-color: rgba(128, 128, 128, 0.18);
+  color: #333;
 }
 
 table tbody + tbody {
@@ -100,7 +101,7 @@ table tbody + tbody {
 }
 
 table tbody tr:nth-of-type(even) {
-  background-color: rgba(128, 128, 128, 0.05);
+  background-color: rgba(128, 128, 128, 0.08);
 }
 
 textarea {
@@ -194,6 +195,10 @@ ul.flat li {
 
 .post .comfy-block ul li p, .post .comfy-block ol li p {
   margin-block-end: 1em;
+}
+
+.post .compact-block table th, .post .compact-block table td {
+  padding: 0.25rem 0.75rem;
 }
 
 .prevent-collapse {
@@ -422,6 +427,12 @@ ul.flat li {
   font-size: 0.85em;
   text-decoration: none;
   margin: 0 10px 0 0;
+  font-weight: 500;
+}
+
+.post .description .footnote-reference {
+  /* Don't display footnotes in content summaries */
+  display: none;
 }
 
 .list .posts .post-header .meta {
@@ -433,7 +444,7 @@ ul.flat li {
   text-align: right;
   font-size: 0.75em;
   color: #999;
-  border-top: 1px solid #f4f4f4;
+  border-top: 1px solid #f0f0f0;
   margin-top: 1.5rem;
   padding: 15px 0 0 0;
   margin-bottom: 1rem;
@@ -527,12 +538,19 @@ code {
   word-break: break-word;
 }
 
-p code {
+.post code {
   color: #1B9B60;
-  background: rgba(128, 128, 128, 0.05);
+  background: rgba(128, 128, 128, 0.10);
   border: 1px solid rgba(128, 128, 128, 0.15);
   padding: 0.1em 0.3em;
   border-radius: 0.2em;
+}
+.post .highlight code {
+  color: unset;
+  background: unset;
+  border: unset;
+  padding: unset;
+  border-radius: unset;
 }
 sup a {
   border-bottom: none;
@@ -548,6 +566,9 @@ sup a {
 }
 .footnote-body p:first-child {
   display: inline;
+}
+.footnotes-separatator {
+  margin-block-start: 3em;
 }
 
 blockquote.instagram-media, blockquote.instagram-media-registered, iframe.instagram-media {

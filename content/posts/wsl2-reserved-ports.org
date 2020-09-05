@@ -1,6 +1,6 @@
 #+TITLE: WSL2, Hyper-V & Reserved Ports
 #+DATE: 2020-08-31T20:43:30+08:00
-#+TAGS[]: WSL Windows Troubleshooting
+#+TAGS[]: WSL Windows Troubleshooting Power-user
 #+DRAFT: false
 
 Allegedly [[https://stackoverflow.com/a/62359555][a botched Windows update resets the dynamic TCP port range]] in some cases. When this happens, [[https://github.com/docker/for-win/issues/3171][Hyper-V ends up aggressively reserving]] it for its own [[https://blogs.technet.microsoft.com/wsnetdoc/2017/09/18/windows-container-networking-for-windows-10-and-windows-server-2016/][Windows Container Host Networking Service (HNS)]]. The end result for me? I've occasionally been unable to connect to my Angular app running on port 4200 within WSL2.
