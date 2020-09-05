@@ -2,7 +2,7 @@
 #+DATE: 2020-09-05T17:47:39+08:00
 #+TAGS[]: Programming Power-user Typography
 
-You may have heard that there are fonts[fn:1] designed specifically for programming work, especially ones that use programming ligatures. If you haven't heard---and you cut code---then you're in for a treat today! And if you're already in the loop, maybe you'll find a new favorite font to spruce up your code. Yes, we're really spoilt for choice nowadays. Today I'll outline the programming fonts that I've come across so far and reveal why I chose [[https://www.jetbrains.com/lp/mono/][JetBrains Mono]] for myself in the end.
+You may have heard that there are fonts[fn:1] designed specifically for programming work, especially ones that use programming ligatures. If you haven't heard---and you cut code---then you're in for a treat today! And if you're already in the loop, maybe you'll find a new favorite font to spruce up your code. Today, I'll explain why I chose [[https://www.jetbrains.com/lp/mono/][JetBrains Mono]] for my own programming needs, and along the way I'll outline all the programming fonts I've come across so far.
 
 [fn:1] In common parlance, the word 'font' is used to refer to both /typefaces/ or /fonts/ and no distinction is made between the two. Although they are technically different, I'm no typographer, so I'm sticking to the colloquial usage.
 
@@ -19,7 +19,7 @@ Let's fight fire with fire.
 
 Because the dot of the 'i' normally collides with the hook of the 'f', most good fonts will combine them such that the dot is "removed". It just looks neater that way.
 
-Programming ligatures take this to the extreme with special code-related combinations. The prime example for me is the arrow operator that is often used for lambda functions: ~=>~. Most fonts with programming ligatures will combine it into an arrow like this: ~⇒~.
+/Programming/ ligatures take this to the extreme with special code-related combinations. A prime example is the arrow operator that is often used for lambda functions: ~=>~. Most fonts with programming ligatures will combine it into an arrow like this: ~⇒~.
 
 Other common programming ligatures include:
 # Exp
