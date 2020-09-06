@@ -66,7 +66,7 @@ Sadly, this meant that it did not include that many ligatures for /general/ prog
 
 * Fira Code
 
-[[https://github.com/tonsky/FiraCode][Fira Code]] was the first real experience I had with programming ligatures. I used it heavily for more than 4 years. It also has a solid foundation, being based on the monospaced variant of Mozilla's [[http://mozilla.github.io/Fira/][Fira]] type family, [[https://fonts.google.com/specimen/Fira+Mono][Fira Mono]]. Due to its strong community support, it's easily one of the most popular programming fonts out there and I would have no problem recommending to any programmer.
+[[https://github.com/tonsky/FiraCode][Fira Code]] was the first real experience I had with programming ligatures. I used it heavily for more than 4 years. It also has a solid foundation, being based on the monospaced variant of Mozilla's [[http://mozilla.github.io/Fira/][Fira]] type family, [[https://fonts.google.com/specimen/Fira+Mono][Fira Mono]]. Due to its strong community support, it's easily one of the most popular programming fonts out there and I would have no problem recommending it to any programmer.
 
 I was happy until I discovered that Fira Mono didn't have a dedicated italic variant. This deficiency was carried over into Fira Code too, making it difficult for me to show true italics in Emacs, especially when using [[https://orgmode.org/][Org mode]].
 
@@ -80,7 +80,7 @@ I really wanted to like it, since it had such a positive community around it fro
 
 * Iosevka
 
-What's a procedurally generated font? [[https://typeof.net/Iosevka/][Iosevka]] is a procedurally generated font. It's built by running code (Node.js/JavaScript in this case) which allows for a ton of customization. The [[https://github.com/be5invis/Iosevka/releases/tag/v3.4.7][current release]] has no fewer than 21 different prepackaged variants to choose from, each with subtle changes that were inspired by other fonts. As a user you can really go wild here---even if none of the 21 variants suit your fancy, you can clone the repository, configure some parameters, then build a totally customized font to call your own.
+[[https://typeof.net/Iosevka/][Iosevka]] is a procedurally generated font. It's built by running code (Node.js/JavaScript in this case) which allows for a ton of customization. The [[https://github.com/be5invis/Iosevka/releases/tag/v3.4.7][current release]] has no fewer than 21 different prepackaged variants to choose from, each with subtle changes that were inspired by other fonts. As a user you can really go wild here---even if none of the 21 variants suit your fancy, you can clone the repository, configure some parameters, then build a totally customized font to call your own.
 
 I have to admit, I /really/ loved the idea of Iosevka: a coding font built with code. I used it happily for 2 solid weeks, but ultimately gave up on it because of mysterious performance issues that I only encountered in Emacs[fn:4].
 
@@ -92,7 +92,7 @@ The Iosevka’s monospace family is provided in a slender outfit by default: gly
 --- https://typeof.net/Iosevka/
 #+END_QUOTE
 
-This was quite a bit more narrow than I was used to, so I was using the Extended (i.e. wide character) variant of Iosevka to get around this. It was OK, but still a little cramped.
+This was quite a bit more narrow than I was used to, so I used the Extended variant to get slightly wider characters. It was OK, but still a little cramped.
 
 [fn:4] When using Iosevka in Emacs 28, I found that scrolling up and down documents caused some sort of memory or resource leak that would irreversibly slow things down. It had something to do with the automatic ligature composition that was in Emacs 28, since the problem didn't occur in Emacs 27.
 
