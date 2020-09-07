@@ -112,7 +112,7 @@ To use these icons, just place these styles somewhere on the page or in an appro
 .signal-icon {
   height: 18px;
   width: 18px;
-  /* The power of flexbox! */
+  /* To show you the power of flexbox! */
   display: flex;
   /* Bars should be placed left to right */
   flex-direction: row;
@@ -147,7 +147,7 @@ To use these icons, just place these styles somewhere on the page or in an appro
 { opacity: 100%; }
 #+END_SRC
 
-Then use the HTML below to display the icons on your page or app. Use the ~weak~, ~medium~ and ~strong~ classes next to the ~signal-icon~ class to turn on 1, 2 or 3 bars respectively. Without the modified classes all 3 bars will be faded, indicating no signal.
+Then use the HTML below to display the icons on your page or app. Use the ~weak~, ~medium~ and ~strong~ classes next to the ~signal-icon~ class to turn on 1, 2 or 3 bars respectively. Without the modifier classes all 3 bars will be faded, indicating no signal.
 
 #+NAME: markup
 #+BEGIN_SRC html :results silent
