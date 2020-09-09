@@ -1,0 +1,67 @@
+#+TITLE: Emacs Lets You Calculate While You Write
+#+DATE: 2020-09-09T21:24:54+08:00
+#+TAGS[]: Emacs Doom~Emacs Power-user
+
+Let's say you're writing a recipe down but you want to scale the ingredients down by one third. The recipe calls for 280g of flour. Did I mention you also want to round to the nearest 10g? I applaud you if you can do that in your head---because I certainly can't. Also yes, it would be easy just to run your system's calculator app to get the answer, but why leave Emacs if you can help it? Doing it this way also saves you a bunch of manual copying and pasting.
+
+# more
+
+Here's how:
+
+#+BEGIN_COMFY
+1. Type the expression you want to calculate; in this case it'll be =round(280*2/3, -1)=. Your buffer might look like this:
+   #+BEGIN_SRC
+Ingredients:
+- 2 eggs
+- round(280*2/3, -1)g flour
+- 10g baking powder
+   #+END_SRC
+  
+2. Mark/select the expression by hitting =C-SPC= (just =v= in Doom Emacs or evil mode) and moving the point/cursor until the whole expression is neatly marked.
+
+3. Call ~calc-grab-region~ either manually via =M-x calc-grab-region= or by pressing =C-x * g=. In Doom Emacs, the =G= has to be capital for some reason.
+
+   This will grab the expression, shove it into Emacs' calc mode and evaluate it. You should see =[190]= on the "stack".
+
+4. To get the result back in your buffer, press =C-u y= (that would be =SPC u p P= in Doom Emacs or evil mode).
+
+   This calls ~calc-copy-to-buffer~ on the most recent result. The prefix =C-u= makes it overwrite the marked region in your original buffer and conveniently quit calc mode. Without the prefix, it would insert the result at the point in your buffer, but leaving the original expression text intact /and/ also let you hang out in calc mode in case you want to do more math.
+
+5. The result will still have square brackets around it, like this:
+   #+BEGIN_SRC
+Ingredients:
+- 2 eggs
+- [190]g flour
+- 10g baking powder
+   #+END_SRC
+
+   Sure you can leave it like that, but you might want to remove them. In evil mode that's easy: just =d S ]= to delete the surrounding brackets with help from [[https://github.com/emacs-evil/evil-surround][evil-surround]].
+#+END_COMFY
+
+* Summary
+
+Assuming you have your expression marked, your keystrokes in one line would be: =C-x * g= and =C-u y=, then delete the square brackets manually.
+
+For Doom Emacs and evil mode users, that would be =C-x * G=, =SPC u p P= then =d S ]= to delete the square brackets.
+
+* A word on calc-dispatch
+
+=C-x *= actually calls the ~calc-dispatch~ command, which you can also call manually. In this mode, you can press =?= to get a list of all the calc options that are available to you. However, in this tutorial we just used =g= for ~calc-grab-region~.
+
+In Doom Emacs, most common operations are mapped to the =SPC= leader, so pressing =C-x= felt foreign to me. Personally I went ahead and mapped ~calc-dispatch~ to =SPC = == by putting this in my =config.el=:
+
+#+BEGIN_SRC emacs-lisp
+(map! :leader
+      (:prefix-map ("=" . "calc")
+       "=" #'calc-dispatch
+
+       ;; Some other shortcuts
+       "c" #'calc
+       "q" #'quick-calc
+       "g" #'calc-grab-region))
+#+END_SRC
+
+And as you can see, there's room for more personal shortcuts for whatever calc commands you use regularly. In my case:
+- =SPC = c= to just launch calc mode without doing anything clever
+- =SPC = q= to do quick calculations in the minibuffer
+- =SPC = g= as a shortcut to grab a region without going through ~calc-dispatch~
