@@ -2,14 +2,16 @@
 #+DATE: 2020-09-09T21:24:54+08:00
 #+TAGS[]: Emacs Doom~Emacs Power-user
 
-Let's say you're writing a recipe down but you want to scale the ingredients down by one third. The recipe calls for 280g of flour. Did I mention you also want to round to the nearest 10g? I applaud you if you can do that in your head---because I certainly can't. Also yes, it would be easy just to run your system's calculator app to get the answer, but why leave Emacs if you can help it? Doing it this way also saves you a bunch of manual copying and pasting.
+Let's say you're writing a recipe down but you want to scale the ingredients down by one third. The recipe calls for 280g of flour. Did I mention you also want to round to the nearest 10g?
+
+I applaud you if you can easily do that in your head---because I certainly can't. Also yes, it would be easy just to run your system's calculator app to get the answer, but why leave Emacs if you can help it? Doing it this way also saves you a bunch of manual copying and pasting.
 
 # more
 
 Here's how:
 
 #+BEGIN_COMFY
-1. Type the expression you want to calculate; in this case it'll be =round(280*2/3, -1)=. Your buffer might look like this:
+1. Type in the expression you want to calculate; in this case it'll be =round(280*2/3, -1)=[fn:1]. Your buffer might look like this:
    #+BEGIN_SRC
 Ingredients:
 - 2 eggs
@@ -23,7 +25,7 @@ Ingredients:
 
    This will grab the expression, shove it into Emacs' calc mode and evaluate it. You should see =[190]= on the "stack".
 
-4. To get the result back in your buffer, press =C-u y= (that would be =SPC u p P= in Doom Emacs or evil mode).
+4. To get the result back in your buffer, press =C-u y= (that would be =SPC u p P= in Doom Emacs[fn:2] or evil mode).
 
    This calls ~calc-copy-to-buffer~ on the most recent result. The prefix =C-u= makes it overwrite the marked region in your original buffer and conveniently quit calc mode. Without the prefix, it would insert the result at the point in your buffer, but leaving the original expression text intact /and/ also let you hang out in calc mode in case you want to do more math.
 
@@ -42,11 +44,11 @@ Ingredients:
 
 Assuming you have your expression marked, your keystrokes in one line would be: =C-x * g= and =C-u y=, then delete the square brackets manually.
 
-For Doom Emacs and evil mode users, that would be =C-x * G=, =SPC u p P= then =d s ]= to delete the square brackets.
+For Doom Emacs and evil mode users, that would be =C-x * G=, =SPC u p P=[fn:2] then =d s ]= to delete the square brackets.
 
 * A word on calc-dispatch
 
-=C-x *= actually calls the ~calc-dispatch~ command, which you can also call manually. In this mode, you can press =?= to get a list of all the calc options that are available to you. However, in this tutorial we just used =g= for ~calc-grab-region~.
+=C-x *= actually calls the ~calc-dispatch~ command, which you can also call manually. In this mode you can press =?= to get a list of all the calc options that are available to you. However, in this tutorial we just used =g= for ~calc-grab-region~.
 
 In Doom Emacs, most common operations are mapped to the =SPC= leader, so pressing =C-x= felt foreign to me. Personally I went ahead and mapped ~calc-dispatch~ to =SPC = == by putting this in my =config.el=:
 
@@ -65,3 +67,9 @@ And as you can see, there's room for more personal shortcuts for whatever calc c
 - =SPC = c= to just launch calc mode without doing anything clever
 - =SPC = q= to do quick calculations in the minibuffer
 - =SPC = g= as a shortcut to grab a region without going through ~calc-dispatch~
+
+[fn:1] The ~round~ formula does as you'd expect. The second parameter specifies the precision that you want to round to. Usually this is the number of decimal places, and if you leave it out it'll default to =0=, which would round to the nearest integer. Putting =-1= means that it'll round one place to the left of the decimal point, i.e. to the nearest 10.
+
+[fn:2] Doom Emacs uses [[https://github.com/emacs-evil/evil-collection][evil-collection]] which remaps some of the keys in calc mode to be more aligned with evil mode. One of the [[https://github.com/emacs-evil/evil-collection/blob/d26f7acbd9f7a32ee7dee33d098d60406eff31be/modes/calc/evil-collection-calc.el#L79][changes]] is to remap =y= to =pP= for ~calc-copy-to-buffer~. That's why the Doom Emacs key sequence is a little weird.
+
+The way I remember it is that I want to 'put' or 'paste' the result, so I press =p=, then I remember that I want to put it in the buffer above, so I elevate the next 'p' to =P= with the shift key.
