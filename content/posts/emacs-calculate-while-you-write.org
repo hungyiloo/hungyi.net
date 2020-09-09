@@ -35,14 +35,14 @@ Ingredients:
 - 10g baking powder
    #+END_SRC
 
-   Sure you can leave it like that, but you might want to remove them. In evil mode that's easy: just =d S ]= to delete the surrounding brackets with help from [[https://github.com/emacs-evil/evil-surround][evil-surround]].
+   Sure you can leave it like that, but you might want to remove them. In evil mode that's easy: just =d s ]= to delete the surrounding brackets with help from [[https://github.com/emacs-evil/evil-surround][evil-surround]].
 #+END_COMFY
 
 * Summary
 
 Assuming you have your expression marked, your keystrokes in one line would be: =C-x * g= and =C-u y=, then delete the square brackets manually.
 
-For Doom Emacs and evil mode users, that would be =C-x * G=, =SPC u p P= then =d S ]= to delete the square brackets.
+For Doom Emacs and evil mode users, that would be =C-x * G=, =SPC u p P= then =d s ]= to delete the square brackets.
 
 * A word on calc-dispatch
 
