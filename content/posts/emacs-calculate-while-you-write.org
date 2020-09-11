@@ -2,7 +2,7 @@
 #+DATE: 2020-09-09T21:24:54+08:00
 #+TAGS[]: Emacs Doom~Emacs Power-user
 
-Let's say you're writing a recipe down but you want to scale the ingredients down by one third. The recipe calls for 280g of flour. Did I mention you also want to round to the nearest 10g?
+Let's say you're writing a recipe but you want to scale the ingredients down by one third. The recipe calls for 280g of flour. And you want to round to the nearest 10g.
 
 I applaud you if you can easily do that in your head---because I certainly can't. Also yes, it would be easy just to run your system's calculator app to get the answer, but why leave Emacs if you can help it? Doing it this way also saves you a bunch of manual copying and pasting.
 

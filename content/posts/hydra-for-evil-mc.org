@@ -1,0 +1,91 @@
+#+TITLE: An evil-mc Emacs Hydra
+#+DATE: 2020-09-11T21:11:49+08:00
+#+TAGS[]: Emacs Doom~Emacs Power-user Programming
+
+One thing sorely lacking in native Emacs is the ability to edit with multiple cursors [[https://code.visualstudio.com/docs/editor/codebasics#:~:text=VS%20Code%20supports%20multiple%20cursors,insert%20cursors%20below%20or%20above.][like VS Code]]. Fortunately for [[https://github.com/hlissner/doom-emacs][Doom Emacs]] or [[https://github.com/emacs-evil/evil][Evil]] users, there's [[https://github.com/gabesoft/evil-mc][evil-mc]]. But even with that installed, all it gives you is a bunch of commands---you still have to decide how to bind them yourself or rely on Doom's suggested bindings that map everything to the =g z= prefix for every command.
+
+But I think we can do better. Today, I'm sharing an Emacs [[https://github.com/abo-abo/hydra][hydra]] that I've been using to power up my evil-mc usage. Just put this anywhere in your =config.el=:
+
+# more
+
+#+BEGIN_SRC emacs-lisp
+(defhydra my-mc-hydra (:color pink
+                       :hint nil
+                       :pre (evil-mc-pause-cursors))
+  "
+^Match^            ^Line-wise^           ^Manual^
+^^^^^^----------------------------------------------------
+_Z_: match all     _J_: make & go down   _z_: toggle here
+_m_: make & next   _K_: make & go up     _r_: remove last
+_M_: make & prev   ^ ^                   _R_: remove all
+_n_: skip & next   ^ ^                   _p_: pause/resume
+_N_: skip & prev
+
+Current pattern: %`evil-mc-pattern
+
+"
+  ("Z" #'evil-mc-make-all-cursors)
+  ("m" #'evil-mc-make-and-goto-next-match)
+  ("M" #'evil-mc-make-and-goto-prev-match)
+  ("n" #'evil-mc-skip-and-goto-next-match)
+  ("N" #'evil-mc-skip-and-goto-prev-match)
+  ("J" #'evil-mc-make-cursor-move-next-line)
+  ("K" #'evil-mc-make-cursor-move-prev-line)
+  ("z" #'+multiple-cursors/evil-mc-toggle-cursor-here)
+  ("r" #'+multiple-cursors/evil-mc-undo-cursor)
+  ("R" #'evil-mc-undo-all-cursors)
+  ("p" #'+multiple-cursors/evil-mc-toggle-cursors)
+  ("q" #'evil-mc-resume-cursors "quit" :color blue)
+  ("<escape>" #'evil-mc-resume-cursors "quit" :color blue))
+#+END_SRC
+
+And since I'm using Doom Emacs, I've bound it to the prefix =g z= to stay somewhat in line with the default setup. Note that binding it this way will make this hydra replace *all* of the previous multiple cursor bindings under =g z=.
+
+#+BEGIN_SRC emacs-lisp
+(map!
+ (:when (featurep! :editor multiple-cursors)
+  :prefix "g"
+  :nv "z" #'my-mc-hydra/body))
+#+END_SRC
+
+* Why Use a Hydra?
+
+A hydra lets us enter and stay in a "multiple cursor creation mode" without having to press a bunch of prefix keys or modifiers before every command. This fit the way I used multiple cursors on a conceptual level:
+
+1. Create all the cursors in the appropriate places; then
+2. Check if all the cursors are perfect; if they are
+3. Start text editing.
+
+Because steps 1 and 2 purely involve multiple cursor stuff, it's perfectly OK for some of the regular editing keys to be commandeered for the sole purpose of manipulating cursors.
+
+And yes, it's useful to have the movement keys still available when messing around with cursors, which brings us to...
+
+* Notable Benefits
+
+#+BEGIN_COMFY
+1. *Most movement keys are still free to be used while in the hydra.*
+
+   The ~:color~ is set to =pink= so that keys that are foreign to the hydra are still passed through without complaint. I've also chosen keys that don't interfere with basic vim movement.
+
+2. *Automatically pause all evil-mc cursors when entering the hydra.*
+
+   I always found it annoying that the cursors could move around while I was setting them up. No other editor I've used so far has had any (obvious) way of freezing the cursors during set up, but this hydra can. You can also control the pausing manually by using =p=.
+
+3. *Automatically unfreeze all evil-mc cursors when exiting the hydra*, ready for editing.
+
+4. *Allows easy skipping of matching text without creating cursors* using the =n= and =N= keys.
+
+   This is roughly similar to the regular vim searching behavior, so it's easier for me to remember.
+
+5. *Easy access to correction commands*, like toggle at point =z=, remove last mistake =r= or remove all =R= to start again.
+
+   Multiple cursors is messy, and I almost never get it right on the first try, but this makes it easy to reset and get back on track using very few keystroke.
+
+6. *Just hold shift to make cursors vertically up and down* with =K= and =J=.
+
+   Skipping is easy too. Just let go of shift and use the regular vim =k= and =j= movement keys.
+#+END_COMFY
+
+I've left out bindings for commands like ~evil-mc-make-and-goto-next-cursor~ and ~evil-mc-skip-and-goto-prev-cursor~ as well as all of the cursor-specific navigation keys because I rarely use them right now.
+
+Of course, you're free to bind them yourself. Might I suggest using some of these directional keys? =[= =]= =<= =>=.
