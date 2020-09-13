@@ -567,6 +567,9 @@ sup a {
 .footnote-body p:first-child {
   display: inline;
 }
+.footnotes {
+  font-size: 90%;
+}
 .footnotes-separatator {
   margin-block-start: 3em;
 }
