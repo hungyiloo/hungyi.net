@@ -1,0 +1,113 @@
+#+TITLE: Learning Emacs More Effectively
+#+DATE: 2020-09-13T20:17:25+08:00
+#+TAGS[]: Emacs
+
+It can be confusing as a new Emacs user. The tutorials that you read online often throw a bunch of obscure command names or long chains of key sequences at you without explaining the /why/ and the /how/ behind the /what/.
+
+Today I'll outline what I think are the *fundamentals* for exploring Emacs features. These techniques can be used if you're just messing around in Emacs on your own, but they can even help you understand other Emacs tutorials better. You might consider this a tutorial for how to follow other Emacs tutorials.
+
+# more
+
+* Understanding Keybinding Notation
+
+You'll probably be familiar with keyboard shortcuts written like =Ctrl+c= to copy something to the clipboard or =Alt+F4= to close a window. Emacs keybindings are not too different from those, but the way they are written is more condensed:
+
+- =Ctrl+c= becomes =C-c=
+- =Alt+F4= becomes =M-f4=
+- =Ctrl+Alt+Del= becomes =C-M-delete=[fn:1]
+- Unmodified keys like the letter =x= are written as is
+
+Sometimes Emacs keybindings require you to enter several keys in a row, in a pattern. Each step of the pattern is separated by a space where you should let go of all keys.
+
+For example, the keystrokes to enter a ½ symbol are =C-x 8 1 / 2=. This means you should press =Ctrl+x=, let go, then type the individual keys =8=, =1=, =/= and finally =2=.
+
+Some instructions will require you to enter long strings of text, for example a command name or a search query. In this case, the spaces may be omitted (it would be too long to put a space between every letter). You'll also need to hit enter or =RET= at the end of the input.
+
+Look at the example =M-x save-buffer=. The first part clearly translates to =Alt+x=, but the second part is a little more confusing since it has a =-= in it.
+
+If you think about it, it's impossible for =save= to be a modifier like =Ctrl= or =Alt=. Moreover, =save-buffer= has no spaces, so we should read it as a string of characters that should be typed in. In other words, press =Alt+x= then type in the exact characters "save-buffer" and hit enter.
+
+[fn:1] Sometimes special keys like "delete" and "backspace" are surrounded by angle brackets, like =<delete>= and =<backspace>=. Emacs is quite forgiving with this.
+
+
+* Emacs Talks to You in the Minibuffer
+
+In most cases, Emacs will give you instructions and feedback in the minibuffer. This is the small area at the bottom of your Emacs window, and it acts kind of like a status bar that can /sometimes/ take input directly from you.
+
+When I'm not focusing on the content of my work, my eyes are invariably glued to the minibuffer area. This is doubly true if I'm trying to do something new in Emacs that I've never done before.
+
+If you want to learn more about what Emacs is doing or what options you have, especially if you're stuck in a weird state, then look in the minibuffer. Emacs might be trying to get your attention. Get into the habit of checking down there often. It's just like checking the mirrors when you're driving.
+
+
+* Emergency Abort
+
+Uh oh. You've pressed the wrong keys and you have no idea what Emacs is doing. Maybe it's asking you a weird question. Or maybe it's just hanging. Your CPU fan starts spinning up. What if it's trying to download the /entire/ internet? What do you do now?
+
+Don't panic. Keep calm and press =C-g=. It's the universal "abort" command[fn:2]. Get used to mashing it when you want to abort, abort, abort!
+
+I'm pretty sure even seasoned Emacs users mash =C-g= a lot. Everyone has butterfingers now and then.
+
+[fn:2] Emacs can generate popups when you do certain things. If =C-g= doesn't close them, try =q=, a common binding to dismiss popup windows. If =q= doesn't work or does something weird, =C-g= to abort that, then try =C-x 0= or =M-x quit-window= to close the window.
+
+
+* Calling Commands Directly with =M-x=
+
+Most of the power of Emacs comes with its command[fn:3] system. If you know the name of a command, you can call it by pressing =M-x= and typing it. When you read some instructions on [[https://emacs.stackexchange.com/][Stack Exchange]] or [[https://www.reddit.com/r/emacs/][Reddit]] and they casually mention a command that might help you, just type =M-x= followed by the command name and it'll run.
+
+This is the slowest way to invoke a command, but it's also the easiest to remember since commands are usually named very sensibly. Even if you remember just part of the command name, you'll usually be able to find a partial match in the =M-x= list.
+
+For example, say you've forgotten the keystrokes /and/ the exact command name for saving a buffer (a.k.a. file). You can type =M-x save= and hit =TAB= to get suggestions. Looking through the list you'll likely come across the =save-buffer= command, which is what you needed.
+
+The magic in =M-x= is that *almost every action in Emacs is a command* so =M-x= is /the/ ultimate entry point to everything you can possibly do in Emacs. This is why a lot of Emacs symbolism is decorated with =M-x=---it really is the heart and soul of Emacs.
+
+[fn:3] Commands are sometimes called interactive functions. Emacs has a master list of functions, but not all of them are meant to be called "interactively" by you, the user.
+
+* What Command Does This Key Run?
+
+You've been given advice by a kind internet stranger to run the command =C-x * q= with the promise that it will help you. Sure enough when you press it, you get a neat little calculator in the minibuffer at the bottom of Emacs. Just what the doctor ordered!
+
+But wait---what sorcery is this? Is there more to learn? How do you open pandora's box for all things "calculator" in Emacs?
+
+In other words: *you want to know what command* =C-x * q= runs so that you can understand it better. Introducing =describe-key=, a command that lets you enter any key sequence; if the sequence is bound to a command, it will tell you what it is.
+
+You can either call it manually via =M-x describe-key= or you can use its most common keybinding =C-h k= (read: "get me Help for this Key"). After that, just type your key sequence and Emacs will try its best explain itself.
+
+In this case, we type in =C-x *= and then Emacs cuts us off early, telling us that it's bound to =calc-dispatch=. Ah, this means the =q= key is handled separately by =calc-dispatch=. The help text for =calc-dispatch= even tells us where to look for more help, i.e. =M-x calc-dispatch-help=.
+
+* What Keys Run This Command?
+
+So you've found a cool new command =upcase-word= and you're using it regularly, but you're getting tired of calling =M-x upcase-word= all the time. Maybe there's a keybinding that makes it easier to call. The question is: how do we find it?
+
+=M-x describe-function= is how. The keybinding for this helpful command is =C-h f= (read: "get me Help for this Function").
+
+When you call =describe-function= on =upcase-word=, a window will pop up giving you all the information Emacs has on =upcase-word=, including a line that says:
+
+#+begin_quote
+It is bound to M-u
+#+end_quote
+
+It's that simple, as long as the command you're looking at has a keybinding in your Emacs setup. If not, you'll have to manually bind it, but that's a topic for another time.
+
+* Use a Distribution
+
+My last tip for learning Emacs more effectively is to use an Emacs distribution. A distribution is a canned configuration that you can download and get started with fairly quickly. Think of it like one of those dinner kits that are delivered to your door so you can practice cooking without having to worry about too many of the details.
+
+I recommend [[https://github.com/hlissner/doom-emacs][Doom Emacs]], which is what I use daily.
+
+Why use a distribution instead of learning things from scratch?
+
+#+BEGIN_COMFY
+1. *Distributions don't just make Emacs easier to use---they make Emacs easier to learn too.*
+
+   There are usually lots of small tweaks and third-party packages that are installed that expose a lot of the power of Emacs in a user friendly way. You'll see things at your fingertips that you would not normally discover (quickly) on your own.
+
+2. *I believe distributions have better documentation and helpful resources for beginners that want to get productive ASAP.*
+
+   Sure, Emacs has a very exhaustive (and exhausting) [[https://www.gnu.org/software/emacs/manual/html_node/emacs/index.html][manual]], which is a great low-level resource for text editing, but it definitely doesn't get you started quickly with high-level goals like programming in C# with intellisense or efficient writing and editing in [[https://orgmode.org/][Org mode]].
+
+3. *Distributions are a great entry point for learning how Emacs can be properly customized.*
+
+   Learning about how they work will teach you more about Emacs in a few weeks than you could learn in months on your own. They also modernize Emacs in a way that makes you less likely to give up on a text editor that was primarly designed for use in 1985.
+#+END_COMFY
+
+Good luck and have fun!
