@@ -1,0 +1,252 @@
+#+TITLE: ReactiveX and RxJS in Angular
+#+TAGS[]: Code TypeScript JavaScript RxJS Reactive~Programming Web Front-end Programming
+#+DATE: 2020-09-22T19:20:31+08:00
+
+It's been more than 5 years since I started writing my UI code in a [[https://en.wikipedia.org/wiki/Reactive_programming][reactive]] fashion with [[http://reactivex.io/][ReactiveX]]. I've used [[https://github.com/ReactiveX/RxJava][RxJava]] for Android development, [[https://www.reactiveui.net/][ReactiveUI]] for Xamarin development, and now I'm using [[https://github.com/ReactiveX/rxjs][RxJS]] for Angular development. I stuck with it not because it was easy---it definitely wasn't---but because something about it just felt so /right/. For the longest time I couldn't explain it, and I'm not even sure I can explain it succinctly now. But today I want to use an example to at least /try/ to illustrate just a touch of the mystery and allure that drew me into Reactive[fn:1] Programming in the first place. Let's dive in.
+
+# more
+
+[fn:1] Don't get /reactive programming/ confused with the JavaScript library called [[https://reactjs.org/][React]]. They aren't the same thing. React is a library, while reactive programming is an abstract programming technique that uses streams of events to model data flow. You can use one without the other, or even both.
+
+* The (Old) Imperative Way
+
+It's an extremely common pattern to want to show a loading indicator to a user while waiting on some long operation, like a web response. On the surface it's not a particularly complicated task. Let's use a hypothetical Angular component that monitors some stock prices an example.
+
+The key to this method is a boolean flag that represents the state of the loading indicator. If it's ~true~ then show the loading indicator, otherwise hide it.
+
+(See a working demo of the following code [[https://codesandbox.io/s/sleepy-paper-cwvpq][in this CodeSandbox]])
+
+#+BEGIN_SRC typescript
+// stock-prices.component.ts
+@Component({
+  selector: "app-stock-prices",
+  templateUrl: "./stock-prices.component.html"
+})
+export class StockPricesComponent implements OnInit, OnDestroy {
+  // A reference to the 10-second interval so we can
+  // stop it and clean up when the component is destroyed.
+  private autoRefreshInterval: NodeJS.Timer = null;
+  // The current stock data that the template should display
+  stocks: Stock[];
+  // A boolean flag that represents loading state
+  isLoading = false;
+
+  constructor(private service: StockService) {}
+
+  ngOnInit() {
+    // Load the latest data on initializing
+    this.refresh();
+    // Set up the 10-second auto refresh cycle
+    this.autoRefreshInterval = setInterval(() => this.refresh(), 10000);
+  }
+
+  ngOnDestroy() {
+    // Clean up the auto refresh cycle when the component dies
+    if (this.autoRefreshInterval) {
+      clearInterval(this.autoRefreshInterval);
+    }
+  }
+
+  refresh() {
+    // Don't trigger another refresh if we're already loading
+    if (this.isLoading) {
+      return;
+    }
+    // Turn on the loading indicator
+    this.isLoading = true;
+    // Send a request to get the latest stock information
+    this.service
+      .getLatestStocks()
+      .then((response) => {
+        // Update the stock data so the template can see it
+        this.stocks = response.stocks;
+        // Turn off the loading indicator
+        this.isLoading = false;
+      })
+      .catch((err) => {
+        // Fail gracefully
+        console.error(err);
+        // Try not to get stuck in a loading state after failure
+        this.isLoading = false;
+      });
+  }
+}
+interface Stock {
+  name: string;
+  price: number;
+}
+#+END_SRC
+
+#+BEGIN_SRC html
+<!--stock-prices.component.html-->
+<button (click)="refresh()">Refresh</button>
+<span *ngIf="isLoading; else stockList">
+  Please wait. Getting latest stock prices...
+</span>
+<ng-template #stockList>
+  <ul>
+    <li *ngFor="let stock of stocks">
+      {{stock.name}}
+      ${{stock.price | number:'1.2-2'}}
+    </li>
+  </ul>
+</ng-template>
+#+END_SRC
+
+** Benefits With The Imperative Way
+
+The code is standard. It uses no cleverness or special techniques, which is generally a really Good Thing™. It's readable. It's relatively easy to extend and build upon for new functionality.
+
+So far, it's still easy to maintain...
+
+** Concerns With The Imperative Way
+
+I don't know about you, but mutating ~isLoading~ on multiple lines under different conditions and storing a timer reference to be cleaned up like that makes me quite uncomfortable. The questions in my head go something like this:
+
+- What if the user spams the refresh button?
+- What if the auto refresh somehow coincides with the click of a refresh button?
+- Am I 100% sure that it's impossible for two requests to be running in parallel, just with the guard at the beginning of ~refresh()~?
+- Is it robust enough to turn off ~isLoading~ in ~catch()~?
+- What happens if the component is destroyed before entering ~then()~?
+- If I add more code, do I have to keep checking ~isLoading~ everywhere---or worse, set its value in even more places?
+
+Additional, to see what affects the value of ~isLoading~, you have to read pretty much the *entire* component or search for its references. If you want to change the behavior of ~isLoading~, you'll have to comb through the component and decide whether or not to update the relevant lines.
+
+#+BEGIN_QUOTE
+With the imperative approach, you have to search the whole component and the template to understand the lifecycle of any single property. It could have been mutated anywhere.
+#+END_QUOTE
+
+* The Reactive Way
+
+In ReactiveX, everything is modelled as an Observable---sometimes also called a stream. The essence of an observable stream is that it can be observed for changes by an observer. The observer then decides how it should react to the emitted changes; the observable stream does not need to know who's listening and what they're doing with the emitted data.
+
+In more concrete Angular terms, the component TypeScript exposes a set of observable streams and the template acts as the observer (using the ~async~ pipe) and decides how to update itself based on the emitted data.
+
+The key is that *observable streams can be chained together* logically and functionally so that data can be emitted and transformed through several steps before it even reaches the template. This is ReactiveX's super power, and it's why RxJS has [[https://rxjs-dev.firebaseapp.com/guide/operators][many, many operators]] for doing these data transformations.
+
+Now, let's take the same component from above and convert everything we can possibly convert into RxJS Observables.
+
+(See a working demo of the following code [[https://codesandbox.io/s/polished-morning-6gimj][in this CodeSandbox]])
+
+#+BEGIN_SRC typescript
+// stock-prices.component.ts
+@Component({
+  selector: "app-stock-prices",
+  templateUrl: "./stock-prices.component.html"
+})
+export class StockPricesComponent implements OnDestroy {
+  // A stream that emits when the component is dying
+  readonly destroyed$ = new Subject();
+  // A stream that emits every 10 seconds until the component dies
+  private readonly autoRefresh$ = interval(10000).pipe(
+    takeUntil(this.destroyed$)
+  );
+  // A stream that emits when the user triggers a refresh
+  readonly manualRefresh$ = new Subject();
+  // A stream of stock service responses
+  readonly stocksResponse$: Observable<{ stocks: Stock[] }> =
+    // Send a new request on either auto or manual refresh
+    merge(this.autoRefresh$, this.manualRefresh$).pipe(
+      // Also start off with a request at the beginning
+      startWith(null),
+      // Doubled-up requests are ignored
+      exhaustMap(() =>
+        this.service.getLatestStocks().pipe(
+          catchError((err) => {
+            console.error(err);
+            // Emit null if the response was a lemon
+            return null;
+          })
+        )
+      ),
+      // Share response data between all listeners
+      publishReplay(1),
+      refCount()
+    );
+  // A stream of latest valid stock data
+  readonly stocks$: Observable<Stock[]> = this.stocksResponse$.pipe(
+    filter((response) => response != null),
+    map((response) => response.stocks),
+    // Share stock data between all listeners
+    publishReplay(1),
+    refCount()
+  );
+  // A stream of boolean values that represent loading state
+  readonly isLoading$ = merge(
+    this.autoRefresh$.pipe(mapTo(true)),
+    this.manualRefresh$.pipe(mapTo(true)),
+    this.stocksResponse$.pipe(mapTo(false))
+  );
+
+  constructor(private service: StockService) {}
+
+  ngOnDestroy() {
+    // Signal to all the streams that the component is dying
+    this.destroyed$.next();
+  }
+}
+interface Stock {
+  name: string;
+  price: number;
+}
+#+END_SRC
+
+#+BEGIN_SRC html
+<!--stock-prices.component.html-->
+<button (click)="manualRefresh$.next()">Refresh</button>
+<span *ngIf="isLoading$ | async; else stockList">
+  Please wait. Getting latest stock prices...
+</span>
+<ng-template #stockList>
+  <ul>
+    <li *ngFor="let stock of stocks$ | async">
+      {{stock.name}}
+      ${{stock.price | number:'1.2-2'}}
+    </li>
+  </ul>
+</ng-template>
+#+END_SRC
+
+** Benefits With The Reactive Way
+
+Notice how everything is [[https://en.wikipedia.org/wiki/Declarative_programming][declarative]]? There are no methods to call. There's nothing to invoke.
+
+Everything to do with stocks is in the ~stocks$~ stream declaration and everything to do with the loading state is in the ~isLoading$~ declaration, etc. You can look at an ~async~ pipe in the template and trace it back to a ~stream$~ and see all of its dependent streams in the one statement.
+
+In general, the streams are ordered such that the dependencies for any particular stream are declared above it. Like this:
+
+#+BEGIN_SRC typescript
+const x = 2;
+const y = 3;
+const sum = x + y;
+#+END_SRC
+
+In this example, ~sum~ has a value that's *only* dependent on ~x~ and ~y~, because its declaration only contains the variables ~x~ and ~y~. Moreover, all 3 are constants, similar to how our Angular component's streams are all ~readonly~. This makes their state very predictable since nothing external can mess around with them.
+
+Another way to illustrate the elegance of this is how we might /remove/ the loading state if we no longer needed it: *just delete the declaration* for ~isLoading$~ and delete its only reference in the template. It's that simple!
+
+#+begin_quote
+With the reactive approach, your streams are immutable and their entire state is condensed into one block of code. This makes it hard to mess up its output.
+#+end_quote
+
+** Concerns With The Reactive Way
+
+I'll be the first to admit that RxJS is undoubtedly obtuse. The operators only make sense once you've learned what they do, and you may spend hours looking at [[https://rxmarbles.com/][marble diagrams]] to try to nut things out.
+
+Angular in particular also tends to have this "all in" or "all out" vibe with RxJS. Once you convert one thing to a stream, you'll start to feel that you have to convert everything else to a stream too.
+
+This also means a codebase that's heavy with RxJS is going to be tough for new developers to pick up. The learning curve is steep and it's hard to clearly justify why it's worth the extra work up front.
+
+* Why RxJS Is Worth It
+
+If I could sum it up in 3 points:
+
+#+BEGIN_COMFY:
+1. RxJS allows for truly declarative reactive programming with virtually zero unpredictable mutations.
+
+2. RxJS encourages you to cover *all* edge cases to make your code more robust, since reactive and declarative programming make you reason about these from the outset.
+
+3. RxJS helps you couple related things and decouple unrelated things. Related streams will be clearly dependent based on their declarations, and unrelated streams won't even know about each other.
+#+END_COMFY
+
+Front-end development can be messy business, particularly since users are unpredictable and failures in the user environment are common. Hopefully I've shown that being declarative and reactive with your code has the potential to help you deal with the mess just a little bit better than you could before, even if it does take a bit of effort to learn something new.
