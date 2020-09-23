@@ -1,4 +1,4 @@
-#+TITLE: ReactiveX and RxJS in Angular
+#+TITLE: Why I Use ReactiveX and RxJS in Angular
 #+TAGS[]: Code TypeScript JavaScript RxJS Reactive~Programming Web Front-end Programming
 #+DATE: 2020-09-22T19:20:31+08:00
 
@@ -14,7 +14,7 @@ It's an extremely common pattern to want to show a loading indicator to a user w
 
 The key to this method is a boolean flag that represents the state of the loading indicator. If it's ~true~ then show the loading indicator, otherwise hide it.
 
-(See a working demo of the following code [[https://codesandbox.io/s/sleepy-paper-cwvpq][in this CodeSandbox]])
+(See a working demo of the following code [[https://codesandbox.io/s/sleepy-paper-cwvpq?file=/src/app/stock-prices.component.ts][in this CodeSandbox]])
 
 #+BEGIN_SRC typescript
 // stock-prices.component.ts
@@ -110,7 +110,7 @@ I don't know about you, but mutating ~isLoading~ on multiple lines under differe
 - What happens if the component is destroyed before entering ~then()~?
 - If I add more code, do I have to keep checking ~isLoading~ everywhere---or worse, set its value in even more places?
 
-Additional, to see what affects the value of ~isLoading~, you have to read pretty much the *entire* component or search for its references. If you want to change the behavior of ~isLoading~, you'll have to comb through the component and decide whether or not to update the relevant lines.
+Additionally, to see what affects the value of ~isLoading~, you have to read pretty much the *entire* component or search for its references. If you want to change the behavior of ~isLoading~, you'll have to comb through the component and decide whether or not to update the relevant lines.
 
 #+BEGIN_QUOTE
 With the imperative approach, you have to search the whole component and the template to understand the lifecycle of any single property. It could have been mutated anywhere.
@@ -126,7 +126,7 @@ The key is that *observable streams can be chained together* logically and funct
 
 Now, let's take the same component from above and convert everything we can possibly convert into RxJS Observables.
 
-(See a working demo of the following code [[https://codesandbox.io/s/polished-morning-6gimj][in this CodeSandbox]])
+(See a working demo of the following code [[https://codesandbox.io/s/eager-gates-foxdz?file=/src/app/stock-prices.component.ts][in this CodeSandbox]])
 
 #+BEGIN_SRC typescript
 // stock-prices.component.ts
@@ -138,9 +138,7 @@ export class StockPricesComponent implements OnDestroy {
   // A stream that emits when the component is dying
   readonly destroyed$ = new Subject();
   // A stream that emits every 10 seconds until the component dies
-  private readonly autoRefresh$ = interval(10000).pipe(
-    takeUntil(this.destroyed$)
-  );
+  readonly autoRefresh$ = interval(10000).pipe(takeUntil(this.destroyed$));
   // A stream that emits when the user triggers a refresh
   readonly manualRefresh$ = new Subject();
   // A stream of stock service responses
@@ -166,10 +164,7 @@ export class StockPricesComponent implements OnDestroy {
   // A stream of latest valid stock data
   readonly stocks$: Observable<Stock[]> = this.stocksResponse$.pipe(
     filter((response) => response != null),
-    map((response) => response.stocks),
-    // Share stock data between all listeners
-    publishReplay(1),
-    refCount()
+    map((response) => response.stocks)
   );
   // A stream of boolean values that represent loading state
   readonly isLoading$ = merge(
