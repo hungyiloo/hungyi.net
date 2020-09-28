@@ -110,13 +110,15 @@ I don't know about you, but mutating ~isLoading~ on multiple lines under differe
 - What happens if the component is destroyed before entering ~then()~?
 - If I add more code, do I have to keep checking ~isLoading~ everywhere---or worse, set its value in even more places?
 
-Additionally, to see what affects the value of ~isLoading~, you have to read pretty much the *entire* component or search for its references. If you want to change the behavior of ~isLoading~, you'll have to comb through the component and decide whether or not to update the relevant lines.
+Note that the ~isLoading~ logic is mixed (i.e. coupled) with the stock data request logic. The lines of code that set ~isLoading~ are literally intertwined with the Promise handling for ~getLatestStocks()~.
+
+Put another way, to see what affects the value of ~isLoading~ you have to read pretty much the *entire* component or search for its references. This is because imperative programming with side effects makes it easy to ignore the [[https://en.wikipedia.org/wiki/Single-responsibility_principle][Single-responsibility principle]].
 
 #+BEGIN_QUOTE
 With the imperative approach, you have to search the whole component and the template to understand the lifecycle of any single property. It could have been mutated anywhere.
 #+END_QUOTE
 
-* The Reactive Way
+* The Reactive & Declarative Way
 
 In ReactiveX, everything is modelled as an Observable---sometimes also called a stream. The essence of an observable stream is that it can be observed for changes by an observer. The observer then decides how it should react to the emitted changes; the observable stream does not need to know who's listening and what they're doing with the emitted data.
 
@@ -124,7 +126,7 @@ In more concrete Angular terms, the component TypeScript exposes a set of observ
 
 The key is that *observable streams can be chained together* logically and functionally so that data can be emitted and transformed through several steps before it even reaches the template. This is ReactiveX's super power, and it's why RxJS has [[https://rxjs-dev.firebaseapp.com/guide/operators][many, many operators]] for doing these data transformations.
 
-Now, let's take the same component from above and convert everything we can possibly convert into RxJS Observables.
+Now, let's take the same component from above and convert everything we possibly can into RxJS Observables.
 
 (See a working demo of the following code [[https://codesandbox.io/s/eager-gates-foxdz?file=/src/app/stock-prices.component.ts][in this CodeSandbox]])
 
@@ -202,7 +204,7 @@ interface Stock {
 </ng-template>
 #+END_SRC
 
-** Benefits With The Reactive Way
+** Benefits With The Reactive & Declarative Way
 
 Notice how everything is [[https://en.wikipedia.org/wiki/Declarative_programming][declarative]]? There are no methods to call. There's nothing to invoke.
 
@@ -221,10 +223,10 @@ In this example, ~sum~ has a value that's *only* dependent on ~x~ and ~y~, becau
 Another way to illustrate the elegance of this is how we might /remove/ the loading state if we no longer needed it: *just delete the declaration* for ~isLoading$~ and delete its only reference in the template. It's that simple!
 
 #+begin_quote
-With the reactive approach, your streams are immutable and their entire state is condensed into one block of code. This makes it hard to mess up its output.
+With the reactive approach, each of your streams are immutable and they have just a single responsibility. This makes it hard to mess up their states.
 #+end_quote
 
-** Concerns With The Reactive Way
+** Concerns With The Reactive & Declarative Way
 
 I'll be the first to admit that RxJS is undoubtedly obtuse. The operators only make sense once you've learned what they do, and you may spend hours looking at [[https://rxmarbles.com/][marble diagrams]] to try to nut things out.
 
@@ -237,7 +239,7 @@ This also means a codebase that's heavy with RxJS is going to be tough for new d
 If I could sum it up in 3 points:
 
 #+BEGIN_COMFY:
-1. RxJS allows for truly declarative reactive programming with virtually zero unpredictable mutations.
+1. RxJS allows for truly declarative reactive programming with virtually zero unpredictable mutations[fn:2].
 
 2. RxJS encourages you to cover *all* edge cases to make your code more robust, since reactive and declarative programming make you reason about these from the outset.
 
@@ -245,3 +247,5 @@ If I could sum it up in 3 points:
 #+END_COMFY
 
 Front-end development can be messy business, particularly since users are unpredictable and failures in the user environment are common. Hopefully I've shown that being declarative and reactive with your code has the potential to help you deal with the mess just a little bit better than you could before, even if it does take a bit of effort to learn something new.
+
+[fn:2] That is if you minimize your use of the [[https://rxjs-dev.firebaseapp.com/api/operators/tap][tap]] operator. It might be tempting to use it to trigger changes between streams. But if you avoid temptation and do your best to build your streams without side effects, you'll end up with more robust code.

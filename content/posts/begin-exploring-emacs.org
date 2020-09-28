@@ -30,14 +30,15 @@ If you think about it, it's impossible for =save= to be a modifier like =Ctrl= o
 [fn:1] Sometimes special keys like "delete" and "backspace" are surrounded by angle brackets, like =<delete>= and =<backspace>=. Emacs is quite forgiving with this.
 
 
-* Emacs Talks to You in the Minibuffer
+* Emacs Talks to You in the Echo Area
 
-In most cases, Emacs will give you instructions and feedback in the minibuffer. This is the small area at the bottom of your Emacs window, and it acts kind of like a status bar that can /sometimes/ take input directly from you.
+In most cases, Emacs will give you instructions and feedback in the echo area. This is the small area at the bottom of your Emacs window, and it acts kind of like a status bar that can /sometimes/ take input directly from you[fn:4].
 
-When I'm not focusing on the content of my work, my eyes are invariably glued to the minibuffer area. This is doubly true if I'm trying to do something new in Emacs that I've never done before.
+When I'm not focusing on the content of my work, my eyes are invariably glued to the echo area. This is doubly true if I'm trying to do something new in Emacs that I've never done before.
 
-If you want to learn more about what Emacs is doing or what options you have, especially if you're stuck in a weird state, then look in the minibuffer. Emacs might be trying to get your attention. Get into the habit of checking down there often. It's just like checking the mirrors when you're driving.
+If you want to learn more about what Emacs is doing or what options you have, especially if you're stuck in a weird state, then look in the echo arae. Emacs might be trying to get your attention. Get into the habit of checking down there often. It's just like checking the mirrors when you're driving.
 
+[fn:4] When the echo area can take input from you like a mini text editor, then it's called a "minibuffer".
 
 * Emergency Abort
 
