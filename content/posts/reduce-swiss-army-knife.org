@@ -2,13 +2,11 @@
 #+DATE: 2020-09-28T12:09:03+08:00
 #+TAGS[]: Code JavaScript Web Front-end Programming
 
-There's a little method that's built into modern JavaScript that I've seen a lot of developers overlook, even when they're dealing with array or list aggregation. I suspect it's because of its abstract nature---much like other functional programming primitives---which doesn't exactly reveal any obvious use cases. But that's precisely why it's my favorite programming Swiss Army knife: you can do a lot more with it than you realise[fn:1].
+There's a little Array method in JavaScript that I've seen a lot of developers overlook. I suspect it's because of its abstract nature that doesn't exactly lead developers to any obvious use cases. But that's why I think it's a great programming Swiss Army knife: you can do a lot more with it than you might realise[fn:1]. Let me introduce you to my friend, [[https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce][~Array.prototype.reduce()~]]. Today, I'll show you some creative ways to use it that may just inspire you.
 
 [fn:1] And just like a Swiss Army knife, just because you /can/ do almost everything with it doesn't mean you /should/. Don't try to fell a tree with a Swiss Army knife; and don't try to use ~reduce~ to sort an array.
 
 # more
-
-Let me introduce you to my friend, [[https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce][~Array.prototype.reduce()~]].
 
 * The Basics
 
@@ -31,7 +29,7 @@ Summing a list of numbers is an example that's been repeated ad nauseam[fn:2] on
 [1,2,3,4].reduce((acc, curr) => acc + curr, 0); // => 10
 #+END_SRC
 
-In all seriousness, it's a great use case for ~reduce~. But because this example is so common, I'm sure many people think numerical summation or aggregation is the only strong suit of ~reduce~; I assure you it's not!
+Admittedly, it's a great use case for ~reduce~. But because this example is so common, I'm sure many people think numerical summation or aggregation is the only strong suit of ~reduce~; I assure you it's not!
 
 First let's take a detour to give you a taste of how fundamental the concept of ~reduce~ actually is.
 
@@ -142,62 +140,15 @@ return {
 
 Note that the above implementations are for demonstration purposes only. They're not as optimized and definitely less readable than their simpler counterparts. *Do not* blindly replace everything with ~reduce~.
 
-However, if customizing the use of ~reduce~ above allows you to achieve something that you couldn't before, then by all means reduce away! Which brings us to...
+However, if customizing the use of ~reduce~ above allows you to achieve something that you couldn't before, then by all means ~reduce~ away! Which brings us to...
 
 * Things That Are Definitely Easier With Reduce
 
 I'll show you a few creative uses for ~reduce~ that you might not have thought of, but this is by no means an exhaustive list. ~reduce~ is too flexible of a tool to have a finite list of use cases.
 
-As long as you have to solve a problem with a list or array, you should consider reduce (if there's no other readily-available way to do it).
+As long as you have to solve a problem with a list or array, you should consider ~reduce~ if there's no other readily-available way to do it.
 
-** Example 1: Boolean Aggregation
-
-Other than [[#summation-example][summation]] and basic repeated arithmetic, there are some other interesting examples of aggregation that aren't immediately obvious.
-
-Have you ever had a list of boolean conditions and you want to check if they're all true?
-
-#+BEGIN_SRC js :results silent
-const conditions = [
-  3 > 2,
-  4 % 2 === 0,
-  [] == false,
-  '' == false,
-  !!1,
-  !!!null
-];
-
-conditions.reduce((acc, curr) => acc && curr, true); // => true
-#+END_SRC
-
-In fact you can define some useful boolean aggregators with reduce:
-
-#+BEGIN_SRC js :results silent
-// Returns true if all conditions are true (as above)
-function all(conditions) {
-  return conditions.reduce((acc, curr) => acc && curr, true);
-}
-all([false, true, false]);  // => false
-all([false, false, false]); // => false
-all([true, true, true]);    // => true
-
-// Returns true if any conditions are true
-function any(conditions) {
-  return conditions.reduce((acc, curr) => acc || curr, false);
-}
-any([false, true, false]);  // => true
-any([false, false, false]); // => false
-any([true, true, true]);    // => true
-
-// Returns true if none of the conditions are true
-function none(conditions) {
-  return !any(conditions);
-}
-none([false, true, false]);  // => false
-none([false, false, false]); // => true
-none([true, true, true]);    // => false
-#+END_SRC
-
-** Example 2: Key-value Pair Aggregation
+** Example 1: Key-value Pair Aggregation
 
 Sometimes you'll find yourself with an array of key-value pairs that you would rather have as one single JavaScript object instead. There are several ways to do this[fn:3], but ~reduce~ can be a really good, idiomatic choice.
 
@@ -218,7 +169,7 @@ return pairs.reduce((acc, curr) => ({...acc, [curr.key]: curr.value}), {});
 
 [fn:3] If your data is in the right format, you can use ~Object.fromEntries()~. If it isn't in the right format, you can ~map~ it into the right format beforehand, but by then you might as well use ~reduce~ and get it done in one step. You might also consider ~new Map(pairs)~ if you're using the object as a dictionary-like lookup.
 
-** Example 3: Cumulative Mapping
+** Example 2: Cumulative Arithmetic
 
 The accumulator pattern that ~reduce~ uses makes it intuitive to do cumulative sums, since you have immediate access to the accumulated data at each step. You also have easy access to the loop index (declared as ~i~ below).
 
@@ -238,14 +189,16 @@ return input.reduce((acc, curr, i) => [
 ]
 #+end_src
 
-** Example 4: Group By
+** Example 3: Group By
 
 In plain JavaScript there's no obvious way to do group-by on a key. Your options are:
-1. Use an external library like [[https://underscorejs.org/][Underscore.js]]
+1. Use an external library like [[https://lodash.com/][Lodash]]
 2. Loop through manually and build your own map or JavaScript object
 3. Use ~reduce~
 
-I think the most idiomatic way is to use ~reduce~ since it avoids side effects and doesn't leave behind any garbage assignments to clean up. This is how:
+I think the most idiomatic way is to use ~reduce~ since it avoids side effects and doesn't leave behind any garbage assignments to clean up. With ~reduce~ you also don't have to rely on third party libraries that might  add bloat to your code too.
+
+This is how:
 
 #+BEGIN_SRC js :results value code
 const ingredients = [
@@ -292,7 +245,7 @@ Map(4) {
 }
 #+end_src
 
-** Example 5: Structural Transformation
+** Example 4: Structural Transformation
 
 Actually, ~reduce~ is not not limited to mapping one-to-one or reducing to a single return value. Just like how ~filter~ can return fewer items than the original array, we can extend this concept to do all sorts of structural transformations and collapsing.
 

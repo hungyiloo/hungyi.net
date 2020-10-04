@@ -1,0 +1,24 @@
+#+TITLE: A More Ergonomic Keybinding for Flycheck in Doom Emacs
+#+DATE: 2020-10-04T19:22:38+08:00
+#+TAGS[]: Doom~Emacs Emacs Programming Power-user
+
+I rely on [[https://github.com/flycheck/flycheck][flycheck]] a lot for giving me hints on type errors when I'm writing [[https://www.typescriptlang.org/][TypeScript]], but in [[https://github.com/hlissner/doom-emacs][Doom Emacs]] the flycheck commands are still bound to =C-c !=. Since I don't have flycheck configured to run 'live' on every code change (for performance reasons) I found myself pressing =C-c ! c= manually all the time, which became physically painful. But I think I've found a good rebinding that stays in line with the Doom way of doing things.
+
+# more
+
+I've chosen simply to bind all of flycheck's commands to =SPC c x= instead by putting this in my =config.el=.
+
+#+BEGIN_SRC emacs-lisp
+(after! flycheck
+  (map! :leader
+        (:prefix-map ("c" . "code")
+         "x" flycheck-command-map)))
+#+END_SRC
+
+The =SPC c= prefix is for "code" commands, which makes sense to me---flycheck is for code checking after all. And although we've lost =SPC c x='s original binding to ~flycheck-list-errors~ it's still easily accessible now through =SPC c x l=. I think =x= is a great mnemonic for errors too.
+
+Doing it this way keeps all the keys you're familiar with under =C-c != since we just forward =SPC c x= to flycheck's original command map.
+
+So now I happily mash =SPC c x c= all day and it's also much easier to go forward and backward through flycheck errors using =SPC c x n= and =SPC c x p=.
+
+Hope this helps. Happy hacking!
