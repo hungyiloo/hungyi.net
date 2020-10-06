@@ -1,0 +1,48 @@
+#+TITLE: Tearing Off Windows in Emacs
+#+DATE: 2020-10-06T18:56:00+08:00
+#+TAGS[]: Doom~Emacs Emacs Power-user
+
+Do you often yourself referring to something in Emacs over and over again, but actually doing work somewhere else? For instance: referring to API code while writing front-end code, or referring to a file while entering commands into a shell? Let's go through the ways I would normally handle this and why I think the ~tear-off-window~ command can help.
+
+# more
+
+/If you're just interested in ~tear-off-window~, skip straight to [[#tear-off-window][the last section]]./
+
+* Strategy 1: Just Keep Switching
+
+Of course there's nothing stopping you from just switching buffers (a.k.a. files) all the time. This works well if you can remember what you're referring to and you don't need to keep referring back frequently.
+
+In [[https://github.com/hlissner/doom-emacs][Doom Emacs]], the quickest way to switch between two buffers is by using =SPC `= which is bound to ~evil-switch-to-windows-last-buffer~. You can achieve something similar in plain Emacs using =C-x <left>= and =C-x <right>= to switch back and forth.
+
+* Strategy 2: Split Windows
+
+If the constant switching from Strategy 1 is interrupting your flow, then you can choose to split Emacs "frame" (a.k.a. "window" in normal speak) into multiple "windows" (a.k.a. "panels" in normal speak). You can do this vertically with two windows in a left/right arrangement, or horizontally with two windows in an up/down arrangement.
+
+In Doom Emacs, the bindings are =SPC w v= which calls ~evil-window-vsplit~ for a vertical split, and =SPC w s= which calls ~evil-window-split~ for a regular horizontal split. In plain Emacs, =C-x 2= for ~split-window-below~ and =C-x 3= ~split-window-right~ achieve something similar. This will duplicate your current window so it shows your current buffer twice.
+
+Then you can switch to whichever window you want with =SPC w w= or =C-w w= or ~other-window~ and load your desired buffer.
+
+Once you're done with the split windows, switch to the window you want to keep and use =SPC w m m= in Doom or =C-x 1= in plain Emacs to maximize your currently selected buffer, getting rid of the split. The respective commands are ~doom/window-maximize-buffer~ and ~delete-other-windows~.
+
+* Strategy 3: Open a New Frame
+
+If split windows feels claustrophobic, I get you. Sometimes it's just not enough. Perhaps you have a multi-monitor setup and you want to move things around more freely. Fortunately, unlike the ever-popular [[https://code.visualstudio.com/][VS Code]], Emacs is a /modern/ code editor that supports a multi-window---ahem, "frame"---experience out of the box (!)
+
+In Doom Emacs it's simply =SPC o f= to open a new frame with ~make-frame~. Plain Emacs users will need to use =C-x 5 2= for the same command.
+
+Once the new frame is open, feel free to load any buffer you want.
+
+* Strategy 4: Tear Off a Window (Into a New Frame)
+:PROPERTIES:
+:CUSTOM_ID: tear-off-window
+:END:
+
+What if you're already viewing the buffer that you want to refer to, or you've already got a split arrangement but it's not serving you well enough? You could open a new frame manually, but this is what ~tear-off-window~ was made for.
+
+It does exactly what you would expect:
+1. If you're viewing just one window, it'll duplicate it and show it in a new frame.
+2. If you're in a split situation, it'll hijack the currently selected window and "tear it off" into a new frame.
+
+Essentially it gives you a shortcut to go from either Strategy 1 or 2 directly to Strategy 3.
+
+And thanks to the recent [[https://github.com/hlissner/doom-emacs/commit/7b56a5310a4a55a60d5bc2813421d84c86da6ceb][commit]] in Doom Emacs, it's now conveniently bound to =SPC w T=. In plain Emacs, you may need to call it directly using =M-x tear-off-window=.
