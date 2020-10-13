@@ -1,0 +1,67 @@
+#+TITLE: Use Emacs-Tree-Sitter for Highlighting in Doom Emacs
+#+DATE: 2020-10-13T20:30:21+08:00
+#+TAGS[]: Doom~Emacs Emacs Programming Power-user
+
+[[https://tree-sitter.github.io/tree-sitter/][Tree-sitter]] is a general programming language parser that efficiently builds and updates Abstract Syntax Trees (AST) for your code. Basically, it can read programming languages and understand the structure and meaning of code /without/ having to execute it. Among many amazing things, one of its best and simplest features to take advantage of is *richer syntax highlighting*, which is what I use it for in Emacs. Today I'll show you how to set up [[https://github.com/ubolonton/emacs-tree-sitter/][emacs-tree-sitter]] in Doom Emacs[fn:1] so you can quickly get prettier code with next to no effort.
+
+# more
+
+First, add these lines to =packages.el=:
+
+#+BEGIN_SRC elisp
+(package! tsc
+  :recipe (:host github
+           :repo "ubolonton/emacs-tree-sitter"
+           :files ("core/*.el")))
+(package! tree-sitter
+  :recipe (:host github
+           :repo "ubolonton/emacs-tree-sitter"
+           :files ("lisp/*.el")))
+(package! tree-sitter-langs
+  :recipe (:host github
+           :repo "ubolonton/emacs-tree-sitter"
+           :files ("langs/*.el" "langs/queries")))
+#+END_SRC
+
+Note that the =tsc=[fn:2] package is [[https://github.com/ubolonton/emacs-tree-sitter/commit/5fe88ad0e4b5b56eab7024485f3532daf146ab17][quite a new change]] to the installation procedure. If you follow outdated instructions or otherwise had emacs-tree-sitter set up in Doom Emacs before today, you may get a "Could not find package in recipe repositories" error until you include =tsc= as shown above.
+
+Then in =config.el=, you'll need:
+
+#+BEGIN_SRC elisp
+(use-package! tree-sitter
+  :config
+  (require 'tree-sitter-langs)
+  (global-tree-sitter-mode)
+  (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
+#+END_SRC
+
+Now run =doom sync= in a terminal, restart Doom Emacs with =SPC q R= and explore some code to see the new highlighting. You'll notice some of these changes:
+
+#+BEGIN_COMFY
+- Things that are harder to detect with regex are now highlighted and differentiated (e.g. function names, properties on objects, template strings)
+- More use of italics and bold font weights to help with the above
+- Potential speed and stability improvements, since AST parsing should be faster and more robust than regex parsing.
+#+END_COMFY
+
+[fn:1] If you're using vanilla Emacs instead of Doom, you can follow the official emacs-tree-sitter [[https://ubolonton.github.io/emacs-tree-sitter/installation/][installation instructions]] and the corresponding [[https://ubolonton.github.io/emacs-tree-sitter/syntax-highlighting/][syntax highlighting setup]].
+
+[fn:2] =tsc= has nothing to do with the [[https://www.typescriptlang.org/docs/handbook/compiler-options.html][TypeScript Compiler]] of the same name. That confused me for a while this morning when Doom was complaining about non-existent packages in recipes.
+
+* Caveats
+
+** Web-Mode
+
+Emacs-tree-sitter highlighting works by mapping each major mode in Emacs to a language-specific parser. This [[https://github.com/ubolonton/emacs-tree-sitter/issues/33][falls apart]] when a major mode happens to support multiple or mixed languages in the one file, for example =web-mode= which handles HTML, JavaScript and CSS.
+
+Personally, I tried mapping =web-mode= to =html= in ~tree-sitter-major-mode-language-alist~, but it complained and didn't work when I tried to turn on highlighting. This seems to be a dead end for now.
+
+** SCSS-Mode
+
+One other thing I found missing from the standard setup was SCSS support, which I've added by putting the following in my =:config= section of =use-package! tree-sitter=:
+
+#+BEGIN_SRC elisp
+(pushnew! tree-sitter-major-mode-language-alist
+          '(scss-mode . css))
+#+END_SRC
+
+This seems to work OK for now, however it's not officially supported and may be unstable.

@@ -1,0 +1,43 @@
+#+TITLE: A Function to Get Org-Mode Contents Under a Heading
+#+DATE: 2020-10-11T10:52:25+08:00
+#+TAGS[]: Emacs Programming Code Power-user Org-mode Lisp
+
+Today I'm sharing an interactive function I wrote as an exercise to extract just the inner text content of an Org-mode subtree, excluding the heading itself and any subheadings or their contents. The function adds it to the kill-ring (a.k.a. copies it to the clipboard) and returns it, but can easily be modified to do anything to the contents.
+
+# more
+
+Take this org-mode example file:
+
+#+BEGIN_SRC org
+,* Heading 1
+Some text for heading 1
+,** Subheading 1a
+1a text should not be included for heading 1
+,* Heading 2
+Some text for heading 2
+#+END_SRC
+
+If the point (a.k.a. cursor) is on =Heading 1= or =Some text for heading 1= then it should extract just =Some text for heading 1=. It should also work the same way for =Heading 2=.
+
+However, It should only extract the text for =Subheading 1a= if the point is in or on =Subheading 1a=.
+
+Here's the function:
+
+#+BEGIN_SRC elisp
+(defun my-org-copy-subtree-contents ()
+  "Get the content text of the subtree at point and add it to the `kill-ring'.
+Excludes the heading and any child subtrees."
+  (interactive)
+  (if (org-before-first-heading-p)
+      (message "Not in or on an org heading")
+    (save-excursion
+      ;; If inside heading contents, move the point back to the heading
+      ;; otherwise `org-agenda-get-some-entry-text' won't work.
+      (unless (org-on-heading-p) (org-previous-visible-heading 1))
+      (let ((contents (substring-no-properties
+                       (org-agenda-get-some-entry-text
+                        (point-marker)
+                        most-positive-fixnum))))
+        (message "Copied: %s" contents)
+        (kill-new contents)))))
+#+END_SRC
