@@ -18,7 +18,6 @@ copyright = "© Copyright"
     style = "paraiso-dark"
     tabWidth = 2
 
-# googleAnalytics = "UA-123-45"
 # disqusShortname = "ink-demo"
 
 [params]
