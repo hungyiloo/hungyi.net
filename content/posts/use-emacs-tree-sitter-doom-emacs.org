@@ -9,21 +9,11 @@
 First, add these lines to =packages.el=:
 
 #+BEGIN_SRC elisp
-(package! tsc
-  :recipe (:host github
-           :repo "ubolonton/emacs-tree-sitter"
-           :files ("core/*.el")))
-(package! tree-sitter
-  :recipe (:host github
-           :repo "ubolonton/emacs-tree-sitter"
-           :files ("lisp/*.el")))
-(package! tree-sitter-langs
-  :recipe (:host github
-           :repo "ubolonton/emacs-tree-sitter"
-           :files ("langs/*.el" "langs/queries")))
+(package! tree-sitter)
+(package! tree-sitter-langs)
 #+END_SRC
 
-Note that the =tsc=[fn:2] package is [[https://github.com/ubolonton/emacs-tree-sitter/commit/5fe88ad0e4b5b56eab7024485f3532daf146ab17][quite a new change]] to the installation procedure. If you follow outdated instructions or otherwise had emacs-tree-sitter set up in Doom Emacs before today, you may get a "Could not find package in recipe repositories" error until you include =tsc= as shown above.
+*Update [2020-10-26 Mon]*: It seems emacs-tree-sitter is now on MELPA, so the =packages.el= config above has been simplified accordingly. There's no longer any need to specify a =tsc= package[fn:2] or write a manual =straight.el= recipe to fetch it from GitHub.
 
 Then in =config.el=, you'll need:
 
