@@ -1,0 +1,34 @@
+#+TITLE: Authentication Issues with MSAL.NET on WSL2
+#+DATE: 2021-01-25T21:55:57+08:00
+#+TAGS[]: WSL Windows .NET Programming
+
+I've found that Microsoft's [[https://github.com/AzureAD/microsoft-authentication-extensions-for-dotnet][Azure AD MSAL Extensions]] for .NET don't seem to work very well under WSL2. In particular, there is this [[https://github.com/Azure/azure-sdk-for-net/issues/12939][this issue]] that's reportedly been fixed as of November 2020 but, even with Azure.Identity v1.3.0, it remains a problem for me. The error can look something like =value cannot be null: attributeValue1= or =Unable to load shared library 'libsecret-1.so.0'=.
+
+# more
+
+I found that 2 fixes were required for me:
+
+#+BEGIN_COMFY
+1. Wherever you create ~new DefaultAzureCredentialOptions~, you should also set the property ~ExcludeSharedTokenCacheCredential~ to ~true~. For example:
+
+#+begin_src csharp
+var credentials = new DefaultAzureCredential
+(
+    new DefaultAzureCredentialOptions
+    {
+        ExcludeSharedTokenCacheCredential = SharedUtilities.IsLinuxPlatform(),
+        // ...your other options
+    }
+);
+#+end_src
+
+2. In your WSL environment  install =libsecret-1-dev=. In Ubuntu for example, you should run the command ~sudo apt install libsecret-1-dev~. This will add =libsecret-1.so.0= to your system so that MSAL can find it.
+#+END_COMFY
+
+Alternatively, you can roll back to Azure.Identity v1.2.2, which I can confirm was the last version without as many of these issues.
+
+If you're still having trouble, you may also want to check that:
+
+- Azure CLI is properly logged in. On WSL it's easier to use =az login --use-device-code= and follow the instructions.
+- The =ASPNETCORE_ENVIRONMENT= environment variable is set to =Development=.
+- You have the appropriate [[https://dotnet.microsoft.com/download][.NET (Core) SDK]] installed. The latest is 5.0.
