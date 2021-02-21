@@ -6,7 +6,7 @@ I've found that Microsoft's [[https://github.com/AzureAD/microsoft-authenticatio
 
 # more
 
-I found that 2 fixes were required for me:
+I found that I needed 2 fixes:
 
 #+BEGIN_COMFY
 1. Wherever you create ~new DefaultAzureCredentialOptions~, you should also set the property ~ExcludeSharedTokenCacheCredential~ to ~true~. For example:
@@ -22,12 +22,12 @@ var credentials = new DefaultAzureCredential
 );
 #+end_src
 
-2. In your WSL environment  install =libsecret-1-dev=. In Ubuntu for example, you should run the command ~sudo apt install libsecret-1-dev~. This will add =libsecret-1.so.0= to your system so that MSAL can find it.
+2. In your WSL environment install =libsecret-1-dev=. In Ubuntu for example, run the command ~sudo apt install libsecret-1-dev~. This will add =libsecret-1.so.0= to your system so that MSAL can find it.
 #+END_COMFY
 
-Alternatively, you can roll back to Azure.Identity v1.2.2, which I can confirm was the last version without as many of these issues.
+Alternatively you can roll back to Azure.Identity v1.2.2, which I can confirm was the last version without as many of these issues.
 
-If you're still having trouble, you may also want to check that:
+If you're still having trouble you may also want to check that:
 
 - Azure CLI is properly logged in. On WSL it's easier to use =az login --use-device-code= and follow the instructions.
 - The =ASPNETCORE_ENVIRONMENT= environment variable is set to =Development=.
