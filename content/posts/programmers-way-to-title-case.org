@@ -183,7 +183,7 @@ If you want to experiment with writing your own implementation, here are the tes
 | 'the great gatsby'                                                                           | 'The Great Gatsby'                                                                           |
 | small word at the end is nothing to be afraid of                                             | Small Word at the End Is Nothing to Be Afraid Of                                             |
 | for step-by-step directions email someone@gmail.com                                          | For Step-by-Step Directions Email someone@gmail.com                                          |
-| 2lmc spool: 'gruber on OmniFocus and vapo(u)rware                                            | 2lmc Spool: 'Gruber on OmniFocus and Vapo(u)rware                                            |
+| 2lmc spool: 'gruber on OmniFocus and vapo(u)rware'                                           | 2lmc Spool: 'Gruber on OmniFocus and Vapo(u)rware'                                           |
 | Have you read “The Lottery”?                                                                 | Have You Read “The Lottery”?                                                                 |
 | Have you read “the lottery”?                                                                 | Have You Read “The Lottery”?                                                                 |
 | Have you read "the lottery"?                                                                 | Have You Read "The Lottery"?                                                                 |
