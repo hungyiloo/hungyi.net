@@ -1,0 +1,25 @@
+#+TITLE: How to Emojify Selectrum Candidates
+#+DATE: 2021-03-01T15:27:19+08:00
+#+TAGS[]: Emacs Doom~Emacs Power-user
+
+If you use both [[https://github.com/iqbalansari/emacs-emojify][emacs-emojify]] and [[https://github.com/raxod502/selectrum/][selectrum]] and you're having trouble getting emoji to show up properly in the list of completion candidates, especially after the latest round of selectrum updates (commit bcf3714) then I have an elisp configuration snippet that may help you. Read on to see it.
+
+# more
+
+Note that this configuration is written for the [[https://github.com/hlissner/doom-emacs][Doom Emacs]] distribution. If you're using vanilla Emacs, you may need to replace the calls to ~use-package!~ and ~after!~ with their vanilla counterparts.
+
+#+begin_src emacs-lisp
+(use-package! emojify
+  :commands (emojify-mode)
+  :config
+  (after! selectrum
+    (advice-add #'selectrum--candidates-display-strings
+                :around
+                (defun my/emojify-selectrum-candidates (orig-fun &rest args)
+                  (mapcar #'emojify-string (apply orig-fun args))))))
+#+end_src
+
+* Explanation
+Since the new version of selectrum builds the candidate list as a string directly in memory, then displayed using an overlay -- without a buffer to contain the list of candidates -- emojify won't work automatically because it works on buffer contents only.
+
+However, there's actually a utility function in =emacs-emojify= that allows direct emojification of a string input: ~emojify-string~. As long as we ~advice-add~ this function around the output strings of ~selectrum--candidates-display-strings~ to emojify them, when selectrum uses those candidate strings to build the overlay, it picks up the emojified text properties. Voilà!
