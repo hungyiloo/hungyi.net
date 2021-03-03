@@ -1,0 +1,76 @@
+#+TITLE: Convolute Lisp S-Expressions With Smartparens
+#+DATE: 2021-03-03T19:28:27+08:00
+#+TAGS[]: Emacs Lisp Programming Power-user
+
+"Convoluting a lisp s-expression" sounds like computer science ivory tower bollocks, but after I actually learned what it was and how to use it, I'm seeing it pop up quite regularly when writing lisp. Let me show you the magic; I promise every time you get to use it, [[https://youtu.be/D6h5dFyyUX0?t=117][you'll feel like a king!]]
+
+# more
+
+Let's say you've been writing some code in a stream-of-consciousness way. First you bind some local variables using ~let~ and call ~do-something~:
+
+#+begin_src emacs-lisp
+(let ((x 1)
+      (y 2))
+  (do-something x y))
+#+end_src
+
+Oh, but now you only want to ~do-something~ ~when~ ~condition-p~ is true:
+
+#+begin_src emacs-lisp
+(let ((x 1)
+      (y 2))
+  (when condition-p
+    (do-something x y)))
+#+end_src
+
+OK, sweet!
+
+...but wait, if ~condition-p~ is false then the ~let~ bindings are useless! You can see that the ~when~ should have wrapped /around/ the ~let~ instead of just the body inside ~let~. Now you have to tediously flip everything around by hand, right?
+
+No! ~sp-convolute-sexp~ to the rescue 🦸‍♂️
+
+Put your point at the opening parenthesis of  ~(do-something x y)~ and run =M-x sp-convolute-sexp= and in one fell swoop...
+
+#+begin_src emacs-lisp
+(when condition-p
+  (let ((x 1)
+        (y 2))
+    (do-something x y)))
+#+end_src
+
+*So many keystrokes saved*, right? Never mind feeling like a king --- you'll feel like a wizard 🧙
+
+* A More Abstract Explanation
+It doesn't matter how many s-expressions there are in the surrounding code --- they usually won't get in the way. You just have to keep a few specific rules in mind. Let's break it down in an abstract example, with no distracting "reality" or whatever that is 🤓
+
+#+begin_src emacs-lisp
+(outer x y z
+       (inner
+        a b c d e f)
+       j k l)
+#+end_src
+
+If you convolute around any of the s-expressions ~a b c d e f~ then the s-expression surrounding ~outer~ will be swapped with the s-expression surrounding ~inner~ and all the s-expressions /immediately/ preceding your cursor will be chopped off and moved alongside ~inner~.
+
+So when we simply convolute around ~a~ we'll get:
+
+#+begin_src emacs-lisp
+(inner
+ (outer x y z
+        a b c d e f
+        j k l))
+#+end_src
+
+But had we convoluted around ~d~ then we would have gotten:
+
+#+begin_src emacs-lisp
+(inner
+ a b c (outer x y z
+              d e f
+              j k l))
+#+end_src
+
+* Keybinding Tips
+I like to map it to a binding that includes the =%= character, since it visually reminds me of swapping something above to below and reinforces that pattern in my head so I remember to use it.
+
+I've included it in my [[https://github.com/hungyiloo/doom-emacs-conf/blob/36fe3c05079145b6bd58fd0ab15441bcbcd5cd85/lisp/hydras.el#L49-L113][Smartparens hydra]], which I've been working on improving as I write more and more lisp. But that's a future post.
