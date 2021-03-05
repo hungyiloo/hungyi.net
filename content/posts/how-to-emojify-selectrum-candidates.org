@@ -17,7 +17,7 @@ Note that this configuration is written for the [[https://github.com/hlissner/do
                :around
                (defun my/emojify-selectrum-candidates (orig-fun &rest args)
                  (mapcar
-                  (apply-partially #'mapcar #'emojify-string)
+                  (lambda (cand) (cons (emojify-string (car cand)) (cdr cand)))
                   (apply orig-fun args))))))
 #+end_src
 
