@@ -1,0 +1,45 @@
+#+TITLE: How to Quickly Get evil-mc Working With Smartparens
+#+DATE: 2021-03-17T20:01:37+08:00
+#+TAGS[]: Emacs Doom~Emacs Power-user
+
+[[https://github.com/gabesoft/evil-mc][evil-mc]] is great for working with multiple cursors and [[https://github.com/Fuco1/smartparens][smartparens]] is great for working with lispy s-expressions. But can they work nicely together without putting in a lot of effort writing glue between the two? Read on to find out.
+
+# more
+
+It turns out that they can! By my estimate, this simple approach works for 90% of the use cases:
+
+#+begin_src emacs-lisp
+(after! (:and evil-mc smartparens)
+  (dolist (sp-command '(sp-up-sexp
+                        sp-copy-sexp
+                        sp-down-sexp
+                        sp-join-sexp
+                        sp-kill-sexp
+                        sp-next-sexp
+                        sp-split-sexp
+                        sp-wrap-curly
+                        sp-wrap-round
+                        sp-raise-sexp
+                        sp-clone-sexp
+                        sp-wrap-square
+                        sp-splice-sexp
+                        sp-end-of-sexp
+                        sp-forward-sexp
+                        sp-backward-sexp
+                        sp-convolute-sexp
+                        sp-transpose-sexp
+                        sp-kill-whole-line
+                        sp-beginning-of-sexp
+                        sp-forward-barf-sexp
+                        sp-forward-slurp-sexp
+                        sp-backward-barf-sexp
+                        sp-backward-slurp-sexp
+                        sp-splice-sexp-killing-forward
+                        sp-splice-sexp-killing-backward))
+    (add-to-list
+     'evil-mc-custom-known-commands
+     `(,sp-command
+       (:default . evil-mc-execute-call)))))
+#+end_src
+
+Not every smartparens command will work seamlessly with the virtual cursors from evil-mc (the ~sp-wrap~ family are particularly quirky) but they all do /work/ to some degree, which means you can still get things done quicker --- now with the power of both packages!
