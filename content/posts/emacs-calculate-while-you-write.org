@@ -25,26 +25,26 @@ Ingredients:
 
    This will grab the expression, shove it into Emacs' calc mode and evaluate it. You should see =[190]= on the "stack".
 
-4. To get the result back in your buffer, press =C-u y= (that would be =SPC u p P= in Doom Emacs[fn:2] or evil mode).
+4. Call ~calc-unpack~ either manually using =M-x= or by pressing =v u= to unpack the vector (i.e. get rid of the square brackets that we don't need)
+
+5. To get the result back in your buffer, press =C-u y= (that would be =SPC u p P= in Doom Emacs[fn:2] or evil mode). This calls ~calc-copy-to-buffer~.
 
    This calls ~calc-copy-to-buffer~ on the most recent result. The prefix =C-u= makes it overwrite the marked region in your original buffer and conveniently quit calc mode. Without the prefix, it would insert the result at the point in your buffer, but leaving the original expression text intact /and/ also let you hang out in calc mode in case you want to do more math.
 
-5. The result will still have square brackets around it, like this:
+6. The result will now look like this:
    #+BEGIN_SRC
 Ingredients:
 - 2 eggs
-- [190]g flour
+- 190g flour
 - 10g baking powder
    #+END_SRC
-
-   Sure you can leave it like that, but you might want to remove them. In evil mode that's easy: just =d s ]= to delete the surrounding brackets with help from [[https://github.com/emacs-evil/evil-surround][evil-surround]].
 #+END_COMFY
 
 * Summary
 
-Assuming you have your expression marked, your keystrokes in one line would be: =C-x * g= and =C-u y=, then delete the square brackets manually.
+Assuming you have your expression marked, your keystrokes in one line would be: =C-x * g= then =v u= and finally =C-u y=.
 
-For Doom Emacs and evil mode users, that would be =C-x * G=, =SPC u p P=[fn:2] then =d s ]= to delete the square brackets.
+For Doom Emacs and evil mode users, that would be =C-x * G=, =v u= and =SPC u p P=.[fn:2]
 
 * A word on calc-dispatch
 
