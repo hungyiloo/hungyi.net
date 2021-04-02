@@ -1,0 +1,98 @@
+#+TITLE: Split a List Into Batches Using Emacs Lisp
+#+DATE: 2021-04-02T14:26:02+08:00
+#+TAGS[]: Emacs Lisp Programming Code
+
+Sometimes a list of things is too large and it needs to be split into batches before it can be processed effectively. A quick google didn't reveal any quick copy-pastable elisp (a.k.a. Emacs Lisp) functions that did this kind of batching, so I cobbled together what I found and came up with this ~cl-loop~ implementation, which is hopefully performant.
+
+# more
+
+Feel free to copy paste it as is, since it should be general enough to use anywhere 💻
+
+#+begin_src emacs-lisp
+(require 'cl-lib)
+
+(defun my/batch-list (input size)
+  "Split INPUT list into a batches (i.e. sublists) of maximum SIZE."
+  (when (< size 1)
+    (error "SIZE of the batches must be at least 1"))
+  (unless (seqp input)
+    (error "INPUT must be a sequence or list"))
+  (cl-loop with tail = input
+           while tail
+           collect (cl-loop for ptr on tail
+                            for i upfrom 0
+                            while (< i size)
+                            collect (car ptr)
+                            finally (setf tail ptr))))
+#+end_src
+
+* Example Usage & Unit Tests
+
+To use it, just call it with the ~input~ list and the maximum ~size~ of the batches that it should split into.
+
+For example, splitting a list of ~(1 2 3 4 5 6 7 8 9)~ into batches of max size ~3~ 🧙
+#+begin_src emacs-lisp :exports both :results code
+(my/batch-list '(1 2 3 4 5 6 7 8 9) 3)
+#+end_src
+
+#+RESULTS:
+#+begin_src emacs-lisp
+((1 2 3)
+ (4 5 6)
+ (7 8 9))
+#+end_src
+
+And a batch size of ~4~ to see what happens when the ~size~ doesn't evenly divide the length of the ~input~ list.
+#+begin_src emacs-lisp :exports both :results code
+(my/batch-list '(1 2 3 4 5 6 7 8 9) 4)
+#+end_src
+
+/Spoiler: the last batch is chopped short compared to the others 🪓/
+#+RESULTS:
+#+begin_src emacs-lisp
+((1 2 3 4)
+ (5 6 7 8)
+ (9))
+#+end_src
+
+Let's try some other tricky inputs to check for sane behavior 😈 [fn:1]
+
+Like a ~size~ that is equal to the length of the ~input~ list ⚖️
+#+begin_src emacs-lisp :exports both :results code
+(my/batch-list '(1 2 3 4 5 6 7 8 9) 9)
+#+end_src
+
+#+RESULTS:
+#+begin_src emacs-lisp
+((1 2 3 4 5 6 7 8 9))
+#+end_src
+
+Or a ~size~ that exceeds the length of ~input~ 🌋
+#+begin_src emacs-lisp :exports both :results code
+(my/batch-list '(1 2 3 4 5 6 7 8 9) 10)
+#+end_src
+
+#+RESULTS:
+#+begin_src emacs-lisp
+((1 2 3 4 5 6 7 8 9))
+#+end_src
+
+Or a batch ~size~ of ... just ~1~? 🤔
+#+begin_src emacs-lisp :exports both :results code
+(my/batch-list '(1 2 3 4 5 6 7 8 9) 1)
+#+end_src
+
+#+RESULTS:
+#+begin_src emacs-lisp
+((1)
+ (2)
+ (3)
+ (4)
+ (5)
+ (6)
+ (7)
+ (8)
+ (9))
+#+end_src
+
+[fn:1] This kind of messing around is actually called /Boundary Testing/ or [[https://en.wikipedia.org/wiki/boundary-value_analysis][Boundary-Value Analysis]] and is a good way to ensure your code is robust. You'll also notice in the function that I also checked that the size is above ~0~, otherwise ~cl-loop~ would run forever.
