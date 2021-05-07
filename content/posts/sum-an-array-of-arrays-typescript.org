@@ -1,0 +1,34 @@
+#+TITLE: Sum an Array of Arrays Using JavaScript or TypeScript
+#+DATE: 2021-05-07T20:34:01+08:00
+#+TAGS[]: Programming Code TypeScript JavaScript
+
+I was recently asked what was the best way to sum up an array of arrays of numbers. While I'm not the best code golfer, I /am/ rather lazy, so I do have some terse solutions up my sleeve.
+
+# more
+
+Here's my quick and dirty solution, using [[{{<ref "reduce-swiss-army-knife.org">}}][JavaScript's Reduce: A Swiss Army Knife for Arrays]]:
+
+#+name: sum-an-array-of-arrays
+#+begin_src typescript :results value code
+// The input data looks like this,
+// with each nested array having the same shape.
+const input = [
+  [1,2,3,4],
+  [2,2,2,2],
+  [0,2,4,6],
+]
+
+// To show you the power of flex- er, I mean reduce()
+const result = input.reduce(
+  (acc, curr) => acc.map((x, i) => x + curr[i])
+)
+
+console.log(result);
+#+end_src
+
+Which prints the result:
+
+#+RESULTS: sum-an-array-of-arrays
+#+begin_src typescript
+[ 3, 6, 9, 12 ]
+#+end_src
