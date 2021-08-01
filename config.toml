@@ -6,6 +6,8 @@ paginate = 5
 
 copyright = "© Copyright"
 
+ignoreErrors = ["error-remote-getjson"]
+
 [markup]
   [markup.highlight]
     codeFences = true
@@ -21,7 +23,7 @@ copyright = "© Copyright"
 # disqusShortname = "ink-demo"
 
 [params]
-    subtitle = "Front-end&nbsp;Developer, Emacs&nbsp;Adventurer, Home&nbsp;Cook"
+    subtitle = "Front-end&nbsp;Developer, Emacs&nbsp;Adventurer"
 
     # Optional 64x64 avatar image.
     avatar = "/HY_Light_and_Color_2.svg"
@@ -36,7 +38,8 @@ copyright = "© Copyright"
     # customDarkCSS = "css/custom-dark.css"  # Custom styles applied to dark mode css.
     # customJS = ["js/custom.js", "js/custom1.js"]  # Custom JS scripts.
 
-    mainSections = ["posts", "recipes"]
+    # mainSections = ["posts", "recipes"]
+    mainSections = ["posts"]
 
 # Nav.
 [[menu.main]]
@@ -49,10 +52,10 @@ name = "Posts"
 url = "/posts"
 weight = 2
 
-[[menu.main]]
-name = "Recipes"
-url = "/recipes"
-weight = 3
+# [[menu.main]]
+# name = "Recipes"
+# url = "/recipes"
+# weight = 3
 
 # [[menu.main]]
 # name = "About"
