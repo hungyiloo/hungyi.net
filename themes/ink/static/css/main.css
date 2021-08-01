@@ -564,8 +564,13 @@ sup a {
 .footnote-definition sup {
   margin-right: 0.1em;
 }
-.footnote-body p:first-child {
+.footnote-body p {
   display: inline;
+}
+.footnote-body p + p::before {
+  content: '';
+  display: block;
+  margin: 1em 0;
 }
 .footnotes {
   font-size: 90%;
@@ -594,4 +599,13 @@ blockquote.instagram-media, blockquote.instagram-media-registered, iframe.instag
   .footer {
     margin-bottom: -5px;
   }
+}
+
+.footnote-definition *:target + .footnote-body {
+  padding: 0.4em 0;
+  background-color: #00ffff22;
+}
+
+html.dark .footnote-definition *:target + .footnote-body {
+  background-color: #00ffff19;
 }

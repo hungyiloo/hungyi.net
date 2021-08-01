@@ -3,17 +3,21 @@
 #+DATE: 2020-09-06T16:53:58+08:00
 #+DRAFT: false
 
-Earlier this week I went looking for "how to search and replace in a whole project" in Emacs. I knew had [[https://github.com/hlissner/doom-emacs][Doom Emacs]] set up with [[https://github.com/emacs-evil/evil][evil]] turned on by default, and I knew to use =SPC s p= to launch Ivy's [[https://github.com/abo-abo/swiper][counsel-rg]] for searching the project. What was next...?
+Earlier this week I went looking for "how to search and replace in a whole project" in Emacs. I knew had [[https://github.com/hlissner/doom-emacs][Doom Emacs]] set up with [[https://github.com/emacs-evil/evil][evil]] turned on by default, and I knew to use =SPC s p= to launch a project text search. What was next...?
 
 # more
 
 Today, I'm documenting the process so that I won't forget again. Hopefully it'll help someone out there too.
 
-TLDR: =SPC s p foo C-c C-e :%s/foo/bar/g RET Z Z=
+TL;DR:
+- for ivy module users =SPC s p foo C-c C-e :%s/foo/bar/g RET Z Z=
+- for vertico module users =SPC s p foo C-; E C-c C-p :%s/foo/bar/g RET Z Z=
 
 Entering those keys will replace "foo" with "bar" in your whole project. Magic!
 
-* The Long Explanation
+/Not sure if you're using ivy or vertico? If you set up Doom Emacs after 29 July, 2021, you're probably using vertico. Otherwise, probably ivy. See this footnote for more details[fn:3]/
+
+* The Long Explanation (for ivy users[fn:3])
 
 #+BEGIN_COMFY
 1. Make sure you're in the right project and all your open buffers/files are saved. If you're making a large change, maybe a =git commit= would give you a little extra insurance.
@@ -35,6 +39,32 @@ Entering those keys will replace "foo" with "bar" in your whole project. Magic!
 6. Hit =Z Z= to write all the changes to their respective files, or =Z Q= to abort the search and replace.
 #+END_COMFY
 
+* The Long Explanation (for vertico users[fn:3])
+
+#+BEGIN_COMFY
+1. Make sure you're in the right project and all your open buffers/files are saved. If you're making a large change, maybe a =git commit= would give you a little extra insurance.
+
+2. =SPC s p= to launch the project search. This is what you would normally use to search strings or regular expressions[fn:1] within your project.
+
+3. Type in a search string or regular expression, =foo= in this example, to get some results. This doesn't have to be exactly what you want to replace; it just needs to be specific enough to get the right results into view.
+
+4. =C-;= to run ~embark-act~. This [[https://github.com/oantolin/embark][Embark]] command is like a context menu for what you're currently looking at.
+
+5. =E= to run ~embark-export~, which exports what you're looking at into a new buffer. Embark is smart enough to know that you're looking at grep search results, so it will export to a new buffer in ~grep-mode~
+
+6. =C-c C-p= to run ~wgrep-change-to-wgrep-mode~ to make the search results writable.
+
+7. Use your preferred method of search and replace in a single file. Doom relies heavily on evil's vim emulation, so the smoothest option for me was to type ~:%s/foo/bar/g~ to preview the changes and hitting =RET= to apply.
+
+   You can also edit the buffer manually using any technique you want. =M-%= or =C-M-%= to do a regular Emacs query replace? Sure. =C-x SPC= or =C-v= to do a rectangle/visual block edit? Go for it. =g z z= for [[https://github.com/gabesoft/evil-mc][evil-mc]] multiple cursors? No worries—just be careful of the readonly region of filenames on the left.
+
+   At this stage nothing has been written to the files yet, so you can still undo easily. Go through all the lines in the search results to check if the changes are as expected.
+
+   You can also =SPC : wgrep=  or =M-x wgrep= to look at the other advanced wgrep actions.
+
+8. Hit =Z Z= to write all the changes to their respective files, or =Z Q= to abort the search and replace.
+#+END_COMFY
+
 [fn:1] Just a reminder that Emacs has its own idiosyncratic [[https://www.emacswiki.org/emacs/RegularExpression][version]] of regular expressions. It's weird, I know.
 
 [fn:2] I have this in my =config.el= to set the minimum characters to 3 before a search is fired. You can customize the threshold individually for each of the commands.
@@ -45,3 +75,22 @@ Entering those keys will replace "foo" with "bar" in your whole project. Magic!
                                (counsel-search . 3)
                                (t . 3))))
 #+END_SRC
+
+[fn:3] Update [2021-08-01 Sun]: This post was originally written back when Ivy was still the default completion engine used by Doom Emacs. However, since [[https://github.com/hlissner/doom-emacs/commit/c2e6db27d030f20d3aead4b2049695e4b2d942ba][this commit]]  on [2021-07-29 Thu], new users of Doom will be using the [[https://github.com/minad/vertico][vertico]] completion stack. Existing users upgrading to the current version of Doom will keep using Ivy.
+
+How can you tell if you're using Ivy or vertico? Have a look at your =init.el= file in your Doom config to check if ~ivy~ or ~vertico~ are present and uncommented. Whichever one is uncommented is the one you're using.
+
+[fn:1] Just a reminder that Emacs has [[https://www.emacswiki.org/emacs/RegularExpression][its own idiosyncratic version of regular expressions]]. It's weird, I know.
+
+[fn:2] I have this in my =config.el= to set the minimum characters to 3 before a search is fired. You can customize the threshold individually for each of the commands.
+#+BEGIN_SRC emacs-lisp
+(after! ivy
+  (setq ivy-more-chars-alist '((counsel-grep . 3)
+                               (counsel-rg . 3)
+                               (counsel-search . 3)
+                               (t . 3))))
+#+END_SRC
+
+[fn:3] *Update [2021-08-01 Sun]*: This post was originally written back when ivy was still the default completion engine used by Doom Emacs. However, since [[https://github.com/hlissner/doom-emacs/commit/c2e6db27d030f20d3aead4b2049695e4b2d942ba][this commit]] on [2021-07-29 Thu], new users of Doom will be using the [[https://github.com/minad/vertico][vertico]] completion stack, which includes packages such as [[https://github.com/oantolin/embark][embark]], [[https://github.com/minad/consult][consult]], [[https://github.com/oantolin/orderless][orderless]] and [[https://github.com/minad/marginalia][marginalia]]. Old users upgrading to the current version of Doom will keep using ivy unless they also update their config to match the new defaults.
+
+*How can you tell if you're using ivy or vertico?* Have a look at your =init.el= file in your Doom config to check if ~ivy~ or ~vertico~ are present and uncommented. Whichever one is uncommented is the one you're using.
