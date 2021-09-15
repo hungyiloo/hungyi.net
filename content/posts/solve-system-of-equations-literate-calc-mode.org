@@ -1,0 +1,98 @@
+#+TITLE: Solving Equations With Emacs literate-calc-mode
+#+DATE: 2021-09-15T19:41:34+08:00
+#+TAGS[]: Emacs Doom~Emacs Power-user
+#+DRAFT: false
+#+OPTIONS: \n:t
+
+The wonderful Emacs package [[https://github.com/sulami/literate-calc-mode.el][literate-calc-mode]] combines the power of [[https://www.gnu.org/software/emacs/manual/html_mono/calc.html][Emacs Calc]] with the readability of plain text to let you document your math in a more friendly, less technical way, similar to [[https://en.wikipedia.org/wiki/Literate_programming][literate programming]].
+
+Today I want to show you how to take it one step further, leveraging the solving capabilities of Calc to do something a bit more fancy than your average calculator app or spreadsheet.
+
+# more
+
+* Installation and preparation
+Use [[https://melpa.org/#/getting-started][MELPA]] and =M-x package-install= to install =literate-calc-mode=. Or if you're using [[https://github.com/hlissner/doom-emacs][Doom Emacs]], just add this line to =packages.el= and run =doom sync= in a terminal:
+
+#+begin_src emacs-lisp
+;; ~/.config/doom/packages.el
+(package! literate-calc-mode)
+#+end_src
+
+Now you're ready to type out a series of expressions or equations like this, in any major mode
+#+begin_src text
+Price = 80.00 AUD
+Discount = 26%
+= Price - (Price * Discount)
+#+end_src
+
+Then enable =literate-calc-minor-mode= to show the results, which will appear as overlays next to your text, starting with ==>=
+#+begin_src text
+Price = 80.00 AUD => Price: 80. AUD
+Discount = 26% => Discount: 0.26
+= Price - (Price * Discount) => 59.2 AUD
+#+end_src
+
+Let's dive into a more complicated calculation now, using Calc's =solve= 🚀
+
+* 1. Set up the known values
+We're going with a bread baking example here, which seems to be traditional in these kinds of examples. Math in the kitchen can be difficult! 😵‍💫
+
+=Dough = uconv(1.68kg, g)= /=> Dough: 1,680. g/ \\
+=Hydration = 65%= /=> Hydration: 0.65/ \\
+=Salinity = 2%= /=> Salinity: 0.02/ \\
+=Inoculation = 1%= /=> Inoculation: 0.01/
+
+Note that ~uconv~ is a custom algebraic function for easy unit conversion[fn:2]
+
+Also note that this example is different to the one demonstrated in the =literate-calc-mode= README, in that we're starting with the final dough weight and back-calculating the individual components[fn:1] 🤯
+
+* 2. Set up the system of equations
+These are the four equalities that we want to solve:
+
+=e1 = Dough - (Water + Flour + Salt + Yeast)= /=> e1: 1,680. g - Water - Flour - Salt - Yeast/ \\
+=e2 = Hydration - (Water / Flour)= /=> e2: 0.65 - Water / Flour/ \\
+=e3 = Salinity - (Salt / Flour)= /=> e3: 0.02 - Salt / Flour/ \\
+=e4 = Inoculation - (Yeast / Flour)= /=> e4: 0.01 - Yeast / Flour/
+
+Why write the equalities in such an indirect way? We're using the fact that each each equality will be *implicitly solved for zero*.
+
+So instead of saying "the weight of the dough should equal the total weight of water, flour, salt and yeast", we move things around to state that "the weight of the dough *minus* the total weight of water, flour, salt and yeast should *equal zero*". These two statements are mathematically equivalent, and makes using =solve= a lot easier in the next step.
+
+* 3. Solve for unknown variables
+Now we just need to plug in =e1= =e2= =e3= and =e4= into =solve= and ask it for the values of =Water= =Flour= =Salt= and =Yeast=
+
+=Solution = solve([e1, e2, e3, e4], [Water, Flour, Salt, Yeast])= /=> Solution: [Water = 650. g, Flour = 1,000. g, Salt = 20. g, Yeast = 10. g]/
+
+You can absolutely stop here if the above style of solution is good enough to your eye.
+
+* Destructure solution & final results (optional)
+Maybe you want to extract out each component in the solution vector and reassign the appropriate variables, to make things tidier.
+
+=Water = rmeq(mcol(Solution, 1))= /=> Water: 650. g/ \\
+=Flour = rmeq(mcol(Solution, 2))= /=> Flour: 1,000. g/ \\
+=Salt = rmeq(mcol(Solution, 3))= /=> Salt: 20. g/ \\
+=Yeast = rmeq(mcol(Solution, 4))= /=> Yeast: 10. g/
+
+Note: ~rmeq~ removes the equal sign in each of the solution results and ~mcol~ extracts out a specified element of a vector, by index.
+
+Now our four key variables look like this:
+
+== Water= /=> 650. g/ \\
+== Flour= /=> 1,000. g/ \\
+== Salt= /=> 20. g/ \\
+== Yeast= /=> 10. g/
+
+[fn:1] I have actually done calculations like this before, while cooking. I'm probably just bad at math, but I found it difficult to figure out ingredient weights going back from baker's percentages unless I used actual algebra.
+
+[fn:2] ~uconv~ is a custom function that exposes Emacs Calc's unit conversion utilities via an algebraic function, which lets us use it in with =literate-calc-mode=. It's defined in my Doom Emacs =config.el= as:
+#+begin_src emacs-lisp
+(after! calc
+  (defalias 'calcFunc-uconv 'math-convert-units))
+#+end_src
+
+# Some styling for the calc overlays, just for this post
+#+begin_export html
+<style>
+  em { opacity: 70%; display: inline-block; }
+</style>
+#+end_export
