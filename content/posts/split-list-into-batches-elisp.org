@@ -8,7 +8,7 @@ Sometimes a list of things is too large and it needs to be split into batches be
 
 Feel free to copy paste it as is, since it should be general enough to use anywhere 💻
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :exports both :results silent
 (require 'cl-lib)
 
 (defun my/batch-list (input size)

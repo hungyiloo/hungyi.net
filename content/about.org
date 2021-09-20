@@ -1,6 +1,3 @@
----
-title: "About"
-type: "page"
----
-
+#+title: About Hung-Yi
+#+slug: about
 This is some static page where you can write about yourself.

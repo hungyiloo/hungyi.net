@@ -1,4 +1,5 @@
 #+TITLE: JavaScript's Reduce: A Swiss Army Knife for Arrays
+#+SLUG: reduce-swiss-army-knife
 #+DATE: 2020-09-28T12:09:03+08:00
 #+TAGS[]: Code JavaScript Web Front-end Programming
 
