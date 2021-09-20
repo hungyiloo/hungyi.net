@@ -43,7 +43,7 @@ For example, splitting a list of ~(1 2 3 4 5 6 7 8 9)~ into batches of max size 
 #+end_src
 
 And a batch size of ~4~ to see what happens when the ~size~ doesn't evenly divide the length of the ~input~ list.
-#+begin_src emacs-lisp :exports both :results code
+#+begin_src emacs-lisp :exports code :results code
 (my/batch-list '(1 2 3 4 5 6 7 8 9) 4)
 #+end_src
 

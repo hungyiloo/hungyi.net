@@ -1,4 +1,4 @@
-;;; publish.el --- Generate a simple static HTML blog
+;;; build.el --- Generate a simple static HTML blog
 ;;; Commentary:
 ;;
 ;;    Define the routes of the static website.  Each of which
@@ -15,43 +15,45 @@
 (load-file "~/.config/emacs/init.el")
 
 (require 'weblorg)
-(require 'htmlize)
-(require 'typescript-mode)
 
 (setq org-html-htmlize-output-type 'css)
-(setq-default weblorg-default-url "")
+(setq weblorg-default-url "")
 
-(weblorg-site
- :theme nil)
+(let ((site (weblorg-site
+             :name "personal"
+             :theme nil
+             :template-vars '(("site_name" . "Hung-Yi’s Journal"))
+             :base-url "")))
+  ;; Generate blog posts
+  (weblorg-route
+   :name "posts"
+   :input-pattern "content/posts/*.org"
+   :template "post.html"
+   :output "public/posts/{{ slug }}/index.html"
+   :url "/posts/{{ slug }}"
+   :site site)
 
-;; Generate blog posts
-(weblorg-route
- :name "posts"
- :input-pattern "content/posts/*.org"
- :template "post.html"
- :output "public/posts/{{ slug }}/index.html"
- :url "/posts/{{ slug }}")
+  ;; Generate pages
+  (weblorg-route
+   :name "pages"
+   :input-pattern "content/*.org"
+   :template "page.html"
+   :output "public/{{ slug }}/index.html"
+   :url "/{{ slug }}")
 
-;; Generate pages
-(weblorg-route
- :name "pages"
- :input-pattern "content/*.org"
- :template "page.html"
- :output "public/{{ slug }}/index.html"
- :url "/{{ slug }}")
+  ;; Generate posts summary
+  (weblorg-route
+   :name "index"
+   :input-pattern "content/posts/*.org"
+   :input-aggregate #'weblorg-input-aggregate-all-desc
+   :template "blog.html"
+   :output "public/index.html"
+   :url "/")
 
-;; Generate posts summary
-(weblorg-route
- :name "index"
- :input-pattern "content/posts/*.org"
- :input-aggregate #'weblorg-input-aggregate-all-desc
- :template "blog.html"
- :output "public/index.html"
- :url "/")
+  (weblorg-copy-static
+   :output "public/{{ file }}"
+   :url "/{{ file }}"
+   :site site)
 
-(weblorg-copy-static
- :output "public/{{ file }}"
- :url "/{{ file }}")
-
-(weblorg-export)
-;;; publish.el ends here
+  (weblorg-export))
+;;; build.el ends here

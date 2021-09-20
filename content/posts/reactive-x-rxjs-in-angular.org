@@ -238,7 +238,7 @@ This also means a codebase that's heavy with RxJS is going to be tough for new d
 
 If I could sum it up in 3 points:
 
-#+BEGIN_COMFY:
+#+BEGIN_COMFY
 1. RxJS allows for truly declarative reactive programming with virtually zero unpredictable mutations[fn:2].
 
 2. RxJS encourages you to cover *all* edge cases to make your code more robust, since reactive and declarative programming make you reason about these from the outset.

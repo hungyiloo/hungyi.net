@@ -1,58 +1,71 @@
 :root {
+  /* --- Nord Theme */
+  --cl-nord-polar-night-0:   #1E2430;
+  --cl-nord-polar-night-1:   #2E3440;
+  --cl-nord-polar-night-2:   #3B4252;
+  --cl-nord-polar-night-3:   #434C5E;
+  --cl-nord-polar-night-4:   #4C566A;
+  --cl-nord-polar-night-5:   #6C768A;
+  --cl-nord-snow-storm-0:   #D0D6E1;
+  --cl-nord-snow-storm-1:   #D8DEE9;
+  --cl-nord-snow-storm-2:   #E5E9F0;
+  --cl-nord-snow-storm-3:   #ECEFF4;
+  --cl-nord-snow-storm-4:   #F2F4F8;
+  --cl-nord-red:          #BF616A;
+  --cl-nord-orange:       #D08770;
+  --cl-nord-yellow:       #EBCB8B;
+  --cl-nord-green:        #A3BE8C;
+  --cl-nord-frost-1:       #8FBCBB;
+  --cl-nord-frost-2:       #88C0D0;
+  --cl-nord-frost-3:       #81A1C1;
+  --cl-nord-frost-4:       #5E81AC;
+  --cl-nord-purple:       #B48EAD;
+
   /* colors */
-  --cl-border: #E7E7E7;
-  --cl-foreground: #212121;
-  --cl-background: #FFFFFF;
-  --cl-gray: #828282;
-  --cl-note: #F2FFDD;
-  --cl-link: #E49619;
+  --cl-border: var(--cl-nord-snow-storm-0);
+  --cl-foreground: var(--cl-nord-polar-night-0);
+  --cl-background: #ffffff;
+  --cl-gray: var(--cl-nord-polar-night-5);
+  --cl-note: var(--cl-nord-yellow);
+  --cl-link: var(--cl-nord-frost-4);
 
   /* -- Code Block Colors -- */
-
-  /* --- Monokai Theme */
-  --cl-code-monokai-background:   #272822;
-  --cl-code-monokai-foreground:   #F8F8F2;
-  --cl-code-monokai-comment:      #75715E;
-  --cl-code-monokai-red:          #F92672;
-  --cl-code-monokai-orange:       #FD971F;
-  --cl-code-monokai-light-orange: #E69F66;
-  --cl-code-monokai-yellow:       #E6DB74;
-  --cl-code-monokai-green:        #A6E22E;
-  --cl-code-monokai-blue:         #66D9EF;
-  --cl-code-monokai-purple:       #AE81FF;
-
-  /* --- Theme Variables */
-  --cl-code-background:           var(--cl-code-monokai-background);
-  --cl-code-foreground:           var(--cl-code-monokai-foreground);
-  --cl-code-builtin:              var(--cl-code-monokai-green);
-  --cl-code-comment:              var(--cl-code-monokai-comment);
-  --cl-code-function-name:        var(--cl-code-monokai-green);
-  --cl-code-keyword:              var(--cl-code-monokai-red);
-  --cl-code-string:               var(--cl-code-monokai-yellow);
-  --cl-code-type:                 var(--cl-code-monokai-blue);
-  --cl-code-variable-name:        var(--cl-code-monokai-orange);
+  --cl-code-background:           var(--cl-nord-polar-night-1);
+  --cl-code-foreground:           var(--cl-nord-snow-storm-1);
+  --cl-code-builtin:              var(--cl-nord-snow-storm-3);
+  --cl-code-comment:              var(--cl-nord-polar-night-5);
+  --cl-code-function-name:        var(--cl-nord-frost-2);
+  --cl-code-keyword:              var(--cl-nord-snow-storm-4);
+  --cl-code-string:               var(--cl-nord-green);
+  --cl-code-type:                 var(--cl-nord-purple);
+  --cl-code-variable-name:        var(--cl-nord-frost-2);
 }
 
 body {
-    font-family: 'Lora', serif;
-    background: var(--cl-background);
-    color: var(--cl-foreground);
-    margin: 0;
-    padding: 0;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
+  font-family: 'Open Sans', sans-serif;
+  background: var(--cl-background);
+  color: var(--cl-foreground);
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 header {
   display: flex;
+  justify-content: center;
+  background-color: var(--cl-nord-snow-storm-4);
+  padding: 1rem 3rem;
+  margin-bottom: 4rem;
+}
+header > div {
+  width: 600px;
+  display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid var(--cl-border);
-  padding: 10px 30px;
-  margin-bottom: 40px;
 }
-header h1 { font-size: 24px; }
+header h1 { font-size: 200%; }
 header nav {
   display: flex;
   align-items: center;
@@ -83,33 +96,33 @@ header nav ul li {
 /* -- main content -- */
 a { color: var(--cl-link); }
 a:hover {
-    transition: 0.2s;
-    text-decoration: none;
+  transition: 0.2s;
+  text-decoration: none;
 }
 p {
-    line-height: 25px;
-    font-size: 15px;
-    margin-bottom: 20px;
+  line-height: 25px;
+  font-size: 15px;
+  margin-bottom: 20px;
 }
 h2 {
-    font-size: 24px;
-    font-weight: bold;
+  font-size: 24px;
+  font-weight: bold;
 }
 main {
-    width: 600px;
-    margin: 0 auto;
-    flex-grow: 1;
+  width: 600px;
+  margin: 0 auto;
+  flex-grow: 1;
 }
 @media (max-width: 599px) {
-    main {
-        width: calc(100% - 20px);
-        padding: 10px;
-    }
+  main {
+    width: calc(100% - 20px);
+    padding: 10px;
+  }
 }
 article h1:first-child { font-size: 36px; }
 .post__meta {
-    font-size: 14px;
-    color: var(--cl-gray);
+  font-size: 14px;
+  color: var(--cl-gray);
 }
 
 /* -- table -- */
@@ -118,17 +131,17 @@ main table th { text-align: left; }
 
 /* -- Highlight Note Class -- */
 .note {
-    margin-top: 20px;
-    background-color: var(--cl-note);
-    padding: 20px;
-    border-radius: 2px;
-    font-size: 13px;
-    line-height: 22px;
-    margin-bottom: 30px;
+  margin-top: 20px;
+  background-color: var(--cl-note);
+  padding: 20px;
+  border-radius: 2px;
+  font-size: 13px;
+  line-height: 22px;
+  margin-bottom: 30px;
 }
 .note p {
-    margin: 0;
-    padding: 0;
+  margin: 0;
+  padding: 0;
 }
 
 /* -- Page -- */
@@ -147,13 +160,16 @@ li.post-title {
 .org-type             { color: var(--cl-code-type); }
 .org-variable-name    { color: var(--cl-code-variable-name); }
 .org-comment, .org-comment-delimiter { color: var(--cl-code-comment); }
-.org-src-container    { color: var(--cl-code-foreground);
-                        background: var(--cl-code-background);
-                        border: 1px solid var(--cl-border-src);
-                        padding: 0px 15px;
-                        max-width: 100%;
-                        overflow-y: scroll;
-                        border-radius: 5px; }
+.org-src-container    {
+  color: var(--cl-code-foreground);
+  background: var(--cl-code-background);
+  border: 1px solid var(--cl-border-src);
+  padding: 0px 15px;
+  max-width: 100%;
+  overflow-y: auto;
+  border-radius: 5px;
+}
+.org-src-container + .org-src-container { margin-top: 0.5rem; }
 
 
 /* -- Footer --*/

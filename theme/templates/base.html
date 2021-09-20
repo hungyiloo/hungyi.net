@@ -4,8 +4,8 @@
     {% block head %}
     <meta charset="utf-8">
     <title>
-      {% block title %}{{ site_name | default("weblorg website") }}{% endblock %}
       {% block subtitle %}{% endblock %}
+      {% block title %}{{ site_name | default("weblorg website") }}{% endblock %}
     </title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     {% if site_owner is defined %}<meta name="author" content="{{ site_owner }}" />{% endif %}
@@ -13,25 +13,40 @@
     {% if site_keywords is defined %}<meta name="keywords" content="{{ site_keywords }}" />{% endif %}
     {% block meta %}{% endblock %}
     <link rel="stylesheet" href="{{ url_for("static", file="style.css") }}" type="text/css" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora&family=Space+Mono&display=swap" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300;1,400;1,600;1,700;1,800&display=swap" rel="stylesheet">
+    <link rel="icon" href="{{ url_for("static", file="favicon.ico") }}" type="image/x-icon">
     {% endblock %}
   </head>
   <body>
     {# Top navigation bar #}
     {% block nav %}
       <header>
-        <h1>
-          <a href="{{ url_for("index") }}">
-            {% block title %}{{ site_name | default("weblorg website") }}{% endblock %}
+        <div>
+          <h1>
+            <a href="{{ url_for("index") }}">
+              {% block title %}{{ site_name | default("weblorg website") }}{% endblock %}
+            </a>
+          </h1>
+          <a href="#main" class="visually-hidden">
+            jump to main content
           </a>
-        </h1>
-        <a href="#main" class="visually-hidden">jump to main content</a>
-        <nav>
-          <ul class="menu">
-            <li><a href="{{ url_for("pages", slug="about") }}">about</a></li>
-            <li><a href="{{ url_for("index") }}">blog</a></li>
-          </ul>
-        </nav>
+          <nav>
+            <ul class="menu">
+              <li>
+                <a href="{{ url_for("pages", slug="about") }}">
+                  about
+                </a>
+              </li>
+              <li>
+                <a href="{{ url_for("index") }}">
+                  blog
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
       </header>
     {% endblock %}
 
