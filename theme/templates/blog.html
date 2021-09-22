@@ -1,16 +1,14 @@
 {% extends "base.html" %}
 
 {% block main %}
-  <h1>Blog Posts</h1>
-
   <ul class="posts">
     {% for post in posts %}
-      <li class="post-title">
+      <li class="post-item">
         <a href="{{ url_for("posts", slug=post.slug) }}">
           {% if post.date is defined %}
-            {{ post.date|strftime("%b %d, %Y") }} &mdash;
+            <span class="post-date">{{ post.date|strftime("%d %B, %Y") }}</span>
           {% endif %}
-          {{ post.title }}
+          <span class="post-title">{{ post.title }}</span>
         </a>
       </li>
     {% endfor %}

@@ -1,4 +1,4 @@
-;;; build.el --- Generate a simple static HTML blog
+;;; build.el --- Generate a simple static HTML blog -*- lexical-binding: t; -*-
 ;;; Commentary:
 ;;
 ;;    Define the routes of the static website.  Each of which
@@ -15,9 +15,14 @@
 (load-file "~/.config/emacs/init.el")
 
 (require 'weblorg)
+(require 'seq)
 
 (setq org-html-htmlize-output-type 'css)
 (setq weblorg-default-url "")
+
+(defun weblorg-input-aggregate-take-n-desc (n)
+  "Aggregate first N posts within a single collection in decreasing order."
+  (lambda (posts) (weblorg-input-aggregate-all (seq-take (sort posts #'weblorg--compare-posts-desc) n))))
 
 (let ((site (weblorg-site
              :name "personal"
@@ -45,6 +50,7 @@
   (weblorg-route
    :name "index"
    :input-pattern "content/posts/*.org"
+   ;; :input-aggregate (weblorg-input-aggregate-take-n-desc 10)
    :input-aggregate #'weblorg-input-aggregate-all-desc
    :template "blog.html"
    :output "public/index.html"

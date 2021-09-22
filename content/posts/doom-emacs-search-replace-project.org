@@ -1,7 +1,6 @@
 #+TITLE: How to Do a Project-wide Search & Replace in Doom Emacs
 #+TAGS[]: Doom~Emacs Emacs Programming
 #+DATE: 2020-09-06T16:53:58+08:00
-#+DRAFT: false
 
 Earlier this week I went looking for "how to search and replace in a whole project" in Emacs. I knew had [[https://github.com/hlissner/doom-emacs][Doom Emacs]] set up with [[https://github.com/emacs-evil/evil][evil]] turned on by default, and I knew to use =SPC s p= to launch a project text search. What was next...?
 

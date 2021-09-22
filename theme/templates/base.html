@@ -29,20 +29,16 @@
               {% block title %}{{ site_name | default("weblorg website") }}{% endblock %}
             </a>
           </h1>
-          <a href="#main" class="visually-hidden">
+          <a href="#main" class="hidden">
             jump to main content
           </a>
           <nav>
             <ul class="menu">
               <li>
-                <a href="{{ url_for("pages", slug="about") }}">
-                  about
-                </a>
+                <a href="{{ url_for("pages", slug="about") }}">ABOUT</a>
               </li>
               <li>
-                <a href="{{ url_for("index") }}">
-                  blog
-                </a>
+                <a href="{{ url_for("index") }}">BLOG</a>
               </li>
             </ul>
           </nav>
@@ -57,12 +53,12 @@
 
     {# Links, copyright notice, etc #}
     {% block footer %}
-      <footer>
-        Made with &#x2665; and&nbsp;
-        <a href="https://emacs.love/weblorg" target="_blank">
-          weblorg
-        </a>
-      </footer>
+    <!-- <footer>
+         Made with &#x2665; and&nbsp;
+         <a href="https://emacs.love/weblorg" target="_blank">
+         weblorg
+         </a>
+         </footer> -->
     {% endblock %}
 
   </body>
