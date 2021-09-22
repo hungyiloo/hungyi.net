@@ -214,8 +214,9 @@ main h1:first-of-type {
 
 
 /* -- Table -- */
-main table { width: 100% }
-main table th { text-align: left; }
+main table { width: 100%; border-color: var(--border); background-color: rgba(var(--nord-snow-storm-4-rgb), 0.25); }
+main table th { text-align: left; background-color: rgba(var(--nord-snow-storm-4-rgb), 0.5); }
+main table th, main table td { padding: calc(var(--rhythm) * 0.25) calc(var(--rhythm) * 0.5); border-color: var(--border); }
 
 /* -- Code Blocks -- */
 .org-builtin                         { color: var(--code-builtin); }
