@@ -1,4 +1,5 @@
 #+TITLE: Easily Copy an Org-mode URL
+#+SLUG: copy-org-mode-url
 #+TAGS[]: Emacs Doom~Emacs Code Programming Org-mode
 #+DATE: 2020-09-01T13:39:56+08:00
 

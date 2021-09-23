@@ -60,6 +60,8 @@
   --code-type:                 var(--nord-purple);
   --code-variable-name:        var(--nord-frost-2);
 
+  --code-font: "JetBrains Mono", monospace;
+
   /* -- Spacing -- */
   --rhythm: 1.5rem;
   --content-width: calc(var(--rhythm) * 30);
@@ -89,12 +91,14 @@ header {
   justify-content: center;
   background-color: var(--foreground);
   color: var(--background);
-  padding: calc(var(--rhythm) * 2);
+  padding: calc(var(--rhythm) * 2) calc(var(--rhythm) * 0.5);
   margin-bottom: calc(var(--rhythm) * 2);
 }
+
 header > div {
-  width: var(--content-width);
+  max-width: var(--content-width);
   display: flex;
+  flex-grow: 1;
   justify-content: space-between;
   align-items: center;
 }
@@ -105,25 +109,61 @@ header h1 {
 header h1 a {
   color: var(--background);
   text-decoration: none;
+  white-space: nowrap;
 }
 header h1 a:hover {
   color: white;
+  text-decoration: none;
+}
+header h1 a img {
+  height: calc(var(--rhythm) * 3);
+  vertical-align: middle;
+  margin-right: calc(var(--rhythm) * 0.5);
+  border-radius: 100%;
+  border: calc(var(--rhythm) * 0.25) solid var(--nord-polar-night-1);
+  background-color: #00000033;
 }
 header a { text-decoration: none; }
 header nav {
   display: flex;
   align-items: center;
 }
-header nav ul { margin: 0; padding: 0; }
-header nav ul li { display: inline; }
+header nav ul { margin: 0; padding: 0; display: flex; flex-direction: row; flex-wrap: wrap; }
+header nav li { list-style: none; }
 header .menu li { margin-left: var(--rhythm); }
 header .menu a {
-  color: var(--nord-snow-storm-0);
-  font-size: 80%;
-  font-weight: bold;
+  color: var(--nord-polar-night-5);
+  font-size: 75%;
+  font-weight: 600;
+  letter-spacing: 0.05em;
 }
 header .menu a:hover {
   color: var(--nord-snow-storm-4);
+}
+@media (max-width: 600px) {
+  header {
+    padding: var(--rhythm) calc(var(--rhythm) * 0.5);
+  }
+  header h1 {
+    font-size: 110%;
+  }
+  header .header-title-text {
+    top: calc(var(--rhythm) * -0.25);
+    position: relative;
+  }
+  header > div {
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+  }
+  header nav ul {
+    margin-top: calc(var(--rhythm) * -2);
+    margin-left: calc(var(--rhythm) * 4.25);
+  }
+  header .menu a {
+    font-size: 70%;
+  }
+  header .menu li { margin-left: 0; margin-right: calc(var(--rhythm) * 0.5); }
 }
 
 
@@ -143,6 +183,14 @@ h3 { font-size: 125% }
 h4 { font-size: 100% }
 h5 { font-size: 85% }
 h6 { font-size: 75% }
+@media (max-width: 600px) {
+  h1 { font-size: 140% }
+  h2 { font-size: 120% }
+  h3 { font-size: 110% }
+  h4 { font-size: 100% }
+  h5 { font-size: 85% }
+  h6 { font-size: 75% }
+}
 p { margin: var(--rhythm) 0; }
 sup { font-size: 65%; }
 sup a { text-decoration: none; }
@@ -153,6 +201,7 @@ code {
   border: 1px solid rgba(var(--nord-green-rgb), 0.4);
   color: #000000cc;
   padding: 0 0.2rem;
+  font-size: 90%;
 }
 
 /* -- Content -- */
@@ -161,23 +210,36 @@ a {
 }
 a:hover {
   transition: var(--speed);
-  color: var(--nord-polar-night-2)
+  color: var(--nord-polar-night-2);
   text-decoration: underline;
 }
 main {
-  width: var(--content-width);
-  margin: 0 auto;
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  padding: 0 calc(var(--rhythm) * 0.5);
+  align-self: center;
+  width: calc(100vw - var(--rhythm));
+  margin-bottom: calc(var(--rhythm)*2)
+}
+main > div {
+  max-width: var(--content-width);
   flex-grow: 1;
 }
-@media (max-width: calc(var(--content-width) - 1px)) {
+@media (max-width: 600px) {
   main {
-    width: calc(100% - var(--rhythm)/2);
-    padding: calc(var(--rhythm) * 0.25);
+    width: calc(100% - var(--rhythm));
   }
 }
 main h1:first-of-type {
   font-size: 225%;
   margin-top: calc(var(--rhythm) * 1);
+}
+@media (max-width: 600px) {
+  main h1:first-of-type {
+    font-size: 150%;
+    margin-top: 0;
+  }
 }
 /* post.html */
 .post__meta {
@@ -232,13 +294,14 @@ main table th, main table td { padding: calc(var(--rhythm) * 0.25) calc(var(--rh
   color: var(--code-foreground);
   background: var(--code-background);
   padding: calc(0.75 * var(--rhythm));
-  font-size: 90%;
-  max-width: 100%;
+  font-size: 80%;
+  max-width: calc(100vw - var(--rhythm)*2.5);
   overflow-y: auto;
   border-radius: var(--radius);
 }
 .org-src-container + .org-src-container { margin-top: calc(0.5 * var(--rhythm)); }
 .org-src-container pre { margin: 0; }
+pre, code { font-family: var(--code-font); }
 
 /* -- Footnotes -- */
 #footnotes { font-size: 90%; }

@@ -1,4 +1,5 @@
 #+TITLE: Learning Emacs More Effectively
+#+SLUG: begin-exploring-emacs
 #+DATE: 2020-09-13T20:17:25+08:00
 #+TAGS[]: Emacs
 

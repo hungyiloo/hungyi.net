@@ -1,4 +1,5 @@
 #+TITLE: Browse URLs in Emacs under WSL
+#+SLUG: browse-emacs-urls-wsl
 #+DATE: 2020-09-02T17:52:44+08:00
 #+TAGS[]: Emacs WSL Windows Code Power-user
 #+LANGUAGE: en

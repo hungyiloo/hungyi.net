@@ -1,4 +1,5 @@
 #+TITLE: How to Quickly Get evil-mc Working With Smartparens
+#+SLUG: how-to-evil-mc-smartparens
 #+DATE: 2021-03-17T20:01:37+08:00
 #+TAGS[]: Emacs Doom~Emacs Power-user
 

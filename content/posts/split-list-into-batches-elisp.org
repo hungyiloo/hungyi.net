@@ -1,4 +1,5 @@
 #+TITLE: Split a List Into Batches Using Emacs Lisp
+#+SLUG: split-list-into-batches-elisp
 #+DATE: 2021-04-02T14:26:02+08:00
 #+TAGS[]: Emacs Lisp Programming Code
 

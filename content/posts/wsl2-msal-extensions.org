@@ -1,4 +1,5 @@
 #+TITLE: Authentication Issues with MSAL.NET on WSL2
+#+SLUG: wsl2-msal-extensions
 #+DATE: 2021-01-25T21:55:57+08:00
 #+TAGS[]: WSL Windows .NET Programming
 

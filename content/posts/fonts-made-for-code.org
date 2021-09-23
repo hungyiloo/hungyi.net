@@ -1,4 +1,5 @@
 #+TITLE: Fonts Made for Coding
+#+SLUG: fonts-made-for-code
 #+DATE: 2020-09-05T17:47:39+08:00
 #+TAGS[]: Programming Power-user Typography
 

@@ -1,4 +1,5 @@
 #+TITLE: WSL2, Hyper-V & Reserved Ports
+#+SLUG: wsl2-reserved-ports
 #+DATE: 2020-08-31T20:43:30+08:00
 #+TAGS[]: WSL Windows Troubleshooting Power-user
 

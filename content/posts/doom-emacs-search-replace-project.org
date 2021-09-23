@@ -1,4 +1,5 @@
 #+TITLE: How to Do a Project-wide Search & Replace in Doom Emacs
+#+SLUG: doom-emacs-search-replace-project
 #+TAGS[]: Doom~Emacs Emacs Programming
 #+DATE: 2020-09-06T16:53:58+08:00
 

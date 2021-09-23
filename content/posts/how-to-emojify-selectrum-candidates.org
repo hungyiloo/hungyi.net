@@ -1,4 +1,5 @@
 #+TITLE: How to Emojify Selectrum Candidates
+#+SLUG: how-to-emojify-selectrum-candidates
 #+DATE: 2021-03-01T15:27:19+08:00
 #+TAGS[]: Emacs Doom~Emacs Power-user
 

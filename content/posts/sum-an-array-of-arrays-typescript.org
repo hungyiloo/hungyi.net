@@ -1,4 +1,5 @@
 #+TITLE: Sum an Array of Arrays Using JavaScript or TypeScript
+#+SLUG: sum-an-array-of-arrays-typescript
 #+DATE: 2021-05-07T20:34:01+08:00
 #+TAGS[]: Programming Code TypeScript JavaScript
 

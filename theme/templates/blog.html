@@ -6,7 +6,7 @@
       <li class="post-item">
         <a href="{{ url_for("posts", slug=post.slug) }}">
           {% if post.date is defined %}
-            <span class="post-date">{{ post.date|strftime("%d %B, %Y") }}</span>
+            <span class="post-date">{{ post.date|strftime("%e %B, %Y") }}</span>
           {% endif %}
           <span class="post-title">{{ post.title }}</span>
         </a>

@@ -1,4 +1,5 @@
 #+TITLE: Emacs Lets You Calculate While You Write
+#+SLUG: emacs-calculate-while-you-write
 #+DATE: 2020-09-09T21:24:54+08:00
 #+TAGS[]: Emacs Doom~Emacs Power-user
 

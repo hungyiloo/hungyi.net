@@ -1,4 +1,5 @@
 #+TITLE: Solving Equations With Emacs literate-calc-mode
+#+SLUG: solve-system-of-equations-literate-calc-mode
 #+DATE: 2021-09-15T19:41:34+08:00
 #+TAGS[]: Emacs Doom~Emacs Power-user
 #+OPTIONS: \n:t
@@ -101,6 +102,11 @@ Now our four key variables look like this:
 # Some styling for the calc overlays, just for this post
 #+begin_export html
 <style>
-  .literatecalc i { color: var(--nord-green); display: inline-block; }
+  .literatecalc i {
+    color: var(--nord-green);
+    display: inline-block;
+    font-family: var(--code-font);
+    font-size: 90%;
+  }
 </style>
 #+end_export

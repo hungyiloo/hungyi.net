@@ -1,4 +1,5 @@
 #+TITLE: Pure CSS Map Marker
+#+SLUG: pure-css-map-marker
 #+DATE: 2020-09-03T18:23:35+08:00
 #+TAGS[]: Code CSS HTML Web Front-end Programming
 
