@@ -219,8 +219,8 @@ main {
   justify-content: center;
   padding: 0 calc(var(--rhythm) * 0.5);
   align-self: center;
-  width: calc(100vw - var(--rhythm));
-  margin-bottom: calc(var(--rhythm)*2)
+  width: calc(100vw - var(--rhythm)*2);
+  margin-bottom: calc(var(--rhythm)*2);
 }
 main > div {
   max-width: var(--content-width);
