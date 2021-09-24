@@ -3,7 +3,9 @@
 #+DATE: 2020-09-28T12:09:03+08:00
 #+TAGS[]: Code JavaScript Web Front-end Programming
 
-There's a little Array method in JavaScript that I've seen a lot of developers overlook. I suspect it's because of its abstract nature that doesn't exactly lead developers to any obvious use cases. But that's why I think it's a great programming Swiss Army knife: you can do a lot more with it than you might realise[fn:1]. Let me introduce you to my friend, [[https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce][~Array.prototype.reduce()~]]. Today, I'll show you some creative ways to use it that may just inspire you.
+There's a little Array method in JavaScript that I've seen a lot of developers overlook. I suspect because it's abstract and generic, so doesn't lend itself to any obvious uses. But it turns out that's key to a great programming Swiss Army knife: you can do a lot more with it than you might realise.[fn:1]
+
+Today, let me introduce you to [[https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce][~Array.prototype.reduce()~]]. I'll show you some creative ways to use it that might just make you like JavaScript after all!
 
 [fn:1] And just like a Swiss Army knife, just because you /can/ do almost everything with it doesn't mean you /should/. Don't try to fell a tree with a Swiss Army knife; and don't try to use ~reduce~ to sort an array.
 
@@ -41,10 +43,6 @@ First let's take a detour to give you a taste of how fundamental the concept of 
 You may be familiar with array functions such as [[https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map][~map~]], [[https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter][~filter~]], [[https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/includes][~includes~]] and [[https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/find][~find~]] already. These are the bread and butter for list processing in JavaScript. I use them all the time, of course.
 
 But did you know that you can implement them using ~reduce~? That's right. Because ~reduce~ is a more primitive and flexible building block for list processing, it can do everything that the friendlier functions can.
-
-#+BEGIN_QUOTE
-With the parts for an IKEA shelf, you can build that IKEA shelf. But with raw lumber, the right tools and some considerable effort, you can build almost anything.
-#+END_QUOTE
 
 Let me show you...
 

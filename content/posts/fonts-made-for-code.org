@@ -5,7 +5,7 @@
 
 You may have heard that there are fonts[fn:1] designed specifically for programming work, especially ones that use programming ligatures. If you haven't heard---and you cut code---then you're in for a treat today! And if you're already in the loop, maybe you'll find a new favorite font to spruce up your code. Today, I'll explain why I chose [[https://www.jetbrains.com/lp/mono/][JetBrains Mono]] for my own programming needs, and along the way I'll outline all the programming fonts I've come across so far.
 
-[fn:1] In common parlance, the word 'font' is used to refer to both /typefaces/ or /fonts/ and no distinction is made between the two. Although they are technically different, I'm no typographer, so I'm sticking to the colloquial usage.
+[fn:1] In everyday speak, the word 'font' is used to refer to both /typefaces/ or /fonts/ and no distinction is made between the two. Although they are technically different, I'm no typographer, so I'm sticking to the colloquial usage.
 
 
 # more
@@ -20,26 +20,17 @@ Let's fight fire with fire.
 
 Because the dot of the 'i' normally collides with the hook of the 'f', most good fonts will combine them such that the dot is "removed". It just looks neater that way.
 
+#+BEGIN_NOLIGATURES
 /Programming/ ligatures take this to the extreme with special code-related combinations. A prime example is the arrow operator that is often used for lambda functions: ~=>~. Most fonts with programming ligatures will combine it into an arrow like this: ~⇒~.
+#+END_NOLIGATURES
 
 Other common programming ligatures include:
-# Exp
-#+BEGIN_SRC org :exports results :results html
+#+BEGIN_noligatures
 - ~>=~ into ~≥~
 - ~<=~ into ~≤~
 - ~!=~ into ~≠~
 - ~|>~ into ~▷~
-#+END_SRC
-
-#+RESULTS:
-#+begin_export html
-<ul class="org-ul">
-<li><code>&gt;=</code> into <code>≥</code></li>
-<li><code>&lt;=</code> into <code>≤</code></li>
-<li><code>!=</code> into <code>≠</code></li>
-<li><code>|&gt;</code> into <code>▷</code></li>
-</ul>
-#+end_export
+#+END_noligatures
 
 It's a matter of personal taste[fn:2], but many programmers---myself included---find that these ligatures make code look more meaningful and easier to parse.
 
@@ -49,7 +40,6 @@ Now, on to some actual programming fonts...
 
 For no-ligature fonts with similar names, just make sure you're installing and using the right ones as they often come packaged together or are linked right next to each other.
 
-#+BEGIN_COMPACT
 | Ligatures      | No Ligatures      |
 |----------------+-------------------|
 | Hasklig        | Source Code Pro   |
@@ -57,7 +47,6 @@ For no-ligature fonts with similar names, just make sure you're installing and u
 | Cascadia Code  | Cascadia Mono     |
 | Iosevka        | Iosevka Fixed     |
 | JetBrains Mono | JetBrains Mono NL |
-#+END_COMPACT
 
 * Hasklig
 
