@@ -103,7 +103,7 @@ Now our four key variables look like this:
 #+begin_export html
 <style>
   .literatecalc i {
-    color: var(--nord-green);
+    color: var(--nord-purple);
     display: inline-block;
     font-family: var(--code-font);
     font-size: 90%;

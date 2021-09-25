@@ -9,7 +9,7 @@ Allegedly [[https://stackoverflow.com/a/62359555][a botched Windows update reset
 
 Today I remembered that Windows had some sort of port reservation/exclusion mechanism, so I dug up the relevant command and sure enough, Angular's port 4200 had (presumably) been stolen by Hyper-V[fn:1].
 
-#+BEGIN_SRC
+#+BEGIN_SRC text
 > netsh int ipv4 show excludedportrange protocol=tcp
 
 Protocol tcp Port Exclusion Ranges

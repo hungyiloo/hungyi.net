@@ -25,7 +25,7 @@
     </h1>
     <section class="post__meta">
       {% if post.date is defined %}
-        {{ post.date|strftime("%e %B, %Y") }}
+        <span class="datestamp">{{ post.date|strftime("%e %B, %Y") }}</span>
       {% endif %}
     </section>
     <section>
