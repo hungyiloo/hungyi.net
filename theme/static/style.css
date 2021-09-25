@@ -104,6 +104,7 @@ header {
   color: var(--background);
   padding: calc(var(--rhythm) * 2) calc(var(--rhythm) * 0.5);
   margin-bottom: calc(var(--rhythm) * 2);
+  border-bottom: calc(var(--rhythm)*0.25) solid var(--nord-frost-1);
 }
 
 header > div {
@@ -144,7 +145,7 @@ header nav li { list-style: none; display: flex; }
 header .menu li { margin-left: var(--rhythm); }
 header .menu a {
   font-family: var(--font-display);
-  color: var(--nord-frost-3);
+  color: var(--nord-frost-1);
   font-size: 75%;
   font-weight: 500;
   letter-spacing: 0.05em;
@@ -217,8 +218,8 @@ code {
 ul, ol {
   margin: var(--rhythm) 0;
 }
-ul li > p, ol li > p {
-  margin: 0;
+ul li > p:last-child, ol li > p:last-child {
+  margin-bottom: 0;
 }
 .comfy li, .COMFY li {
   margin-bottom: var(--rhythm);
@@ -226,10 +227,12 @@ ul li > p, ol li > p {
 blockquote {
   font-family: var(--font-display);
   font-size: 120%;
-  border-left: calc(var(--rhythm) * 0.2) solid var(--nord-purple);
-  background-color: var(--nord-snow-storm-4);
+  border-left: calc(var(--rhythm) * 0.2) solid var(--nord-frost-1);
+  background-color: rgba(var(--nord-snow-storm-4-rgb), 0.5);
   margin: 0 0 var(--rhythm) 0;
   padding: var(--rhythm);
+  border-top-right-radius: var(--radius);
+  border-bottom-right-radius: var(--radius);
 }
 blockquote p:last-of-type {
   margin-bottom: 0;
@@ -271,7 +274,7 @@ main h1:first-of-type {
     font-size: 150%;
   }
 }
-.datestamp {
+.datestamp, .timestamp-wrapper {
   padding: calc(var(--rhythm) * 0.1) calc(var(--rhythm) * 0.2);
   border: 1px solid var(--border);
   color: var(--muted);
@@ -280,9 +283,15 @@ main h1:first-of-type {
   text-transform: uppercase;
   letter-spacing: 0.05em;
   font-weight: 500;
+  border-radius: var(--radius);
+}
+.timestamp-wrapper {
+  color: var(--nord-purple);
+  border: none;
+  background-color: rgba(var(--nord-purple-rgb), 0.05)
 }
 @media (max-width: 600px) {
-  .datestamp {
+  .datestamp, .timestamp-wrapper {
     font-size: 75%;
   }
 }

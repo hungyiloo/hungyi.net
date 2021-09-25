@@ -15,7 +15,9 @@ TL;DR:
 
 Entering those keys will replace "foo" with "bar" in your whole project. Magic!
 
-/Not sure if you're using ivy or vertico? If you set up Doom Emacs after 29 July, 2021, you're probably using vertico. Otherwise, probably ivy. See this footnote for more details[fn:3]/
+#+begin_quote
+Not sure if you're using ivy or vertico? If you set up Doom Emacs after [2021-07-29 Thu], you're probably using vertico. Otherwise, probably ivy. See this footnote for more details[fn:3]
+#+end_quote
 
 * The Long Explanation (for ivy users[fn:3])
 
