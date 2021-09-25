@@ -42,7 +42,7 @@
   --nord-purple:            #B48EAD;
 
   /* colors */
-  --border: var(--nord-snow-storm-0);
+  --border: rgba(var(--nord-snow-storm-0-rgb), 0.5);
   --foreground: var(--nord-polar-night-0);
   --background: #ffffff;
   --muted: var(--nord-polar-night-5);
@@ -73,6 +73,8 @@
 
   /* -- Shapes -- */
   --radius: 0.2rem;
+  --shadow: calc(var(--rhythm) * 0.25) calc(var(--rhythm) * 0.25) var(--rhythm) rgba(var(--nord-polar-night-4-rgb), 0.2);
+  --shadow-dark: calc(var(--rhythm) * 0.25) calc(var(--rhythm) * 0.25) var(--rhythm) rgba(var(--nord-polar-night-4-rgb), 0.5);
 }
 
 body {
@@ -330,19 +332,33 @@ main colgroup {
     -webkit-border-horizontal-spacing: 0;
     -webkit-border-vertical-spacing: 0;
 }
-main table { width: 100%; }
-main table td, main table th {
-  padding: calc(var(--rhythm) * 0.25) calc(var(--rhythm) * 0.5);
+main table {
+  width: 100%;
+  box-shadow: var(--shadow);
 }
-main table td {
-  border: 1px solid var(--border);
+main table td, main table th {
+  padding: calc(var(--rhythm) * 0.5) calc(var(--rhythm) * 1);
+}
+main table tr {
+  border-bottom: 1px solid var(--border);
+}
+main thead tr:first-child th:first-child {
+  border-top-left-radius: var(--radius);
+}
+main thead tr:first-child th:last-child {
+  border-top-right-radius: var(--radius);
+}
+main table tr:nth-child(2n) {
+  background-color: rgba(var(--nord-snow-storm-4-rgb), 0.5);
+}
+main table tr:last-child {
+  border-bottom: 3px solid var(--nord-polar-night-4);
 }
 main table th {
-  color: var(--nord-polar-night-4);
-  font-weight: 500;
-  font-size: 110%;
+  background-color: var(--nord-polar-night-4);
+  color: var(--nord-snow-storm-4);
+  font-weight: 400;
   font-family: var(--font-display);
-  text-align: center;
 }
 
 /* -- Code Blocks -- */
@@ -364,6 +380,7 @@ main table th {
   overflow-y: auto;
   border-radius: var(--radius);
   margin-bottom: var(--rhythm);
+  box-shadow: var(--shadow-dark);
 }
 .org-src-container + .org-src-container { margin-top: calc(-0.75 * var(--rhythm)); }
 .org-src-container pre { margin: 0; }

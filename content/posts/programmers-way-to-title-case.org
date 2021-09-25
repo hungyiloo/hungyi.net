@@ -194,7 +194,7 @@ If you want to experiment with writing your own implementation, here are the tes
 | Scott Moritz and thestreet.com’s million iPhone la‑la land                                   | Scott Moritz and thestreet.com’s Million iPhone La‑La Land                                   |
 | BlackBerry vs. iPhone                                                                        | BlackBerry vs. iPhone                                                                        |
 | Notes and observations regarding Apple’s announcements from ‘The Beat Goes On’ special event | Notes and Observations Regarding Apple’s Announcements From ‘The Beat Goes On’ Special Event |
-| Read markdown_rules.txt to find out how =_underscores around words_= will be interpretted    | Read markdown_rules.txt to Find Out How =_Underscores Around Words_= Will Be Interpretted    |
+| Read =markdown_rules.txt= to find out how =_underscores around words_= will be interpretted  | Read =markdown_rules.txt= to Find Out How =_Underscores Around Words_= Will Be Interpretted  |
 | Q&A with Steve Jobs: 'That's what happens in technology'                                     | Q&A With Steve Jobs: 'That's What Happens in Technology'                                     |
 | What is AT&T's problem?                                                                      | What Is AT&T's Problem?                                                                      |
 | Apple deal with AT&T falls through                                                           | Apple Deal With AT&T Falls Through                                                           |
