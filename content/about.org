@@ -1,3 +1,18 @@
-#+title: About Hung-Yi
+#+title: Hello world, I'm Hung-Yi
 #+slug: about
-This is some static page where you can write about yourself. Test.
+
+I'm a UX developer based in Perth, Western Australia. I like building *beautiful and usable* software that runs on the web. Most of the people I work with find HTML, CSS and JavaScript absolutely repulsive, but I'm the opposite --- *I pretty much eat, sleep and breathe front-end web development*.
+
+In my spare time, I'm an Emacs adventurer. I use [[https://github.com/hlissner/doom-emacs][Doom Emacs]] in [[https://en.wikipedia.org/wiki/Windows_Subsystem_for_Linux][WSL]] with an X server on my Windows host. I would love to use Linux as my everyday driver, but it's difficult to avoid Microsoft tech working in the Perth IT industry. Thankfully, Windows + WSL gives me enough flexibility to live in between two worlds.
+
+I've managed to merge the two worlds slightly by crafting my own (unpublished) major mode in Emacs: [[https://github.com/hungyiloo/doom-emacs-conf/blob/master/lisp/tsx-mode.el][tsx-mode]], which lets me edit [[https://www.typescriptlang.org/][TypeScript]] and [[https://reactjs.org/][React]] [[https://www.typescriptlang.org/docs/handbook/jsx.html][TSX]] code using [[https://github.com/tree-sitter/tree-sitter][tree-sitter]] for [[https://en.wikipedia.org/wiki/Abstract_syntax_tree][AST]]-based syntax highlighting and text operations.
+
+I'm also an avid [[https://orgmode.org/][org-mode]] user. I rely on it to organize my personal and work life using [[https://bulletjournal.com/][bullet journalling]] techniques. I also manage my own [[https://www.orgroam.com/][org-roam]] knowledge base.
+
+#+begin_export html
+<style>
+  main h1:first-of-type {
+    margin: 1.5em 0;
+  }
+</style>
+#+end_export

@@ -2,5 +2,5 @@
 set -euo pipefail
 
 rm -rf public
-hugo
+emacs --script build.el
 cp -r public/* ~/sites/hungyi.net/

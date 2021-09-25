@@ -5,7 +5,7 @@
 
 It can be confusing as a new Emacs user. The tutorials that you read online often throw a bunch of obscure command names or long chains of key sequences at you without explaining the /why/ and the /how/ behind the /what/.
 
-Today I'll outline what I think are the *fundamentals* for exploring Emacs features. These techniques can be used if you're just messing around in Emacs on your own, but they can even help you understand other Emacs tutorials better. You might consider this a tutorial for how to follow other Emacs tutorials.
+Today I'll outline what I think are the *fundamentals* for exploring Emacs features. These techniques can be used if you're just messing around in Emacs on your own, but they can also help you understand other Emacs tutorials better. You might consider this a tutorial for how to follow other Emacs tutorials.
 
 # more
 
@@ -37,24 +37,24 @@ In most cases, Emacs will give you instructions and feedback in the echo area. T
 
 When I'm not focusing on the content of my work, my eyes are invariably glued to the echo area. This is doubly true if I'm trying to do something new in Emacs that I've never done before.
 
-If you want to learn more about what Emacs is doing or what options you have, especially if you're stuck in a weird state, then look in the echo arae. Emacs might be trying to get your attention. Get into the habit of checking down there often. It's just like checking the mirrors when you're driving.
+If you want to learn more about what Emacs is doing or what options you have, especially if you're stuck in a weird state, then look in the echo area --- Emacs might just be trying to get your attention. Get into the habit of checking down there often, like checking the mirrors while you're driving.
 
 [fn:4] When the echo area can take input from you like a mini text editor, then it's called a "minibuffer".
 
 * Emergency Abort
 
-Uh oh. You've pressed the wrong keys and you have no idea what Emacs is doing. Maybe it's asking you a weird question. Or maybe it's just hanging. Your CPU fan starts spinning up. What if it's trying to download the /entire/ internet? What do you do now?
+Uh oh. You've pressed the wrong keys and you have no idea what Emacs is doing. Maybe it's asking you a weird question. Or maybe it's just hanging. Your CPU fan starts spinning up...what if it's trying to download the /entire/ internet? What do you do now?
 
-Don't panic. Keep calm and press =C-g=. It's the universal "abort" command[fn:2]. Get used to mashing it when you want to abort, abort, abort!
+Don't panic --- keep calm and press =C-g=. It's the universal "abort" command[fn:2]. Get used to mashing it when you want to abort, abort, abort!
 
-I'm pretty sure even seasoned Emacs users mash =C-g= a lot. Everyone has butterfingers now and then.
+I'm pretty sure even seasoned Emacs users mash =C-g= a lot. We all mess up every now and again.
 
 [fn:2] Emacs can generate popups when you do certain things. If =C-g= doesn't close them, try =q=, a common binding to dismiss popup windows. If =q= doesn't work or does something weird, =C-g= to abort that, then try =C-x 0= or =M-x quit-window= to close the window.
 
 
 * Calling Commands Directly with =M-x=
 
-Most of the power of Emacs comes with its command[fn:3] system. If you know the name of a command, you can call it by pressing =M-x= and typing it. When you read some instructions on [[https://emacs.stackexchange.com/][Stack Exchange]] or [[https://www.reddit.com/r/emacs/][Reddit]] and they casually mention a command that might help you, just type =M-x= followed by the command name and it'll run.
+Most of the power of Emacs comes with its command[fn:3] system. If you know the name of a command, you can call it by pressing =M-x= and typing it. When you read some instructions on [[https://emacs.stackexchange.com/][Stack Exchange]] or [[https://www.reddit.com/r/emacs/][Reddit]] and they casually mention a command that looks useful, just type =M-x= followed by the command name and it'll run.
 
 This is the slowest way to invoke a command, but it's also the easiest to remember since commands are usually named very sensibly. Even if you remember just part of the command name, you'll usually be able to find a partial match in the =M-x= list.
 
@@ -70,11 +70,11 @@ You've been given advice by a kind internet stranger to run the command =C-x * q
 
 But wait---what sorcery is this? Is there more to learn? How do you open pandora's box for all things "calculator" in Emacs?
 
-In other words: *you want to know what command* =C-x * q= runs so that you can understand it better. Introducing =describe-key=, a command that lets you enter any key sequence; if the sequence is bound to a command, it will tell you what it is.
+In other words: *you want to know what command* =C-x * q= runs so that you can understand it better. What you need is =describe-key=, a nifty little command that lets you enter any key sequence; if the sequence is bound to a command, it will tell you what it is.
 
-You can either call it manually via =M-x describe-key= or you can use its most common keybinding =C-h k= (read: "get me Help for this Key"). After that, just type your key sequence and Emacs will try its best explain itself.
+You can either call it manually via =M-x describe-key= or you can use its most common keybinding =C-h k= (read: "get me [h]elp for this [k]ey"). After that, just type your key sequence and Emacs will try its best explain itself.
 
-In this case, we type in =C-x *= and then Emacs cuts us off early, telling us that it's bound to =calc-dispatch=. Ah, this means the =q= key is handled separately by =calc-dispatch=. The help text for =calc-dispatch= even tells us where to look for more help, i.e. =M-x calc-dispatch-help=.
+In this case, we type in =C-x *= and then Emacs cuts us off early, telling us that it's bound to =calc-dispatch=. Ah, this means the =q= key is handled separately by =calc-dispatch=. The documentation for =calc-dispatch= even tells us where to look for more help, i.e. =M-x calc-dispatch-help=.
 
 * What Keys Run This Command?
 
