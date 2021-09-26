@@ -18,59 +18,6 @@ Check it out!
 </div>
 #+END_SRC
 
-#+RESULTS:
-#+begin_export html
-<style>
-  .marker {
-      /* Set the marker size here */
-      width: 2rem;
-      height: 2rem;
-      border-radius: 2rem;
-      /* Set the marker color here */
-      background: #aa3300;
-
-      display: inline-block;
-      border-bottom-right-radius: 0;
-      position: relative;
-      transform: rotate(45deg);
-
-      /* optional fanciness */
-      border: 1px solid #881100;
-  }
-  /* inner circle (optional if you don't need the central dot) */
-  .marker::before {
-      content: "";
-      background: white;
-      width: 50%;
-      height: 50%;
-      border-radius: 100%;
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-
-      /* optional fanciness */
-      border: 1px solid #881100;
-      box-shadow: 0.1rem 0.1rem 0.2rem 0.1rem rgba(0, 0, 0, 0.1);
-  }
-  /* shadow (optional if you don't need a shadow) */
-  .marker::after {
-      content: "";
-      background: rgba(128, 128, 128, 0.2);
-      width: 75%;
-      height: 75%;
-      border-radius: 100%;
-      position: absolute;
-      top: 100%;
-      left: 100%;
-      transform: translate(-50%, -50%) rotate(45deg) scaleX(0.5);
-  }
-</style>
-<div style="display:flex; justify-content: center; margin-bottom: 2em;">
-  <div class="marker"></div>
-</div>
-#+end_export
-
 To get the above result, include the following CSS somewhere on the page (or in an appropriate place in your project).
 
 #+NAME: marker-styles

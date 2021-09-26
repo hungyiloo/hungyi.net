@@ -1,0 +1,127 @@
+#+TITLE: Pure CSS True 3D Button
+#+SLUG: pure-css-true-3d-button
+#+DATE: 2021-09-26T16:41:36+08:00
+
+Sometimes you just need a big, shiny call-to-action that draws the user's attention to the most important thing on a page, but you've already exhausted your UI framework's colors, borders and button options. You want this thing to *really pop*.
+
+...and what could pop more than a chunky, glowing, animated 3D button? 😎
+
+#+BEGIN_SRC html :noweb yes :exports results :results html
+<style>
+  <<button-styles>>
+  .chunky-button .front {
+    font-family: var(--font-display);
+    font-size: 110% ;
+  }
+</style>
+<div style="display:flex; justify-content: center; margin: 3rem 0;">
+  <<button-markup>>
+</div>
+#+END_SRC
+
+The CSS and HTML markup are provided below. The key parts to note are:
+1. [[https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties][CSS variables]] allowing reuse of repetitive properties (e.g. color)
+2. 3D transforms to move and rotate the bottom and side faces of the button into realistic positions
+3. 3D transforms on the whole button to reveal the bottom and side faces[fn:1]
+4. =filter: brightness(0.9)= to darken the bottom and side faces
+5. =box-shadow= for the glow effect
+6. =transform: scale= and =transform-origin=[fn:2] to change the sizes of the bottom and side faces on hover/click
+7. =transform: translateZ= to move the front face in and out of the "screen" on hover/click
+
+#+NAME: button-styles
+#+BEGIN_SRC css :results silent
+.chunky-button {
+  border: none;
+  background: none;
+  padding: 0;
+  border-radius: 0;
+  position: relative;
+  /* Rotate the whole button just slightly
+   ,* so that we can see the side and bottom
+   ,* even though they will be at right angles
+   ,* to the front face */
+  transform: rotateX(2deg) rotateY(-2deg);
+  transform-style: preserve-3d;
+
+  --color: #EBCB8B;
+  --transition: transform 0.1s ease;
+  --virtual-height: 150px; /* oversized to account for the extreme perspective */
+  --factor: 0.38;
+}
+
+.chunky-button .front {
+  background-color: var(--color);
+  color: rgba(0, 0, 0, 0.5);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 1rem 2rem;
+  transition: var(--transition);
+  border: 1px solid var(--color);
+  backface-visibility: hidden;
+}
+.chunky-button:hover .front {
+  transform: translateZ(calc(var(--virtual-height)*var(--factor)));
+  box-shadow: 0 0 3rem var(--color);
+}
+.chunky-button:active .front {
+  transform: translateZ(calc(-1*var(--virtual-height)*var(--factor)));
+}
+
+.chunky-button .bottom {
+  background-color: var(--color);
+  filter: brightness(0.9);
+  height: var(--virtual-height);
+  width: calc(100% + 1px);
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  transform-origin: bottom;
+  --initial-position: rotateX(-90deg) translateY(100%);
+  transform: var(--initial-position);
+  transition: var(--transition);
+}
+.chunky-button:hover .bottom {
+  transform: var(--initial-position) scaleY(calc(1 + var(--factor)));
+}
+.chunky-button:active .bottom {
+  transform: var(--initial-position) scaleY(calc(1 - var(--factor)));
+}
+
+.chunky-button .side {
+  background-color: var(--color);
+  filter: brightness(0.9);
+  width: var(--virtual-height);
+  height: 100%;
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform-origin: right;
+  --initial-position: rotateY(90deg) translateX(100%);
+  transform: var(--initial-position);
+  transition: var(--transition);
+}
+.chunky-button:hover .side {
+  transform: var(--initial-position) scaleX(calc(1 + var(--factor)));
+}
+.chunky-button:active .side {
+  transform: var(--initial-position) scaleX(calc(1 - var(--factor)));
+}
+#+END_SRC
+
+Then place this HTML where you want the marker to appear.
+
+#+NAME: button-markup
+#+BEGIN_SRC html :results silent
+<button class="chunky-button">
+  <div class="bottom"></div>
+  <div class="side"></div>
+  <div class="front">
+    Click me, I won't hurt you!
+  </div>
+</button>
+#+END_SRC
+
+[fn:1] Admittedly this is a bit of a hack. Since transforming the bottom and side faces to be at right angles to the front face of the button actually makes them invisible to the user (since they go "into the screen"), I got around it by tilting the button /very slightly/ by =2deg= on the X and Y axes, which reveals enough of the side faces without noticeably distorting the front face of the button.
+
+[fn:2] I went through many iterations of janky and crunchy animations before figuring out that =transform-origin= was the best approach to anchoring the bottom and side faces of the button "in place" while they changed sizes. It's important to use the simplest =transform= changes possible on hover/click to keep the animation clean.
