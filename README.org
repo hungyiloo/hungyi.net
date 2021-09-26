@@ -1,5 +1,3 @@
-#+TITLE: README
-
 This repo contains the source code that generates my static-website blog at https://hungyi.net/. All of the content is written as [[https://orgmode.org/][org-mode]] files, and uses Emacs and [[https://github.com/emacs-love/weblorg][weblorg]] to parse and generate the static HTML for publishing.
 
 The generated files depend on [[https://github.com/hungyiloo/doom-emacs-conf][my Doom Emacs config]], since I load my whole org-mode environment in order to build this website. That way my blog is in sync with my Emacs development environment and I don't have to maintain the two separately.
