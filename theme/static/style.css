@@ -80,7 +80,7 @@
 body {
   font-family: var(--font-body);
   font-size: 19px;
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
   margin: 0;
   padding: 0;
@@ -103,14 +103,13 @@ header {
   background-color: var(--foreground);
   color: var(--background);
   padding: calc(var(--rhythm) * 2) calc(var(--rhythm) * 0.5);
-  margin-bottom: calc(var(--rhythm) * 2);
   border-bottom: calc(var(--rhythm)*0.25) solid var(--nord-frost-1);
 }
 
 header > div {
   max-width: var(--content-width);
-  display: flex;
   flex-grow: 1;
+  display: flex;
   justify-content: space-between;
   align-items: center;
 }
@@ -156,7 +155,6 @@ header .menu a:hover {
 @media (max-width: 600px) {
   header {
     padding: var(--rhythm) calc(var(--rhythm) * 0.5);
-    margin-bottom: 0;
   }
   header h1 {
     font-size: 110%;
@@ -252,10 +250,13 @@ main {
   flex-grow: 1;
   display: flex;
   justify-content: center;
-  padding: 0 calc(var(--rhythm) * 0.5);
+  padding: calc(var(--rhythm) * 2) calc(var(--rhythm) * 0.5) 0 ;
   align-self: center;
   width: calc(100vw - var(--rhythm)*2);
   margin-bottom: calc(var(--rhythm)*2);
+  background-image: url("/pattern1.svg");
+  background-size: 40%;
+  background-repeat: repeat-x;
 }
 main > div {
   max-width: var(--content-width);
@@ -264,6 +265,8 @@ main > div {
 @media (max-width: 600px) {
   main {
     width: calc(100% - var(--rhythm));
+    padding-top: 0;
+    background-size: 100%;
   }
 }
 main h1:first-of-type {
@@ -298,7 +301,7 @@ main h1:first-of-type {
 }
 /* blog.html */
 .posts {
-  margin: var(--rhythm) 0 calc(var(--rhythm) * 4) 0;
+  margin: var(--rhythm) 0 0 0;
   padding: 0;
 }
 .posts .post-item {
@@ -429,11 +432,23 @@ sup a.footref:target {
 }
 
 /* -- Footer -- */
-/* footer { */
-/*   background: var(--foreground); */
-/*   color: var(--background); */
-/*   height: 70px; */
-/*   display: flex; */
-/*   align-items: center; */
-/*   justify-content: center; */
-/* } */
+footer {
+  background: var(--nord-snow-storm-4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: calc(var(--rhythm) * 2) calc(var(--rhythm) * 0.5);
+}
+.footer-swoosh path {
+  fill: var(--nord-snow-storm-4);
+}
+footer > div {
+  max-width: var(--content-width);
+  flex-grow: 1;
+  color: var(--nord-polar-night-4);
+  font-family: var(--font-display);
+  font-size: 90%;
+  text-align: center;
+  line-height: 1.7;
+  opacity: 50%;
+}

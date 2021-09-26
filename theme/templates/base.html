@@ -58,12 +58,14 @@
 
     {# Links, copyright notice, etc #}
     {% block footer %}
-    <!-- <footer>
-         Made with &#x2665; and&nbsp;
-         <a href="https://emacs.love/weblorg" target="_blank">
-         weblorg
-         </a>
-         </footer> -->
+    <svg class="footer-swoosh" fill="transparent" viewBox="0 0 100 5">
+      <path d="M 0 3 C 11 3 22 0 33 0 C 44 0 55 3 66 3 C 77 3 88 0 100 0 L 100 5 L 0 5 Z"></path>
+    </svg>
+    <footer>
+      <div>
+        All prose, stylesheets and snippets of code (and even most graphics!) on this site are written or generated using <a href="https://www.gnu.org/software/emacs/">GNU Emacs</a> running on <a href="https://github.com/hlissner/doom-emacs">Doom Emacs</a>
+      </div>
+    </footer>
     {% endblock %}
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-180663322-1"></script>
