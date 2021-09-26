@@ -3,7 +3,7 @@
 #+DATE: 2021-03-17T20:01:37+08:00
 #+TAGS[]: Emacs Doom~Emacs Power-user
 
-[[https://github.com/gabesoft/evil-mc][evil-mc]] is great for working with multiple cursors and [[https://github.com/Fuco1/smartparens][smartparens]] is great for working with lispy s-expressions. But can they work nicely together without putting in a lot of effort writing glue between the two? Read on to find out.
+[[https://github.com/gabesoft/evil-mc][evil-mc]] is great for working with multiple cursors and [[https://github.com/Fuco1/smartparens][smartparens]] is great for working with lispy s-expressions. But can they work nicely together without putting in a lot of effort writing glue between the two?
 
 # more
 

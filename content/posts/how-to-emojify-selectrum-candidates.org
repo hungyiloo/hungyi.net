@@ -3,7 +3,7 @@
 #+DATE: 2021-03-01T15:27:19+08:00
 #+TAGS[]: Emacs Doom~Emacs Power-user
 
-If you use both [[https://github.com/iqbalansari/emacs-emojify][emacs-emojify]] and [[https://github.com/raxod502/selectrum/][selectrum]] and you're having trouble getting emoji to show up properly in the list of completion candidates, especially after the latest round of selectrum updates (commit 21cee86) then I have an elisp configuration snippet that may help you. Read on to see it.
+If you use both [[https://github.com/iqbalansari/emacs-emojify][emacs-emojify]] and [[https://github.com/raxod502/selectrum/][selectrum]] and you're having trouble getting emoji to show up properly in the list of completion candidates, especially after the latest round of selectrum updates (commit 21cee86) then I have an elisp configuration snippet that may help you.
 
 # more
 

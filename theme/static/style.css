@@ -79,7 +79,7 @@
 
 body {
   font-family: var(--font-body);
-  font-size: 18px;
+  font-size: 19px;
   background: var(--background);
   color: var(--foreground);
   margin: 0;
@@ -87,7 +87,7 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  line-height: 1.5;
+  line-height: 1.6;
   word-break: break-word;
 }
 
@@ -233,6 +233,7 @@ blockquote {
   padding: var(--rhythm);
   border-top-right-radius: var(--radius);
   border-bottom-right-radius: var(--radius);
+  line-height: 1.5;
 }
 blockquote p:last-of-type {
   margin-bottom: 0;
@@ -286,14 +287,10 @@ main h1:first-of-type {
   border-radius: var(--radius);
 }
 .timestamp-wrapper {
-  color: var(--nord-purple);
+  color: var(--nord-orange);
   border: none;
-  background-color: rgba(var(--nord-purple-rgb), 0.05)
-}
-@media (max-width: 600px) {
-  .datestamp, .timestamp-wrapper {
-    font-size: 75%;
-  }
+  padding: 0;
+  font-size: 85%;
 }
 /* post.html */
 .post__meta {

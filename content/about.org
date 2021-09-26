@@ -1,17 +1,26 @@
-#+title: Hello world, I'm Hung-Yi
+#+title: About Me
 #+slug: about
 
-I'm a UX developer based in Perth, Western Australia. I like building *beautiful and usable* software that runs on the web. Most of the people I work with find HTML, CSS and JavaScript absolutely repulsive, but I'm the opposite --- *I pretty much eat, sleep and breathe front-end web development*.
+#+begin_export html
+<h1 class="special-title">Hello world, I'm Hung-Yi.</h1>
+#+end_export
+
+I'm a UX developer based in Perth, Western Australia. I like building *beautiful and usable* software that runs on the web. Most of the people I work with find HTML, CSS and JavaScript repulsive, but I'm the opposite --- *I pretty much eat, sleep and breathe front-end web development*.
 
 In my spare time, I'm an Emacs adventurer. I use [[https://github.com/hlissner/doom-emacs][Doom Emacs]] in [[https://en.wikipedia.org/wiki/Windows_Subsystem_for_Linux][WSL]] with an X server on my Windows host. I would love to use Linux as my everyday driver, but it's difficult to avoid Microsoft tech working in the Perth IT industry. Thankfully, Windows + WSL gives me enough flexibility to live in between two worlds.
 
-I've managed to merge the two worlds slightly by crafting my own (unpublished) major mode in Emacs: [[https://github.com/hungyiloo/doom-emacs-conf/blob/master/lisp/tsx-mode.el][tsx-mode]], which lets me edit [[https://www.typescriptlang.org/][TypeScript]] and [[https://reactjs.org/][React]] [[https://www.typescriptlang.org/docs/handbook/jsx.html][TSX]] code using [[https://github.com/tree-sitter/tree-sitter][tree-sitter]] for [[https://en.wikipedia.org/wiki/Abstract_syntax_tree][AST]]-based syntax highlighting and text operations.
+I've managed to merge the two worlds slightly by crafting my own (unpublished) major mode in Emacs: [[https://github.com/hungyiloo/doom-emacs-conf/blob/master/lisp/tsx-mode.el][tsx-mode]], which lets me edit [[https://www.typescriptlang.org/][TypeScript]] and [[https://reactjs.org/][React]] [[https://www.typescriptlang.org/docs/handbook/jsx.html][TSX]] code using [[https://github.com/tree-sitter/tree-sitter][tree-sitter]] for [[https://en.wikipedia.org/wiki/Abstract_syntax_tree][AST]]-based syntax highlighting and AST-aware text operations.
 
-I'm also an avid [[https://orgmode.org/][org-mode]] user. I rely on it to organize my personal and work life using [[https://bulletjournal.com/][bullet journalling]] techniques. I also manage my own [[https://www.orgroam.com/][org-roam]] knowledge base.
+I'm also an avid [[https://orgmode.org/][org-mode]] user. I rely on it to organize my personal and work life using [[https://bulletjournal.com/][bullet journalling]], including my own [[https://www.orgroam.com/][org-roam]] knowledge base for long-lived note taking.
+
+This blog is entirely written in org-mode and generated as a static website purely using Emacs Lisp via [[https://emacs.love/weblorg/][weblorg]]. You can see the GitHub repo [[https://github.com/hungyiloo/hungyi.net][here]].
 
 #+begin_export html
 <style>
-  main h1:first-of-type {
+  .page__title {
+    display: none;
+  }
+  .special-title {
     margin: 1.5em 0;
   }
 </style>

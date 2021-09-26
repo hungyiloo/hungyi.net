@@ -14,7 +14,7 @@ First, add these lines to =packages.el=:
 (package! tree-sitter-langs)
 #+END_SRC
 
-*Update [2020-10-26 Mon]*: It seems emacs-tree-sitter is now on MELPA, so the =packages.el= config above has been simplified accordingly. There's no longer any need to specify a =tsc= package[fn:2] or write a manual =straight.el= recipe to fetch it from GitHub.
+[2020-10-26 Mon] It seems emacs-tree-sitter is now on MELPA, so the =packages.el= config above has been simplified accordingly. There's no longer any need to specify a =tsc= package[fn:2] or write a manual =straight.el= recipe to fetch it from GitHub.
 
 Then in =config.el=, you'll need:
 

@@ -78,21 +78,6 @@ Not sure if you're using ivy or vertico? If you set up Doom Emacs after [2021-07
                                (t . 3))))
 #+END_SRC
 
-[fn:3] Update [2021-08-01 Sun]: This post was originally written back when Ivy was still the default completion engine used by Doom Emacs. However, since [[https://github.com/hlissner/doom-emacs/commit/c2e6db27d030f20d3aead4b2049695e4b2d942ba][this commit]]  on [2021-07-29 Thu], new users of Doom will be using the [[https://github.com/minad/vertico][vertico]] completion stack. Existing users upgrading to the current version of Doom will keep using Ivy.
+[fn:3] [2021-08-01 Sun] This post was originally written back when Ivy was still the default completion engine used by Doom Emacs. However, since [[https://github.com/hlissner/doom-emacs/commit/c2e6db27d030f20d3aead4b2049695e4b2d942ba][this commit]]  on [2021-07-29 Thu], new users of Doom will be using the [[https://github.com/minad/vertico][vertico]] completion stack. Existing users upgrading to the current version of Doom will keep using Ivy.
 
 How can you tell if you're using Ivy or vertico? Have a look at your =init.el= file in your Doom config to check if ~ivy~ or ~vertico~ are present and uncommented. Whichever one is uncommented is the one you're using.
-
-[fn:1] Just a reminder that Emacs has [[https://www.emacswiki.org/emacs/RegularExpression][its own idiosyncratic version of regular expressions]]. It's weird, I know.
-
-[fn:2] I have this in my =config.el= to set the minimum characters to 3 before a search is fired. You can customize the threshold individually for each of the commands.
-#+BEGIN_SRC emacs-lisp
-(after! ivy
-  (setq ivy-more-chars-alist '((counsel-grep . 3)
-                               (counsel-rg . 3)
-                               (counsel-search . 3)
-                               (t . 3))))
-#+END_SRC
-
-[fn:3] *Update [2021-08-01 Sun]*: This post was originally written back when ivy was still the default completion engine used by Doom Emacs. However, since [[https://github.com/hlissner/doom-emacs/commit/c2e6db27d030f20d3aead4b2049695e4b2d942ba][this commit]] on [2021-07-29 Thu], new users of Doom will be using the [[https://github.com/minad/vertico][vertico]] completion stack, which includes packages such as [[https://github.com/oantolin/embark][embark]], [[https://github.com/minad/consult][consult]], [[https://github.com/oantolin/orderless][orderless]] and [[https://github.com/minad/marginalia][marginalia]]. Old users upgrading to the current version of Doom will keep using ivy unless they also update their config to match the new defaults.
-
-*How can you tell if you're using ivy or vertico?* Have a look at your =init.el= file in your Doom config to check if ~ivy~ or ~vertico~ are present and uncommented. Whichever one is uncommented is the one you're using.

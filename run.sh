@@ -2,4 +2,4 @@
 set -euo pipefail
 
 fd | entr emacs --script build.el &
-serve public
+python -m http.server --directory public 5000

@@ -1,0 +1,15 @@
+#+TITLE: README
+
+This repo contains the source code that generates my static-website blog at https://hungyi.net/. All of the content is written as [[https://orgmode.org/][org-mode]] files, and uses Emacs and [[https://github.com/emacs-love/weblorg][weblorg]] to parse and generate the static HTML for publishing.
+
+The generated files depend on [[https://github.com/hungyiloo/doom-emacs-conf][my Doom Emacs config]], since I load my whole org-mode environment in order to build this website. That way my blog is in sync with my Emacs development environment and I don't have to maintain the two separately.
+
+* Developing
+Ensure that [[https://github.com/sharkdp/fd][fd-find]], [[https://github.com/eradman/entr][entr]] are installed and available on your =$PATH=. Python 3 is also required for basic local hosting, but it's normally included with Ubuntu.
+
+Run the command ~./run.sh~. This will start a watch on all the relevant files in the repo and re-run ~build.el~ whenever a change is detected. The output is generated to the =public= subdirectory.
+
+The website will be hosted on [[http://localhost:5000]], but needs manual refreshing when changes are expected, as there's not fancy hot-reloading or change detection going on in the browser. This is by design, as I want a dead simple system that's only dependent on Emacs and its ecosystem (i.e. weblorg for now).
+
+* Publishing
+Only Emacs and my personal config are required to build the website. Run ~emacs --script build.el~ to generate the static HTML into the =public= subdirectory.
