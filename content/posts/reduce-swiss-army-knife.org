@@ -48,7 +48,7 @@ Let me show you...
 
 Implementing ~map~ using ~reduce~:
 #+NAME: map-example
-#+BEGIN_SRC js :results value code
+#+BEGIN_SRC js :exports both :results value code
 const input = [1.618, 2.718, 3.141592653, 2.5029];
 
 return {
@@ -70,7 +70,7 @@ return {
 
 Implementing ~filter~ using ~reduce~:
 #+NAME: filter-example
-#+BEGIN_SRC js :results value code
+#+BEGIN_SRC js :exports both :results value code
 const input = [1.618, 2.718, 3.141592653, 2.5029];
 
 return {
@@ -95,7 +95,7 @@ return {
 
 Implementing ~includes~ using ~reduce~:
 #+NAME: includes-example
-#+BEGIN_SRC js :results value code
+#+BEGIN_SRC js :exports both :results value code
 const input = [1.618, 2.718, 3.141592653, 2.5029];
 const pi = 3.141592653;
 
@@ -118,7 +118,7 @@ return {
 
 Implementing ~find~ using ~reduce~:
 #+NAME: find-example
-#+BEGIN_SRC js :results value code
+#+BEGIN_SRC js :exports both :results value code
 const input = [1.618, 2.718, 3.141592653, 2.5029];
 
 return {
@@ -151,7 +151,7 @@ As long as you have to solve a problem with a list or array, you should consider
 
 Sometimes you'll find yourself with an array of key-value pairs that you would rather have as one single JavaScript object instead. There are several ways to do this[fn:3], but ~reduce~ can be a really good, idiomatic choice.
 
-#+BEGIN_SRC js :results value code
+#+BEGIN_SRC js :exports both :results value code
 const pairs = [
   { 'key': 'apple',  'value': 5  },
   { 'key': 'orange', 'value': 3  },
@@ -172,7 +172,7 @@ return pairs.reduce((acc, curr) => ({...acc, [curr.key]: curr.value}), {});
 
 The accumulator pattern that ~reduce~ uses makes it intuitive to do cumulative sums, since you have immediate access to the accumulated data at each step. You also have easy access to the loop index (declared as ~i~ below).
 
-#+BEGIN_SRC js :results value code
+#+BEGIN_SRC js :exports both :results value code
 const input = [1,2,3,4,5,6,7,8,9,10];
 return input.reduce((acc, curr, i) => [
   ...acc,
@@ -199,7 +199,7 @@ I think the most idiomatic way is to use ~reduce~ since it avoids side effects a
 
 This is how:
 
-#+BEGIN_SRC js :results value code
+#+BEGIN_SRC js :exports both :results value code
 const ingredients = [
   { name: 'celery',     category: 'fiber'   },
   { name: 'potato',     category: 'carb'    },
@@ -250,7 +250,7 @@ Actually, ~reduce~ is not not limited to mapping one-to-one or reducing to a sin
 
 For example, let's pair up this single list of people into subgroups of 2:
 
-#+BEGIN_SRC js :results value code
+#+BEGIN_SRC js :exports both :results value code
 const people = [
   'Alice', 'Bob',    'Charlie', 'Daisy', 'Edna',
   'Fara',  'Gordon', 'Hubert',  'Iris',  'Julian'
@@ -283,7 +283,7 @@ I'm pretty sure the idea of redux reducers came from the general concept of func
 
 When you reduce over some actions, you're essentially looping over them and accumulating their effects on some application state. Here's a toy calculator that follows this pattern.
 
-#+BEGIN_SRC js :results value code
+#+BEGIN_SRC js :exports both :results value code
 const actionTypes = {
   ADD:      0,
   SUBTRACT: 1,

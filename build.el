@@ -16,6 +16,8 @@
 
 (require 'weblorg)
 (require 'seq)
+(require 'tree-sitter)
+(global-tree-sitter-mode 1)
 
 (setq org-html-htmlize-output-type 'css)
 (setq weblorg-default-url "")

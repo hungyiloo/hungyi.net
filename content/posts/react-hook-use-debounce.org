@@ -1,0 +1,85 @@
+#+TITLE: React Hook: useDebounce with Enter Key Short Circuit
+#+SLUG: react-hook-use-debounce
+#+DATE: 2021-09-27T17:02:55+08:00
+
+In [[https://reactjs.org/][React]], component state can sometimes change very quickly, for instance when a user is typing input into a [[https://reactjs.org/docs/forms.html#controlled-components][controlled component]]. But we may not want to respond to every state change immediately. If we did, we might be triggering dozens of API calls on every keystroke or starting and canceling multiple long-running operations in quick succession. How do we avoid this?
+
+A common pattern is [[https://en.wiktionary.org/wiki/debounce][debouncing]] behavior, which we can achieve with this hook.
+
+#+name: hook
+#+begin_src tsx :results silent
+function useDebounce(value, delay: number) {
+  // State and setters for debounced value
+  const [debouncedValue, setDebouncedValue] = useState(value)
+  useEffect(
+    () => {
+      // Update debounced value after delay
+      const handler = setTimeout(() => {
+        setDebouncedValue(value)
+      }, delay)
+      // Cancel the timeout if value changes (also on delay change or unmount)
+      // This is how we prevent debounced value from updating if value is
+      // changed within the delay period. Timeout gets cleared and restarted.
+      return () => {
+        clearTimeout(handler)
+      }
+    },
+    [value, delay] // Only re-call effect if value or delay changes
+  )
+  return [debouncedValue, () => setDebouncedValue(value)]
+}
+#+end_src
+
+This version of the ~useDebounce~ hook contains a bonus "short circuiting" behavior, which I've found useful in many scenarios. Say a user is typing in a search query --- seasoned users will hit the =Enter= key when they're done typing, so we can ignore the debouncing delay and update the value immediately, providing a more responsive user experience.
+
+Here's an example of how to implement the hook, including the short circuiting.
+
+#+name: component
+#+begin_src tsx :results silent
+function DebouncedInputExample() {
+  const [input, setInput] = useState('')
+  const [debouncedInput, shortCircuit] = useDebounce(input, 1000)
+
+  return <React.Fragment>
+    <label>Input</label>
+    <input
+      value={input}
+      onChange={e => setInput(e.target.value)}
+      onKeyPress={e => e.key === 'Enter' && shortCircuit()}
+      placeholder="Type something here..." />
+    <label>
+      Debounced Result
+      <br/>
+      <span className="muted">
+        Updates after 1s idling or on hitting Enter
+      </span>
+    </label>
+    <pre>
+      {debouncedInput ||
+        <em className="muted">No input value to display</em>}
+    </pre>
+  </React.Fragment>
+}
+#+end_src
+
+And here's the whole demo in action.
+
+#+begin_src html :exports results :results html
+<div class="demo">
+  <div id="demo-container">Demo is loading (requires JavaScript)...</div>
+</div>
+#+end_src
+
+#+BEGIN_SRC html :noweb yes :exports results :results html
+<script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
+<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+<script type="text/babel">
+  const { useState, useEffect } = React
+  <<hook>>
+  <<component>>
+  const domContainer = document.querySelector('#demo-container')
+  ReactDOM.render(<DebouncedInputExample/>, domContainer)
+</script>
+#+END_SRC
+
