@@ -215,6 +215,7 @@ code {
 }
 ul, ol {
   margin: var(--rhythm) 0;
+  padding-inline-start: calc(var(--rhythm) * 1.5);
 }
 ul li > p:last-child, ol li > p:last-child {
   margin-bottom: 0;
@@ -404,6 +405,12 @@ main table th {
 .org-src-container + .org-src-container { margin-top: calc(-0.75 * var(--rhythm)); }
 .org-src-container pre { margin: 0; }
 pre, code { font-family: var(--font-code); }
+li .org-src-container {
+  max-width: calc(100vw - var(--rhythm)*(2.5 + 1.5*1));
+}
+li li .org-src-container {
+  max-width: calc(100vw - var(--rhythm)*(2.5 + 1.5*2));
+}
 .noligatures, .NOLIGATURES { font-variant-ligatures: none; }
 
 /* -- Footnotes -- */
