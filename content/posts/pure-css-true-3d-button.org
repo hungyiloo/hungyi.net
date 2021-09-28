@@ -31,7 +31,7 @@ The CSS and HTML markup are provided below. The key parts to note are:
 7. =transform: translateZ= to move the front face in and out of the "screen" on hover/click
 
 #+NAME: button-styles
-#+BEGIN_SRC css :results silent
+#+BEGIN_SRC css
 .chunky-button {
   border: none;
   background: none;
@@ -111,7 +111,7 @@ The CSS and HTML markup are provided below. The key parts to note are:
 Then place this HTML where you want the marker to appear.
 
 #+NAME: button-markup
-#+BEGIN_SRC html :results silent
+#+BEGIN_SRC html
 <button class="chunky-button">
   <div class="bottom"></div>
   <div class="side"></div>
