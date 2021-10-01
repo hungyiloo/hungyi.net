@@ -20,7 +20,7 @@
 (global-tree-sitter-mode 1)
 
 (setq org-html-htmlize-output-type 'css)
-(setq weblorg-default-url "")
+(setq weblorg-default-url (or (getenv "BASE_URL") ""))
 
 (defun weblorg-input-aggregate-take-n-desc (n)
   "Aggregate first N posts within a single collection in decreasing order."
@@ -29,8 +29,7 @@
 (let ((site (weblorg-site
              :name "personal"
              :theme nil
-             :template-vars '(("site_name" . "Hung-Yi’s Journal"))
-             :base-url "")))
+             :template-vars '(("site_name" . "Hung-Yi’s Journal")))))
   ;; Generate blog posts
   (weblorg-route
    :name "posts"

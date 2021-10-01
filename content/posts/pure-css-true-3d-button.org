@@ -1,6 +1,7 @@
 #+TITLE: Pure CSS True 3D Button
 #+SLUG: pure-css-true-3d-button
 #+DATE: 2021-09-26T16:41:36+08:00
+#+DESCRIPTION: Learn how to make a chunky, glowing, 3D button that animates on hover and click, using only HTML and CSS with no JavaScript. You'll see examples of 3D CSS transforms, including perspective, perspective-origin and transform-origin. Do you think you can resist clicking the example button more than once?
 
 Sometimes you just need a big, shiny call-to-action that draws the user's attention to the most important thing on a page, but you've already exhausted your UI framework's colors, borders and button options. You want this thing to *really pop*.
 
@@ -25,7 +26,7 @@ The CSS and HTML markup are provided below. The key parts to note are:
 1. [[https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties][CSS variables]] allowing reuse of repetitive properties (e.g. color)
 2. 3D transforms to move and rotate the bottom and side faces of the button into realistic positions
 3. =perspective= and =perspective-origin= on the whole button to reveal the bottom and side faces
-4. =filter: brightness(0.9)= to darken the bottom and side faces
+4. =filter: brightness= to darken the bottom and side faces
 5. =box-shadow= for the glow effect
 6. =transform: scale= and =transform-origin=[fn:1] to change the sizes of the bottom and side faces on hover/click
 7. =transform: translateZ= to move the front face in and out of the "screen" on hover/click
@@ -42,7 +43,7 @@ The CSS and HTML markup are provided below. The key parts to note are:
   perspective-origin: 1200px 1000px;
   transform-style: preserve-3d;
 
-  --color: #EBCB8B;
+  --color: #fe8e28;
   --transition: transform 0.1s ease;
   --virtual-height: 10px;
   --factor: 0.38;
@@ -69,7 +70,7 @@ The CSS and HTML markup are provided below. The key parts to note are:
 
 .chunky-button .bottom {
   background-color: var(--color);
-  filter: brightness(0.9);
+  filter: brightness(0.8);
   height: var(--virtual-height);
   width: 100%;
   position: absolute;

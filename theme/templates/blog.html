@@ -9,6 +9,9 @@
           {% if post.date is defined %}
             <span class="post-date datestamp">{{ post.date|strftime("%e %B, %Y") }}</span>
           {% endif %}
+          {% if post.description %}
+          <p class="post-description">{{ post.description }}</p>
+          {% endif %}
         </a>
       </li>
     {% endfor %}

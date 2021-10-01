@@ -2,5 +2,5 @@
 set -euo pipefail
 
 rm -rf public
-emacs --script build.el
+BASE_URL="https://hungyi.net" emacs --script build.el
 cp -r public/* ~/sites/hungyi.net/
