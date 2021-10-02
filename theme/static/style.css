@@ -336,6 +336,7 @@ main h1:first-of-type {
   margin-top: calc(var(--rhythm) * 0.25);
   align-self: start;
   line-height: 1;
+  white-space: nowrap;
 }
 .posts .post-item .post-title {
   font-family: var(--font-display);
