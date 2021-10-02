@@ -43,7 +43,7 @@ The CSS and HTML markup are provided below. The key parts to note are:
   perspective-origin: 1200px 1000px;
   transform-style: preserve-3d;
 
-  --color: #fe8e28;
+  --color: #46e4bc;
   --transition: transform 0.1s ease;
   --virtual-height: 10px;
   --factor: 0.38;
