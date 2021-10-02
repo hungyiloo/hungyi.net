@@ -1,13 +1,11 @@
 #+TITLE: Emacs Lets You Calculate While You Write
 #+SLUG: emacs-calculate-while-you-write
 #+DATE: 2020-09-09T21:24:54+08:00
-#+TAGS[]: Emacs Doom~Emacs Power-user
+#+DESCRIPTION: What happens when you're in the middle of a sentence and you need to insert a precisely calculated number in amongst your prose? Emacs let's you do just that using its built-in calculator.
 
 Let's say you're writing a recipe but you want to scale the ingredients down by one third. The recipe calls for 280g of flour. And you want to round to the nearest 10g.
 
-I applaud you if you can easily do that in your head---because I certainly can't. Also yes, it would be easy just to run your system's calculator app to get the answer, but why leave Emacs if you can help it? Doing it this way also saves you a bunch of manual copying and pasting.
-
-# more
+I applaud you if you can easily do that in your head---because I certainly can't. And yes, it would be easy just to run your system's calculator app to get the answer, but why leave Emacs if you can help it? Doing it this way also saves you a bunch of manual copying and pasting between apps.
 
 Here's how:
 
@@ -42,13 +40,11 @@ Ingredients:
 #+END_COMFY
 
 * Summary
-
 Assuming you have your expression marked, your keystrokes in one line would be: =C-x * g= then =v u= and finally =C-u y=.
 
 For Doom Emacs and evil mode users, that would be =C-x * G=, =v u= and =SPC u p P=.[fn:2]
 
 * A word on calc-dispatch
-
 =C-x *= actually calls the ~calc-dispatch~ command, which you can also call manually. In this mode you can press =?= to get a list of all the calc options that are available to you. However, in this tutorial we just used =g= for ~calc-grab-region~.
 
 In Doom Emacs, most common operations are mapped to the =SPC= leader, so pressing =C-x= felt foreign to me. Personally I went ahead and mapped ~calc-dispatch~ to =SPC = == by putting this in my =config.el=:

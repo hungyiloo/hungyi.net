@@ -1,9 +1,9 @@
 #+TITLE: JavaScript's Reduce: A Swiss Army Knife for Arrays
 #+SLUG: reduce-swiss-army-knife
 #+DATE: 2020-09-28T12:09:03+08:00
-#+TAGS[]: Code JavaScript Web Front-end Programming
+#+DESCRIPTION: This is my favorite array and list manipulation tool in JavaScript. Avoid the mess of for/while loops and hard-to-debug variable assignments with reduce()!
 
-There's a little Array method in JavaScript that I've seen a lot of developers overlook. Admittedly, it's abstract and generic in nature, so doesn't lend itself to any obvious uses. But it turns out that's what makes a great programming Swiss Army knife: you can do a lot more with it than you might realise.[fn:1]
+There's a little Array method in JavaScript that I've seen a lot of developers overlook. Admittedly, it's abstract and generic in nature so doesn't lend itself to any obvious uses, but it turns out that /exactly/ what makes a great programming Swiss Army knife: you can do a lot more with it than you might realise.[fn:1]
 
 Today, let me introduce you to [[https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce][~Array.prototype.reduce()~]]. I'll show you some creative ways to use it that might just make you like JavaScript after all!
 

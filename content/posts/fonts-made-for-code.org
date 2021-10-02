@@ -1,7 +1,7 @@
 #+TITLE: Fonts Made for Coding
 #+SLUG: fonts-made-for-code
 #+DATE: 2020-09-05T17:47:39+08:00
-#+TAGS[]: Programming Power-user Typography
+#+DESCRIPTION: In this post I cover 5 different coding fonts with ligatures, explain what ligatures are and how they're useful for coding, and explore reasons for my personal font of choice.
 
 You may have heard that there are fonts[fn:1] designed specifically for programming work, especially ones that use programming ligatures. If you haven't heard---and you cut code---then you're in for a treat today! And if you're already in the loop, maybe you'll find a new favorite font to spruce up your code. Today, I'll explain why I chose [[https://www.jetbrains.com/lp/mono/][JetBrains Mono]] for my own programming needs, and along the way I'll outline all the programming fonts I've come across so far.
 

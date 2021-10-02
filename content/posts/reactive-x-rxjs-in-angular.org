@@ -1,6 +1,6 @@
 #+TITLE: Why I Use ReactiveX and RxJS in Angular
 #+SLUG: reactive-x-rxjs-in-angular
-#+TAGS[]: Code TypeScript JavaScript RxJS Reactive~Programming Web Front-end Programming
+#+DESCRIPTION: ReactiveX and RXJS let you write declarative components in Angular. But why should you use them? This post explores the pros and cons.
 #+DATE: 2020-09-22T19:20:31+08:00
 
 It's been more than 5 years since I started writing my UI code in a [[https://en.wikipedia.org/wiki/Reactive_programming][reactive]] fashion with [[http://reactivex.io/][ReactiveX]]. I've used [[https://github.com/ReactiveX/RxJava][RxJava]] for Android development, [[https://www.reactiveui.net/][ReactiveUI]] for Xamarin development, and now I'm using [[https://github.com/ReactiveX/rxjs][RxJS]] for Angular development. I stuck with it not because it was easy---it definitely wasn't---but because something about it just felt so /right/. For the longest time I couldn't explain it, and I'm not even sure I can explain it succinctly now. But today I want to use an example to at least /try/ to illustrate just a touch of the mystery and allure that drew me into Reactive[fn:1] Programming in the first place. Let's dive in.

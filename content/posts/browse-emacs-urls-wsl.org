@@ -1,7 +1,7 @@
 #+TITLE: Browse URLs in Emacs under WSL
 #+SLUG: browse-emacs-urls-wsl
 #+DATE: 2020-09-02T17:52:44+08:00
-#+TAGS[]: Emacs WSL Windows Code Power-user
+#+DESCRIPTION: If you use GUI Emacs under WSL and you want your links to open in your browser on Windows, this post explains how to achieve that.
 #+LANGUAGE: en
 #+OPTIONS: ':t
 

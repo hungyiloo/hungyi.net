@@ -1,13 +1,11 @@
 #+TITLE: An evil-mc Emacs Hydra
 #+SLUG: hydra-for-evil-mc
 #+DATE: 2020-09-11T21:11:49+08:00
-#+TAGS[]: Emacs Doom~Emacs Power-user Programming
+#+DESCRIPTION: What's better than personalized Emacs keybindings for multi-cursor editing? A hydra of course! Here's how to make using evil-mc even more fluent than before.
 
 One thing sorely lacking in native Emacs is the ability to edit with multiple cursors [[https://code.visualstudio.com/docs/editor/codebasics#:~:text=VS%20Code%20supports%20multiple%20cursors,insert%20cursors%20below%20or%20above.][like VS Code]]. Fortunately for [[https://github.com/hlissner/doom-emacs][Doom Emacs]] or [[https://github.com/emacs-evil/evil][Evil]] users, there's [[https://github.com/gabesoft/evil-mc][evil-mc]]. But even with that installed, all it gives you is a bunch of commands---you still have to decide how to bind them yourself or rely on Doom's suggested bindings that map everything to the =g z= prefix for every command.
 
 But I think we can do better. Today, I'm sharing an Emacs [[https://github.com/abo-abo/hydra][hydra]] that I've been using to power up my evil-mc usage. Just put this anywhere in your =config.el=:
-
-# more
 
 #+BEGIN_SRC emacs-lisp
 (defhydra my-mc-hydra (:color pink

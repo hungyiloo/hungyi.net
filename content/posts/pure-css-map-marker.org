@@ -1,7 +1,7 @@
 #+TITLE: Pure CSS Map Marker
 #+SLUG: pure-css-map-marker
 #+DATE: 2020-09-03T18:23:35+08:00
-#+TAGS[]: Code CSS HTML Web Front-end Programming
+#+DESCRIPTION: Learn how to make a map marker icon with just HTML and CSS, no icon fonts or images required. You can even customize the colors in the CSS to whatever you want.
 
 A cute little map marker happens to be one of the things you can easily create with pure CSS without /too/ much sorcery. All it takes is a div with 3 rounded corners, some ~transform~ rotation, and (optionally) a matching pair of ~:before~ and ~:after~ CSS pseudo-elements to dress it up.
 

@@ -1,6 +1,6 @@
 #+TITLE: Pure CSS Signal Indicator
 #+SLUG: pure-css-signal-indicator
-#+TAGS[]: Code CSS Flexbox HTML Web Front-end Programming
+#+DESCRIPTION: Learn how to make a signal indicator icon with 4 different strength levels using only HTML & CSS. Absolutely no images or graphics required.
 #+DATE: 2020-09-07T19:45:15+08:00
 
 Simple HTML and CSS is all you need for a basic signal indicator icon. CSS [[https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Flexible_Box_Layout/Basic_Concepts_of_Flexbox][flexbox]] makes it easy to space the bars evenly apart from each other and sink them to the bottom. After that, some ~weak~, ~medium~ and ~strong~ classes and creative use of the ~:nth-child()~ selector lets us tweak the size and emphasis of the signal bars. Take a look!
