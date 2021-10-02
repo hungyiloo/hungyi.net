@@ -15,6 +15,7 @@
 (load-file "~/.config/emacs/init.el")
 
 (require 'weblorg)
+(require 'templatel)
 (require 'seq)
 (require 'tree-sitter)
 (global-tree-sitter-mode 1)
@@ -22,9 +23,12 @@
 (setq org-html-htmlize-output-type 'css)
 (setq weblorg-default-url (or (getenv "BASE_URL") ""))
 
-(defun weblorg-input-aggregate-take-n-desc (n)
-  "Aggregate first N posts within a single collection in decreasing order."
-  (lambda (posts) (weblorg-input-aggregate-all (seq-take (sort posts #'weblorg--compare-posts-desc) n))))
+(advice-add #'templatel-env-new
+            :around
+            (defun my/templatel-custom-env (orig &rest args)
+              (let ((env (apply orig args)))
+                (templatel-env-add-filter env "drop" (lambda (s n) (seq-drop s n)))
+                env)))
 
 (let ((site (weblorg-site
              :name "personal"

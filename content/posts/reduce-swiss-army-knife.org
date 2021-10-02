@@ -27,7 +27,7 @@ To remind myself of these 2 core concepts, I usually use a lambda with the input
 
 Summing a list of numbers is an example that's been repeated ad nauseam[fn:2] on every page of documentation ever written on [[https://en.wikipedia.org/wiki/Fold_(higher-order_function)][fold/reduce/accumulate/aggregate/compress/inject]]:
 
-#+BEGIN_SRC js :results silent
+#+BEGIN_SRC js :eval no
 // Calculate the sum of a list of numbers
 [1,2,3,4].reduce((acc, curr) => acc + curr, 0); // => 10
 #+END_SRC
@@ -48,7 +48,7 @@ Let me show you...
 
 Implementing ~map~ using ~reduce~:
 #+NAME: map-example
-#+BEGIN_SRC js :exports both :results value code
+#+BEGIN_SRC js :exports both :results value code :cache yes
 const input = [1.618, 2.718, 3.141592653, 2.5029];
 
 return {
@@ -62,7 +62,7 @@ return {
 };
 #+END_SRC
 
-#+RESULTS: map-example
+#+RESULTS[7bc4ba5f37dcbb16a716854ca39cedf927d65c7f]: map-example
 #+begin_src js
 { roundedMap: [ 2, 3, 3, 3 ], roundedReduce: [ 2, 3, 3, 3 ] }
 #+end_src
@@ -70,7 +70,7 @@ return {
 
 Implementing ~filter~ using ~reduce~:
 #+NAME: filter-example
-#+BEGIN_SRC js :exports both :results value code
+#+BEGIN_SRC js :exports both :results value code :cache yes
 const input = [1.618, 2.718, 3.141592653, 2.5029];
 
 return {
@@ -84,7 +84,7 @@ return {
 };
 #+END_SRC
 
-#+RESULTS: filter-example
+#+RESULTS[ed453d6fd87d99cfea3f4fdb904fedacb5f4bc4a]: filter-example
 #+begin_src js
 {
   above2Filtered: [ 2.718, 3.141592653, 2.5029 ],
@@ -95,7 +95,7 @@ return {
 
 Implementing ~includes~ using ~reduce~:
 #+NAME: includes-example
-#+BEGIN_SRC js :exports both :results value code
+#+BEGIN_SRC js :exports both :results value code :cache yes
 const input = [1.618, 2.718, 3.141592653, 2.5029];
 const pi = 3.141592653;
 
@@ -110,7 +110,7 @@ return {
 };
 #+END_SRC
 
-#+RESULTS: includes-example
+#+RESULTS[a3eba31ee15ca56c56be7ae62364981e1f22b185]: includes-example
 #+begin_src js
 { containsPiIncludes: true, containsPiReduced: true }
 #+end_src
@@ -118,7 +118,7 @@ return {
 
 Implementing ~find~ using ~reduce~:
 #+NAME: find-example
-#+BEGIN_SRC js :exports both :results value code
+#+BEGIN_SRC js :exports both :results value code :cache yes
 const input = [1.618, 2.718, 3.141592653, 2.5029];
 
 return {
@@ -132,7 +132,7 @@ return {
 };
 #+END_SRC
 
-#+RESULTS: find-example
+#+RESULTS[43efb23dc594947152ee4b0568c7fc70e4d8d68a]: find-example
 #+begin_src js
 { firstAbove2Find: 2.718, firstAbove2Reduced: 2.718 }
 #+end_src
@@ -151,7 +151,7 @@ As long as you have to solve a problem with a list or array, you should consider
 
 Sometimes you'll find yourself with an array of key-value pairs that you would rather have as one single JavaScript object instead. There are several ways to do this[fn:3], but ~reduce~ can be a really good, idiomatic choice.
 
-#+BEGIN_SRC js :exports both :results value code
+#+BEGIN_SRC js :exports both :results value code :cache yes
 const pairs = [
   { 'key': 'apple',  'value': 5  },
   { 'key': 'orange', 'value': 3  },
@@ -161,7 +161,7 @@ const pairs = [
 return pairs.reduce((acc, curr) => ({...acc, [curr.key]: curr.value}), {});
 #+END_SRC
 
-#+RESULTS:
+#+RESULTS[3d91b5bf2226c4bcff27e6ce2688fdc67c7f6f9d]:
 #+begin_src js
 { apple: 5, orange: 3, banana: 10 }
 #+end_src
@@ -172,7 +172,7 @@ return pairs.reduce((acc, curr) => ({...acc, [curr.key]: curr.value}), {});
 
 The accumulator pattern that ~reduce~ uses makes it intuitive to do cumulative sums, since you have immediate access to the accumulated data at each step. You also have easy access to the loop index (declared as ~i~ below).
 
-#+BEGIN_SRC js :exports both :results value code
+#+BEGIN_SRC js :exports both :results value code :cache yes
 const input = [1,2,3,4,5,6,7,8,9,10];
 return input.reduce((acc, curr, i) => [
   ...acc,
@@ -180,7 +180,7 @@ return input.reduce((acc, curr, i) => [
 ], []);
 #+END_SRC
 
-#+RESULTS:
+#+RESULTS[ef9ca254654a361f2ad4d8dc2d2b17e26a3e9075]:
 #+begin_src js
 [
    1,  3,  6, 10, 15,
@@ -199,7 +199,7 @@ I think the most idiomatic way is to use ~reduce~ since it avoids side effects a
 
 This is how:
 
-#+BEGIN_SRC js :exports both :results value code
+#+BEGIN_SRC js :exports both :results value code :cache yes
 const ingredients = [
   { name: 'celery',     category: 'fiber'   },
   { name: 'potato',     category: 'carb'    },
@@ -221,7 +221,7 @@ return ingredients.reduce((acc, curr) => {
 }, new Map());
 #+END_SRC
 
-#+RESULTS:
+#+RESULTS[913622d6ea079ecdb5fec1131195ecee510441b0]:
 #+begin_src js
 Map(4) {
   'fiber' => [
@@ -250,7 +250,7 @@ Actually, ~reduce~ is not not limited to mapping one-to-one or reducing to a sin
 
 For example, let's pair up this single list of people into subgroups of 2:
 
-#+BEGIN_SRC js :exports both :results value code
+#+BEGIN_SRC js :exports both :results value code :cache yes
 const people = [
   'Alice', 'Bob',    'Charlie', 'Daisy', 'Edna',
   'Fara',  'Gordon', 'Hubert',  'Iris',  'Julian'
@@ -266,7 +266,7 @@ return people.reduce((acc, curr, i) => {
 }, []);
 #+END_SRC
 
-#+RESULTS:
+#+RESULTS[4e34a78dbb2be115c8b4ee9b6f6f9f8754752fdb]:
 #+begin_src js
 [
   [ 'Alice', 'Bob' ],
@@ -283,7 +283,7 @@ I'm pretty sure the idea of redux reducers came from the general concept of func
 
 When you reduce over some actions, you're essentially looping over them and accumulating their effects on some application state. Here's a toy calculator that follows this pattern.
 
-#+BEGIN_SRC js :exports both :results value code
+#+BEGIN_SRC js :exports both :results value code :cache yes
 const actionTypes = {
   ADD:      0,
   SUBTRACT: 1,
@@ -318,7 +318,7 @@ return actions.reduce(
 );
 #+END_SRC
 
-#+RESULTS:
+#+RESULTS[e22c4e975ea036ceed6e02e0760e4928ce3012d0]:
 #+begin_src js
 [
      0,    5,   4,  32,

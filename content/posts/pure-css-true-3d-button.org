@@ -1,7 +1,7 @@
 #+TITLE: Pure CSS True 3D Button
 #+SLUG: pure-css-true-3d-button
 #+DATE: 2021-09-26T16:41:36+08:00
-#+DESCRIPTION: Learn how to make a chunky, glowing, 3D button that animates on hover and click, using only HTML and CSS with no JavaScript. You'll see examples of 3D CSS transforms, including perspective, perspective-origin and transform-origin. Do you think you can resist clicking the example button more than once?
+#+DESCRIPTION: Discover how to make a chunky, glowing, 3D button that animates on hover and click, with no JavaScript! Just clever use of HTML and 3D CSS transforms.
 
 Sometimes you just need a big, shiny call-to-action that draws the user's attention to the most important thing on a page, but you've already exhausted your UI framework's colors, borders and button options. You want this thing to *really pop*.
 
@@ -32,7 +32,7 @@ The CSS and HTML markup are provided below. The key parts to note are:
 7. =transform: translateZ= to move the front face in and out of the "screen" on hover/click
 
 #+NAME: button-styles
-#+BEGIN_SRC css
+#+BEGIN_SRC css :eval never
 .chunky-button {
   border: none;
   background: none;
@@ -44,7 +44,7 @@ The CSS and HTML markup are provided below. The key parts to note are:
   transform-style: preserve-3d;
 
   --color: #46e4bc;
-  --transition: transform 0.1s ease;
+  --transition: transform 0.1s ease, box-shadow 0.1s ease;
   --virtual-height: 10px;
   --factor: 0.38;
 }
@@ -112,7 +112,7 @@ The CSS and HTML markup are provided below. The key parts to note are:
 Then place this HTML where you want the marker to appear.
 
 #+NAME: button-markup
-#+BEGIN_SRC html
+#+BEGIN_SRC html :eval never
 <button class="chunky-button">
   <div class="bottom"></div>
   <div class="side"></div>

@@ -1,9 +1,9 @@
-#+TITLE: Use Emacs-Tree-Sitter for Highlighting in Doom Emacs
+#+TITLE: Use elisp-tree-sitter for Highlighting in Doom Emacs
 #+SLUG: use-emacs-tree-sitter-doom-emacs
 #+DATE: 2020-10-13T20:30:21+08:00
-#+TAGS[]: Doom~Emacs Emacs Programming Power-user
+#+DESCRIPTION: Get faster, richer and more beautiful code syntax highlighting in Doom Emacs using the power of tree-sitter and abstract syntax trees.
 
-[[https://tree-sitter.github.io/tree-sitter/][Tree-sitter]] is a general programming language parser that efficiently builds and updates Abstract Syntax Trees (AST) for your code. Basically, it can read programming languages and understand the structure and meaning of code /without/ having to execute it. Among many amazing things, one of its best and simplest features to take advantage of is *richer syntax highlighting*, which is what I use it for in Emacs. Today I'll show you how to set up [[https://github.com/ubolonton/emacs-tree-sitter/][emacs-tree-sitter]] in Doom Emacs[fn:1] so you can quickly get prettier code with next to no effort.
+[[https://tree-sitter.github.io/tree-sitter/][Tree-sitter]] is a general programming language parser that efficiently builds and updates Abstract Syntax Trees (AST) for your code. Basically, it can read programming languages and understand the structure and meaning of code /without/ having to execute it. Among many amazing things, one of its best and simplest features to take advantage of is *richer syntax highlighting*, which is what I use it for in Emacs. Today I'll show you how to set up [[https://github.com/emacs-tree-sitter/elisp-tree-sitter][elisp-tree-sitter]] in Doom Emacs[fn:1] so you can quickly get prettier code with next to no effort.
 
 # more
 
@@ -14,7 +14,7 @@ First, add these lines to =packages.el=:
 (package! tree-sitter-langs)
 #+END_SRC
 
-[2020-10-26 Mon] It seems emacs-tree-sitter is now on MELPA, so the =packages.el= config above has been simplified accordingly. There's no longer any need to specify a =tsc= package[fn:2] or write a manual =straight.el= recipe to fetch it from GitHub.
+[2020-10-26 Mon] It seems elisp-tree-sitter is now on MELPA, so the =packages.el= config above has been simplified accordingly. There's no longer any need to specify a =tsc= package[fn:2] or write a manual =straight.el= recipe to fetch it from GitHub.
 
 Then in =config.el=, you'll need:
 
@@ -34,7 +34,7 @@ Now run =doom sync= in a terminal, restart Doom Emacs with =SPC q R= and explore
 - Potential speed and stability improvements, since AST parsing should be faster and more robust than regex parsing.
 #+END_COMFY
 
-[fn:1] If you're using vanilla Emacs instead of Doom, you can follow the official emacs-tree-sitter [[https://ubolonton.github.io/emacs-tree-sitter/installation/][installation instructions]] and the corresponding [[https://ubolonton.github.io/emacs-tree-sitter/syntax-highlighting/][syntax highlighting setup]].
+[fn:1] If you're using vanilla Emacs instead of Doom, you can follow the official elisp-tree-sitter [[https://ubolonton.github.io/emacs-tree-sitter/installation/][installation instructions]] and the corresponding [[https://ubolonton.github.io/emacs-tree-sitter/syntax-highlighting/][syntax highlighting setup]].
 
 [fn:2] =tsc= has nothing to do with the [[https://www.typescriptlang.org/docs/handbook/compiler-options.html][TypeScript Compiler]] of the same name. That confused me for a while this morning when Doom was complaining about non-existent packages in recipes.
 
@@ -42,7 +42,7 @@ Now run =doom sync= in a terminal, restart Doom Emacs with =SPC q R= and explore
 
 ** Web-Mode
 
-Emacs-tree-sitter highlighting works by mapping each major mode in Emacs to a language-specific parser. This [[https://github.com/ubolonton/emacs-tree-sitter/issues/33][falls apart]] when a major mode happens to support multiple or mixed languages in the one file, for example =web-mode= which handles HTML, JavaScript and CSS.
+elisp-tree-sitter highlighting works by mapping each major mode in Emacs to a language-specific parser. This [[https://github.com/ubolonton/emacs-tree-sitter/issues/33][falls apart]] when a major mode happens to support multiple or mixed languages in the one file, for example =web-mode= which handles HTML, JavaScript and CSS.
 
 Personally, I tried mapping =web-mode= to =html= in ~tree-sitter-major-mode-language-alist~, but it complained and didn't work when I tried to turn on highlighting. This seems to be a dead end for now.
 

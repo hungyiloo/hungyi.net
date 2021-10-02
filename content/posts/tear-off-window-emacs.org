@@ -1,11 +1,9 @@
 #+TITLE: Tearing Off Windows in Emacs
 #+SLUG: tear-off-window-emacs
 #+DATE: 2020-10-06T18:56:00+08:00
-#+TAGS[]: Doom~Emacs Emacs Power-user
+#+DESCRIPTION: Explore some strategies for managing multiple windows in Emacs. If you're having trouble figuring out how to see two or more things at once in Emacs, this post might help you.
 
 Do you often yourself referring to something in Emacs over and over again, but actually doing work somewhere else? For instance: referring to API code while writing front-end code, or referring to a file while entering commands into a shell? Let's go through the ways I would normally handle this and why I think the ~tear-off-window~ command can help.
-
-# more
 
 /If you're just interested in ~tear-off-window~, skip straight to [[#tear-off-window][the last section]]./
 

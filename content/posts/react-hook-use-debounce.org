@@ -1,6 +1,7 @@
 #+TITLE: React Hook: useDebounce with Enter Key Short Circuit
 #+SLUG: react-hook-use-debounce
 #+DATE: 2021-09-27T17:02:55+08:00
+#+DESCRIPTION: See how to debounce your input events to improve the UX in your React app, plus bonus "short circuiting" behavior to skip the delay for impatient users.
 
 In [[https://reactjs.org/][React]], component state can sometimes change very quickly, for instance when a user is typing input into a [[https://reactjs.org/docs/forms.html#controlled-components][controlled component]]. But we may not want to respond to every state change immediately. If we did, we might be triggering dozens of API calls on every keystroke or starting and canceling multiple long-running operations in quick succession. How do we avoid this?
 

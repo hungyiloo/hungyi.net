@@ -21,7 +21,7 @@ Check it out!
 To get the above result, include the following CSS somewhere on the page (or in an appropriate place in your project).
 
 #+NAME: marker-styles
-#+BEGIN_SRC css :results silent
+#+BEGIN_SRC css :eval never
 .marker {
     /* Set the marker size here */
     width: 2rem;
@@ -71,7 +71,7 @@ To get the above result, include the following CSS somewhere on the page (or in 
 Then place this HTML where you want the marker to appear.
 
 #+NAME: marker-markup
-#+BEGIN_SRC html :results silent
+#+BEGIN_SRC html :eval never
 <div class="marker"></div>
 #+END_SRC
 

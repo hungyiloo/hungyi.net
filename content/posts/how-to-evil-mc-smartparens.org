@@ -1,11 +1,9 @@
 #+TITLE: How to Quickly Get evil-mc Working With Smartparens
 #+SLUG: how-to-evil-mc-smartparens
 #+DATE: 2021-03-17T20:01:37+08:00
-#+TAGS[]: Emacs Doom~Emacs Power-user
+#+DESCRIPTION: A quick and dirty way of getting Emacs' evil-mc and smartparens packages to play nicely together, so you can use multiple cursors with s-expression editing.
 
 [[https://github.com/gabesoft/evil-mc][evil-mc]] is great for working with multiple cursors and [[https://github.com/Fuco1/smartparens][smartparens]] is great for working with lispy s-expressions. But can they work nicely together without putting in a lot of effort writing glue between the two?
-
-# more
 
 It turns out that they can! By my estimate, this simple approach works for 90% of the use cases:
 

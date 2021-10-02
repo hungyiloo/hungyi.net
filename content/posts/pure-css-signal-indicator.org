@@ -28,7 +28,7 @@ Simple HTML and CSS is all you need for a basic signal indicator icon. CSS [[htt
 To use these icons, just place these styles somewhere on the page or in an appropriate place in your project:
 
 #+NAME: styles
-#+BEGIN_SRC css :results silent
+#+BEGIN_SRC css :eval never
 .signal-icon {
   height: 18px;
   width: 18px;
@@ -70,7 +70,7 @@ To use these icons, just place these styles somewhere on the page or in an appro
 Then use the HTML below to display the icons on your page or app. Use the ~weak~, ~medium~ and ~strong~ classes next to the ~signal-icon~ class to turn on 1, 2 or 3 bars respectively. Without the modifier classes all 3 bars will be faded, indicating no signal.
 
 #+NAME: markup
-#+BEGIN_SRC html :results silent
+#+BEGIN_SRC html :eval never
 <!-- zero signal, no bars -->
 <div class="signal-icon">
   <div class="signal-bar"></div>

@@ -1,7 +1,7 @@
 #+TITLE: Authentication Issues with MSAL.NET on WSL2
 #+SLUG: wsl2-msal-extensions
 #+DATE: 2021-01-25T21:55:57+08:00
-#+TAGS[]: WSL Windows .NET Programming
+#+DESCRIPTION: Are you having trouble running .NET Core code with Azure AD MSAL Extensions when using WSL or Linux? This post might help you find a workaround.
 
 I've found that Microsoft's [[https://github.com/AzureAD/microsoft-authentication-extensions-for-dotnet][Azure AD MSAL Extensions]] for .NET don't seem to work very well under WSL2. In particular, there is this [[https://github.com/Azure/azure-sdk-for-net/issues/12939][this issue]] that's reportedly been fixed as of November 2020 but, even with Azure.Identity v1.3.0, it remains a problem for me. The error can look something like =value cannot be null: attributeValue1= or =Unable to load shared library 'libsecret-1.so.0'=.
 

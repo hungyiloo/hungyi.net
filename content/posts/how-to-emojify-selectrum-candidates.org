@@ -1,11 +1,9 @@
 #+TITLE: How to Emojify Selectrum Candidates
 #+SLUG: how-to-emojify-selectrum-candidates
 #+DATE: 2021-03-01T15:27:19+08:00
-#+TAGS[]: Emacs Doom~Emacs Power-user
+#+DESCRIPTION: Because who wouldn't want cute emojis in their Emacs completion candidates? Learn how to make the emacs-emojify and selectrum packages cooperate nicely.
 
 If you use both [[https://github.com/iqbalansari/emacs-emojify][emacs-emojify]] and [[https://github.com/raxod502/selectrum/][selectrum]] and you're having trouble getting emoji to show up properly in the list of completion candidates, especially after the latest round of selectrum updates (commit 21cee86) then I have an elisp configuration snippet that may help you.
-
-# more
 
 Note that this configuration is written for the [[https://github.com/hlissner/doom-emacs][Doom Emacs]] distribution. If you're using vanilla Emacs, you may need to replace the calls to ~use-package!~ and ~after!~ with their vanilla counterparts.
 

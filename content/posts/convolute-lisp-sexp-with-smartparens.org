@@ -1,7 +1,7 @@
 #+TITLE: Convolute Lisp S-Expressions With Smartparens
 #+SLUG: convolute-lisp-sexp-with-smartparens
 #+DATE: 2021-03-03T19:28:27+08:00
-#+TAGS[]: Emacs Lisp Programming Power-user
+#+DESCRIPTION: Discover the magic of convoluting s-expressions when editing Lisp code. Once it clicks, it could save you many hundreds of keystrokes.
 
 "Convoluting a lisp s-expression" sounds like computer science ivory tower bollocks, but after I actually learned what it was and how to use it, I'm seeing it pop up quite regularly when writing lisp. Let me show you the magic; I promise every time you get to use it, [[https://youtu.be/D6h5dFyyUX0?t=117][you'll feel like a king!]]
 

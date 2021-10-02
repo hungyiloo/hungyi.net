@@ -300,14 +300,31 @@ main h1:first-of-type {
 .post__meta {
   margin: 0 0 calc(var(--rhythm) * 1) 0;
 }
+.post__description {
+  color: var(--muted);
+  font-style: italic;
+  font-size: 90%;
+  margin: calc(var(--rhythm)*1.5) 0 calc(var(--rhythm)*1.5) calc(var(--rhythm)*0.25);
+  padding-left: calc(var(--rhythm)*0.75);
+  border-left: calc(var(--rhythm)*0.2) solid var(--nord-frost-1);
+}
 /* blog.html */
+.section-header {
+  font-family: var(--font-display);
+  color: var(--nord-frost-1);
+  font-size: 80%;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-top: var(--rhythm);
+  margin-bottom: calc(var(--rhythm)*0.25);
+}
 .posts {
-  margin: var(--rhythm) 0 0 0;
+  margin: 0 0 calc(var(--rhythm)*2) 0;
   padding: 0;
 }
 .posts .post-item {
   list-style: none;
-  margin-bottom: calc(var(--rhythm)*1.5);
+  margin-bottom: calc(var(--rhythm)*2);
   display: flex;
 }
 .posts .post-item a {
@@ -333,6 +350,7 @@ main h1:first-of-type {
   font-size: 95%;
 }
 .posts .post-item a:hover .post-title { text-decoration: underline; }
+.featured.posts .post-item .post-title { font-size: 180%; }
 
 
 /* -- Table -- */

@@ -1,7 +1,7 @@
 #+TITLE: The Programmer's Way to Write in Title Case Using Emacs Lisp
 #+SLUG: programmers-way-to-title-case
 #+DATE: 2021-02-24T22:22:07+08:00
-#+TAGS[]: Emacs Programming Code Lisp
+#+DESCRIPTION: Emacs has convenient functions for upcasing and downcasing, but why not title casing? This was my journey to write a native Emacs Lisp function that does exactly that.
 
 It turns out that writing in proper title case can be important for a front-end developer, since there are often things on screen that need to appear as a title to convey importance: dialog headers, menu items, buttons labels, to name a few.
 

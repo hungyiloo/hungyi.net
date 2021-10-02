@@ -1,8 +1,9 @@
 {% extends "base.html" %}
 
 {% block main %}
-  <ul class="posts">
-    {% for post in posts %}
+  <div class="section-header">Latest</div>
+  <ul class="featured posts">
+    {% for post in posts | take(1) %}
       <li class="post-item">
         <a href="{{ url_for("posts", slug=post.slug) }}">
           <span class="post-title">{{ post.title }}</span>
@@ -10,7 +11,23 @@
             <span class="post-date datestamp">{{ post.date|strftime("%e %B, %Y") }}</span>
           {% endif %}
           {% if post.description %}
-          <p class="post-description">{{ post.description }}</p>
+          <div class="post-description">{{ post.description }}</div>
+          {% endif %}
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+  <div class="section-header">Older</div>
+  <ul class="posts">
+    {% for post in posts | drop(1) %}
+      <li class="post-item">
+        <a href="{{ url_for("posts", slug=post.slug) }}">
+          <span class="post-title">{{ post.title }}</span>
+          {% if post.date is defined %}
+            <span class="post-date datestamp">{{ post.date|strftime("%e %B, %Y") }}</span>
+          {% endif %}
+          {% if post.description %}
+          <div class="post-description">{{ post.description }}</div>
           {% endif %}
         </a>
       </li>

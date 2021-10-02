@@ -1,11 +1,9 @@
 #+TITLE: A Function to Get Org-Mode Contents Under a Heading
 #+SLUG: org-mode-subtree-contents
 #+DATE: 2020-10-11T10:52:25+08:00
-#+TAGS[]: Emacs Programming Code Power-user Org-mode Lisp
+#+DESCRIPTION: Ever wondered how to programatically get the direct contents under a heading in Emacs Org-mode? This Emacs Lisp function will do just that.
 
 Today I'm sharing an interactive function I wrote as an exercise to extract just the inner text content of an Org-mode subtree, excluding the heading itself and any subheadings or their contents. The function adds it to the kill-ring (a.k.a. copies it to the clipboard) and returns it, but can easily be modified to do anything to the contents.
-
-# more
 
 Take this org-mode example file:
 

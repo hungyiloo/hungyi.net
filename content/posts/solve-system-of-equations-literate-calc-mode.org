@@ -1,7 +1,7 @@
 #+TITLE: Solving Equations With Emacs literate-calc-mode
 #+SLUG: solve-system-of-equations-literate-calc-mode
 #+DATE: 2021-09-15T19:41:34+08:00
-#+TAGS[]: Emacs Doom~Emacs Power-user
+#+DESCRIPTION: When literate programming meets spreadsheet calculations: learn how to integrate calculations into your writing projects using Emacs and literate-calc-mode.
 #+OPTIONS: \n:t
 
 The wonderful Emacs package [[https://github.com/sulami/literate-calc-mode.el][literate-calc-mode]] combines the power of [[https://www.gnu.org/software/emacs/manual/html_mono/calc.html][Emacs Calc]] with the readability of plain text to let you document your math in a more friendly, less technical way, similar to [[https://en.wikipedia.org/wiki/Literate_programming][literate programming]].
@@ -13,7 +13,7 @@ Today I want to show you how to take it one step further, leveraging the solving
 * Installation and preparation
 Use [[https://melpa.org/#/getting-started][MELPA]] and =M-x package-install= to install =literate-calc-mode=. Or if you're using [[https://github.com/hlissner/doom-emacs][Doom Emacs]], just add this line to =packages.el= and run =doom sync= in a terminal:
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :eval never
 ;; ~/.config/doom/packages.el
 (package! literate-calc-mode)
 #+end_src
@@ -94,7 +94,7 @@ Now our four key variables look like this:
 [fn:1] I have actually done calculations like this before, while cooking. I'm probably just bad at math, but I found it difficult to figure out ingredient weights going back from baker's percentages unless I used actual algebra.
 
 [fn:2] ~uconv~ is a custom function that exposes Emacs Calc's unit conversion utilities via an algebraic function, which lets us use it in with =literate-calc-mode=. It's defined in my Doom Emacs =config.el= as:
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :eval never
 (after! calc
   (defalias 'calcFunc-uconv 'math-convert-units))
 #+end_src
