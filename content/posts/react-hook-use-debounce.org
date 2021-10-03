@@ -65,7 +65,7 @@ function DebouncedInputExample() {
 
 And here's the whole demo in action.
 
-#+BEGIN_SRC html :noweb yes
+#+BEGIN_SRC html :noweb yes :exports results :results html
 <div class="demo">
   <div id="demo-container">Demo is loading (requires JavaScript)...</div>
 </div>
