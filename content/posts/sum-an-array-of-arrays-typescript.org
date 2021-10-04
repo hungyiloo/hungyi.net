@@ -7,7 +7,7 @@ I was recently asked what was the best way to sum up an array of arrays of numbe
 
 # more
 
-Here's my quick and dirty solution, using [[url_for:posts,slug=reduce-swiss-army-knife][JavaScript's Reduce: A Swiss Army Knife for Arrays]]:
+Here's my quick and dirty solution, using [[charge:reduce-swiss-army-knife.org][JavaScript's Reduce]]:
 
 #+name: sum-an-array-of-arrays
 #+begin_src typescript :exports both :results code :cache yes

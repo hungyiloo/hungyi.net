@@ -44,7 +44,7 @@ To be honest, this worked really well for me. I brought the Perl script and =tit
 But having to carry around a Perl script and making Emacs do a process call out just kept nagging at me. What I really wanted was a native Emacs Lisp solution to keep my config pure and less reliant on external dependencies.
 
 * Rolling My Own Solution and Adding More Test Cases
-Instead of an unholy mess of regular expressions, I decided to use a state machine and [[url_for:posts,slug=reduce-swiss-army-knife][reduce]] each character in the input string to convert it to title case. I wrote it in a completely pure way, as an exercise, even though Emacs Lisp isn't normally conducive to that sort of thing.
+Instead of an unholy mess of regular expressions, I decided to use a state machine and [[charge:reduce-swiss-army-knife.org][reduce]] each character in the input string to convert it to title case. I wrote it in a completely pure way, as an exercise, even though Emacs Lisp isn't normally conducive to that sort of thing.
 
 I also added a bunch more test cases for the "start of a new sentence" behavior:
 - Semicolons (;)
