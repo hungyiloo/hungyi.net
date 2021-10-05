@@ -2,37 +2,49 @@
 ;;; Commentary:
 ;;; Code:
 
-(let ((posts (charge-collect-nodes-org (file-expand-wildcards "content/posts/*.org")))
-      (pages (charge-collect-nodes-org (file-expand-wildcards "content/*.org")))
-      (static-files (file-expand-wildcards "theme/static/*")))
+(let* ((posts (charge-collect-org (file-expand-wildcards "content/posts/*.org")))
+       (pages (charge-collect-org (file-expand-wildcards "content/*.org")))
+       (static-files (charge-collect-files (file-expand-wildcards "theme/static/*")))
+       (blog-index (list (charge-particle :posts posts))))
+
   (charge-site
    :base-url "http://localhost:5000/"
-   :output-dir "output"
+   :output "output"
 
-   :routes
-   `((:url ,(lambda (node) (format "posts/%s" (alist-get :slug node)))
-      :output ,(lambda (node) (format "posts/%s/index.html" (alist-get :slug node)))
-      :nodes ,posts
-      :writer ,(lambda (destination node _route _site)
-                 (write-region
-                  (charge-render `(body ,(charge-export-node-org node)))
-                  nil
-                  destination)))
+   (charge-route blog-index
+     :url ""
+     :path '("index.html" "posts/index.html")
+     :emit (lambda (destination particle _route site)
+             (charge-write
+              (charge-html
+               `(body
+                 (ul
+                  ,(mapcar
+                    (lambda (post) `(li (a :href ,(charge-url site post) ,(alist-get :title post))))
+                    (alist-get :posts particle)))))
+              destination)))
 
-     (:url ,(lambda (node) (alist-get :slug node))
-      :output ,(lambda (node) (format "%s/index.html" (alist-get :slug node)))
-      :nodes ,pages
-      :writer ,(lambda (destination node _route _site)
-                 (write-region
-                  (charge-render `((h1 "this is a page!")
-                                   (body ,(alist-get :html node))))
-                  nil
-                  destination)))
+   (charge-route posts
+     :url (charge-format "posts/%s" :slug)
+     :path (charge-format "posts/%s/index.html" :slug)
+     :emit (lambda (destination particle _route _site)
+             (charge-write
+              (charge-html `(body ,(charge-export-particle-org particle)))
+              destination)))
 
-     (:url ,(lambda (node) (file-name-nondirectory node))
-      :output ,(lambda (node) (file-name-nondirectory node))
-      :nodes ,static-files
-      :writer ,(lambda (destination node _route _site)
-                 (copy-file node destination))))))
+   (charge-route pages
+     :url (charge-format "%s" :slug)
+     :path (charge-format "%s/index.html" :slug)
+     :emit (lambda (destination particle _route _site)
+             (charge-write
+              (charge-html `((h1 "this is a page!")
+                             (body ,(alist-get :html particle))))
+              destination)))
+
+   (charge-route static-files
+     :url (charge-format "%s" :filename)
+     :path (charge-format "%s" :filename)
+     :emit (lambda (destination particle _route _site)
+             (copy-file (alist-get :path particle) destination t)))))
 
 ;;; charge-build.el ends here
