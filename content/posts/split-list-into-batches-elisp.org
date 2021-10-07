@@ -1,13 +1,36 @@
 #+TITLE: Split a List Into Batches Using Emacs Lisp
 #+SLUG: split-list-into-batches-elisp
 #+DATE: 2021-04-02T14:26:02+08:00
-#+DESCRIPTION: A simple Emacs Lisp function that can be used to chop or group a list of things into batches of a maximum size, including examples of unit testing and boundary value analysis.
+#+DESCRIPTION: An exercise to write a simple Emacs Lisp function that can be used to chop a list of things into batches of a given size, including examples of unit testing and boundary value analysis.
+
+[2021-10-07 Thu] I made a mistake! 😅 There's (probably) nothing wrong with the code I wrote in my original post, but there's /already/ a function in Emacs that does exactly what I was trying to achieve: namely ~seq-partition~. It even takes the exact same parameters as my old function.
+
+It turns out "partition" is a word commonly used in computer science to split lists in various ways, like in the ubiquitous [[https://en.wikipedia.org/wiki/Quicksort][quicksort algorithm]].
+
+Here's a quick demonstration of it in action:
+
+#+begin_src emacs-lisp :exports both :results code :cache yes
+(require 'seq)
+(seq-partition '(1 2 3 4 5 6 7 8 9) 4)
+#+end_src
+
+#+RESULTS[453b1696f0a89045577931a0f7b8e1535f841cab]:
+#+begin_src emacs-lisp
+((1 2 3 4)
+ (5 6 7 8)
+ (9))
+#+end_src
+
+Please use the built-in ~seq-partition~ and not my code 🙏
+
+If you'd like to read through my adventures in naivety anyway, the original post follows below. It's still a good exercise in using ~cl-loop~ and boundary value analysis.
+
+------
 
 Sometimes a list of things is too large and it needs to be split into batches before it can be processed effectively. A quick google didn't reveal any quick copy-pastable elisp (a.k.a. Emacs Lisp) functions that did this kind of batching, so I cobbled together what I found and came up with this ~cl-loop~ implementation, which is hopefully performant.
 
-# more
 
-Feel free to copy paste it as is, since it should be general enough to use anywhere 💻
+Feel free to copy paste it as is, since it should be general enough to use anywhere .
 
 #+begin_src emacs-lisp :exports both :results code :results silent :eval no-export
 (require 'cl-lib)
@@ -31,7 +54,7 @@ Feel free to copy paste it as is, since it should be general enough to use anywh
 
 To use it, just call it with the ~input~ list and the maximum ~size~ of the batches that it should split into.
 
-For example, splitting a list of ~(1 2 3 4 5 6 7 8 9)~ into batches of max size ~3~ 🧙
+For example, splitting a list of ~(1 2 3 4 5 6 7 8 9)~ into batches of max size ~3~
 #+begin_src emacs-lisp :exports both :results code :cache yes
 (my/batch-list '(1 2 3 4 5 6 7 8 9) 3)
 #+end_src
@@ -59,7 +82,7 @@ And a batch size of ~4~ to see what happens when the ~size~ doesn't evenly divid
 
 Let's try some other tricky inputs to check for sane behavior 😈 [fn:1]
 
-Like a ~size~ that is equal to the length of the ~input~ list ⚖️
+Like a ~size~ that is equal to the length of the ~input~ list
 #+begin_src emacs-lisp :exports both :results code :cache yes
 (my/batch-list '(1 2 3 4 5 6 7 8 9) 9)
 #+end_src
@@ -69,7 +92,7 @@ Like a ~size~ that is equal to the length of the ~input~ list ⚖️
 ((1 2 3 4 5 6 7 8 9))
 #+end_src
 
-Or a ~size~ that exceeds the length of ~input~ 🌋
+Or a ~size~ that exceeds the length of ~input~
 #+begin_src emacs-lisp :exports both :results code :cache yes
 (my/batch-list '(1 2 3 4 5 6 7 8 9) 10)
 #+end_src
@@ -79,7 +102,7 @@ Or a ~size~ that exceeds the length of ~input~ 🌋
 ((1 2 3 4 5 6 7 8 9))
 #+end_src
 
-Or a batch ~size~ of ... just ~1~? 🤔
+How about a batch ~size~ of ... just ~1~?
 #+begin_src emacs-lisp :exports both :results code :cache yes
 (my/batch-list '(1 2 3 4 5 6 7 8 9) 1)
 #+end_src
