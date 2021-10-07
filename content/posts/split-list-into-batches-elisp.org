@@ -5,7 +5,7 @@
 
 [2021-10-07 Thu] I made a mistake! 😅 There's (probably) nothing wrong with the code I wrote in my original post, but there's /already/ a function in Emacs that does exactly what I was trying to achieve: namely ~seq-partition~. It even takes the exact same parameters as my old function.
 
-It turns out "partition" is a word commonly used in computer science to split lists in various ways, like in the ubiquitous [[https://en.wikipedia.org/wiki/Quicksort][quicksort algorithm]].
+It turns out "partition" is a word commonly used in computer science to refer to splitting lists in various ways, like in the ubiquitous [[https://en.wikipedia.org/wiki/Quicksort][quicksort algorithm]].
 
 Here's a quick demonstration of it in action:
 
