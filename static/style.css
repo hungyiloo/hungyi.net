@@ -233,6 +233,12 @@ blockquote p:last-of-type {
 .muted {
   color: var(--muted);
 }
+hr {
+  border-color: var(--border);
+  margin-block-start: calc(var(--rhythm) * 2);
+  margin-block-end: calc(var(--rhythm) * 2);
+  border-top: none;
+}
 
 /* -- Content -- */
 a {
