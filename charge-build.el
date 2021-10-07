@@ -5,7 +5,7 @@
 (require 'charge)
 
 ;; TODO: Move templates out into separate files
-(defun my/blog/base-template (site main &optional subtitle meta)
+(defun my/blog/render-base (site main &optional subtitle meta)
   "Renders base template with SITE, MAIN content, SUBTITLE and META tags."
   (let ((site-name (alist-get :name site))
         (base-url (alist-get :base-url site)))
@@ -64,7 +64,7 @@
         gtag('config', 'UA-180663322-1');
         """))))))
 
-(defun my/blog/page-template (page main)
+(defun my/blog/render-page (page main)
   "Renders page template with PAGE particle and MAIN content."
   (charge-html
    (article
@@ -72,8 +72,8 @@
     (h1 :class "page__title" ,(alist-get :title page))
     (section ,main))))
 
-(defun my/blog/post-template (post main)
-  "Renders page template with POST particle and MAIN content."
+(defun my/blog/render-post (post main)
+  "Renders post template with POST particle and MAIN content."
   (charge-html
    (article
     :class "post"
@@ -87,6 +87,55 @@
      ,(when-let ((post-description (alist-get :description post)))
         `(p ,post-description)))
     (section ,main))))
+
+(defun my/blog/render-post-meta (post site)
+  "Renders post meta tags with POST particle and SITE config."
+  (charge-html
+   ((meta :property "og:title" :content ,(alist-get :title post))
+    (meta :property "og:url" :content ,(charge-url site post))
+    (meta :property "og:description" :content ,(alist-get :description post))
+    (meta :property "description" :content ,(alist-get :description post))
+    (meta :property "og:image" :content ,(concat (alist-get :base-url site) "HY_Light_and_Color_2.svg"))
+    (meta :property "og:type" :content "blog"))))
+
+(defun my/blog/render-blog-index-item (post site)
+  "Renders individual POST particle in blog index given the SITE config."
+  (charge-html
+   (li
+    :class "post-item"
+    (a
+     :href ,(charge-url site post)
+     (span :class "post-title" ,(alist-get :title post))
+     ,(when-let ((post-date (alist-get :date post)))
+        `(span
+          :class "post-date datestamp"
+          ,(format-time-string "%e %B, %Y" (date-to-time post-date))))
+     ,(when-let ((post-description (alist-get :description post)))
+        `(div :class "post-description" ,post-description))))))
+
+(defun my/blog/render-blog-index (posts site)
+  "Renders blog index with all POSTS and SITE config."
+  ;; Sort posts in reverse date order.
+  ;; ISO8601 date strings are sortable lexicographically
+  (setq posts
+        (sort posts
+              (lambda (a b)
+                (string-greaterp
+                 (alist-get :date a)
+                 (alist-get :date b)))))
+  (charge-html
+   ((div :class "section-header" "Latest")
+    (ul
+     :class "featured posts"
+     ,(mapcar
+       (lambda (post) (my/blog/render-blog-index-item post site))
+       (seq-take posts 1)))
+    (div :class "section-header" "Older")
+    (ul
+     :class "posts"
+     ,(mapcar
+       (lambda (post) (my/blog/render-blog-index-item post site))
+       (seq-drop posts 1))))))
 
 (let* ((posts (charge-collect-org (file-expand-wildcards "content/posts/*.org")))
        (pages (charge-collect-org (file-expand-wildcards "content/*.org")))
@@ -103,12 +152,9 @@
      :path '("index.html" "posts/index.html")
      :emit (lambda (destination particle _route site)
              (charge-write
-              (my/blog/base-template
+              (my/blog/render-base
                site
-               ;; TODO: proper blog landing template
-               (mapcar
-                (lambda (post) `(li (a :href ,(charge-url site post) ,(alist-get :title post))))
-                (alist-get :posts particle)))
+               (my/blog/render-blog-index (alist-get :posts particle) site))
               destination)))
 
    (charge-route posts
@@ -116,12 +162,11 @@
      :path (charge-format "posts/%s/index.html" :slug)
      :emit (lambda (destination particle _route site)
              (charge-write
-              (my/blog/base-template
+              (my/blog/render-base
                site
-               (my/blog/post-template particle (charge-export-particle-org particle))
+               (my/blog/render-post particle (charge-export-particle-org particle))
                (alist-get :title particle)
-               ;; TODO: post meta tags
-               )
+               (my/blog/render-post-meta particle site))
               destination)))
 
    (charge-route pages
@@ -129,9 +174,9 @@
      :path (charge-format "%s/index.html" :slug)
      :emit (lambda (destination particle _route site)
              (charge-write
-              (my/blog/base-template
+              (my/blog/render-base
                site
-               (my/blog/page-template particle (charge-export-particle-org particle))
+               (my/blog/render-page particle (charge-export-particle-org particle))
                (alist-get :title particle))
               destination)))
 
