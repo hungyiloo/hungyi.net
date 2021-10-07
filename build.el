@@ -1,70 +1,72 @@
-;;; build.el --- Generate a simple static HTML blog -*- lexical-binding: t; -*-
+;;; build.el --- builds my static blog using charge.el -*- lexical-binding: t; -*-
+;;;
 ;;; Commentary:
-;;
-;;    Define the routes of the static website.  Each of which
-;;    containing the pattern for finding Org-Mode files, which HTML
-;;    template to be used, as well as their output path and URL.
-;;
+;;; builds my static blog using charge.el
+;;;
 ;;; Code:
-
-;; (add-to-list 'load-path "~/.config/emacs/.local/straight/repos/weblorg")
-;; (add-to-list 'load-path "~/.config/emacs/.local/straight/repos/templatel")
-;; (add-to-list 'load-path "~/.config/emacs/.local/straight/repos/emacs-htmlize")
-;; (add-to-list 'load-path "~/.config/emacs/.local/straight/repos/typescript.el")
 (load-file "~/.config/emacs/early-init.el")
 (load-file "~/.config/emacs/init.el")
 
-(require 'weblorg)
-(require 'templatel)
-(require 'seq)
-(require 'tree-sitter)
-(global-tree-sitter-mode 1)
+(require 'charge)
 
-(setq org-html-htmlize-output-type 'css)
-(setq weblorg-default-url (or (getenv "BASE_URL") ""))
+;; Load templates
+(dolist (template (file-expand-wildcards "templates/*.el")) (load-file template))
+(declare-function my/blog/render-base ())
+(declare-function my/blog/render-blog-index ())
+(declare-function my/blog/render-post ())
+(declare-function my/blog/render-post-meta ())
+(declare-function my/blog/render-page ())
 
-(advice-add #'templatel-env-new
-            :around
-            (defun my/templatel-custom-env (orig &rest args)
-              (let ((env (apply orig args)))
-                (templatel-env-add-filter env "drop" (lambda (s n) (seq-drop s n)))
-                env)))
+;; Collect particles and render site
+(let* ((posts (charge-collect-org (file-expand-wildcards "content/posts/*.org")))
+       (pages (charge-collect-org (file-expand-wildcards "content/*.org")))
+       (static-files (charge-collect-files (file-expand-wildcards "static/*")))
+       (blog-index (list (charge-particle :posts posts))))
 
-(let ((site (weblorg-site
-             :name "personal"
-             :theme nil
-             :template-vars '(("site_name" . "Hung-Yi’s Journal")))))
-  ;; Generate blog posts
-  (weblorg-route
-   :name "posts"
-   :input-pattern "content/posts/*.org"
-   :template "post.html"
-   :output "public/posts/{{ slug }}/index.html"
-   :url "/posts/{{ slug }}"
-   :site site)
+  (charge-site
+   :name "Hung-Yi’s Journal"
+   :base-url (cond ((getenv "PRODUCTION") "https://hungyi.net/")
+                   (t "http://localhost:5000/"))
+   :output "output"
 
-  ;; Generate pages
-  (weblorg-route
-   :name "pages"
-   :input-pattern "content/*.org"
-   :template "page.html"
-   :output "public/{{ slug }}/index.html"
-   :url "/{{ slug }}")
+   (charge-route blog-index
+     :url ""
+     :path '("index.html" "posts/index.html")
+     :emit (lambda (destination particle _route site)
+             (charge-write
+              (my/blog/render-base
+               site
+               (my/blog/render-blog-index (alist-get :posts particle) site))
+              destination)))
 
-  ;; Generate posts summary
-  (weblorg-route
-   :name "index"
-   :input-pattern "content/posts/*.org"
-   ;; :input-aggregate (weblorg-input-aggregate-take-n-desc 10)
-   :input-aggregate #'weblorg-input-aggregate-all-desc
-   :template "blog.html"
-   :output "public/index.html"
-   :url "/")
+   (charge-route posts
+     :url (charge-format "posts/%s" :slug)
+     :path (charge-format "posts/%s/index.html" :slug)
+     :emit (lambda (destination particle _route site)
+             (charge-write
+              (my/blog/render-base
+               site
+               (my/blog/render-post particle (charge-export-particle-org particle))
+               (alist-get :title particle)
+               (my/blog/render-post-meta particle site))
+              destination)))
 
-  (weblorg-copy-static
-   :output "public/{{ file }}"
-   :url "/{{ file }}"
-   :site site)
+   (charge-route pages
+     :url (charge-format "%s" :slug)
+     :path (charge-format "%s/index.html" :slug)
+     :emit (lambda (destination particle _route site)
+             (charge-write
+              (my/blog/render-base
+               site
+               (my/blog/render-page particle (charge-export-particle-org particle))
+               (alist-get :title particle))
+              destination)))
 
-  (weblorg-export))
+   (charge-route static-files
+     :url (charge-format "%s" :filename)
+     :path (charge-format "%s" :filename)
+     :emit (lambda (destination particle _route _site)
+             (copy-file (alist-get :path particle) destination t)))))
+
+(provide 'build)
 ;;; build.el ends here
