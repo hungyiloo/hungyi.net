@@ -17,7 +17,7 @@ I've managed to merge the two worlds slightly by crafting my own (unpublished) m
 
 I'm also an avid [[https://orgmode.org/][org-mode]] user. I rely on it to organize my personal and work life using [[https://bulletjournal.com/][bullet journalling]]. I also manage a personal [[https://www.orgroam.com/][org-roam]] knowledge base for long-lived note taking.
 
-This blog is entirely written in org-mode and generated as a static website purely using Emacs Lisp via [[https://emacs.love/weblorg/][weblorg]]. You can see the GitHub repo [[https://github.com/hungyiloo/hungyi.net][here]].
+This blog is entirely written in org-mode and generated as a static website purely using Emacs Lisp and my own experimental [[https://github.com/hungyiloo/doom-emacs-conf/blob/master/lisp/charge.el][charge.el]]. You can see the GitHub repo for this website [[https://github.com/hungyiloo/hungyi.net][here]].
 
 #+begin_export html
 <style>
