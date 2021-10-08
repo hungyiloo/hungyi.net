@@ -9,6 +9,11 @@
 
 (require 'charge)
 
+;; Enable syntax highlighting using tree-sitter
+(require 'tree-sitter)
+(require 'tree-sitter-langs)
+(global-tree-sitter-mode 1)
+
 ;; Load templates
 (dolist (template (file-expand-wildcards "templates/*.el")) (load-file template))
 (declare-function my/blog/render-base ())
