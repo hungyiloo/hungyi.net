@@ -17,10 +17,10 @@
 ;; Load templates
 (dolist (template (file-expand-wildcards "templates/*.el")) (load-file template))
 (declare-function my/blog/render-base ())
-(declare-function my/blog/render-blog-index ())
-(declare-function my/blog/render-post ())
-(declare-function my/blog/render-post-meta ())
-(declare-function my/blog/render-page ())
+(declare-function my/blog/template-blog-index ())
+(declare-function my/blog/template-post ())
+(declare-function my/blog/template-post-meta ())
+(declare-function my/blog/template-page ())
 
 ;; Collect particles and render site
 (let* ((posts (charge-collect-org (file-expand-wildcards "content/posts/*.org")))
@@ -41,7 +41,7 @@
              (charge-write
               (my/blog/render-base
                site
-               (my/blog/render-blog-index (alist-get :posts particle) site))
+               (my/blog/template-blog-index (alist-get :posts particle) site))
               destination)))
 
    (charge-route posts
@@ -51,9 +51,9 @@
              (charge-write
               (my/blog/render-base
                site
-               (my/blog/render-post particle (charge-export-particle-org particle))
+               (my/blog/template-post particle (charge-export-particle-org particle))
                (alist-get :title particle)
-               (my/blog/render-post-meta particle site))
+               (my/blog/template-post-meta particle site))
               destination)))
 
    (charge-route pages
@@ -63,7 +63,7 @@
              (charge-write
               (my/blog/render-base
                site
-               (my/blog/render-page particle (charge-export-particle-org particle))
+               (my/blog/template-page particle (charge-export-particle-org particle))
                (alist-get :title particle))
               destination)))
 

@@ -7,13 +7,12 @@
 
 (require 'charge)
 
-(defun my/blog/render-page (page main)
+(defun my/blog/template-page (page main)
   "Renders page template with PAGE particle and MAIN content."
-  (charge-html
-   (article
+  `(article
     :class "page"
     (h1 :class "page__title" ,(alist-get :title page))
-    (section ,main))))
+    (section ,main)))
 
 (provide 'page-template)
 ;;; page-template.el ends here
