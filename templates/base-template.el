@@ -12,6 +12,7 @@
   (let ((site-name (alist-get :name site))
         (base-url (alist-get :base-url site)))
     (charge-html
+     "<!DOCTYPE html>"
      `(html
        :lang "en"
        (head

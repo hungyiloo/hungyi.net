@@ -26,7 +26,8 @@
 (let* ((posts (charge-collect-org (file-expand-wildcards "content/posts/*.org")))
        (pages (charge-collect-org (file-expand-wildcards "content/*.org")))
        (static-files (charge-collect-files (file-expand-wildcards "static/*")))
-       (blog-index (list (charge-particle :posts posts))))
+       (blog-index (list (charge-particle "blog-index"
+                           :posts posts))))
 
   (charge-site
    :name "Hung-Yi’s Journal"
