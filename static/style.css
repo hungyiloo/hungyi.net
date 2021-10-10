@@ -429,6 +429,7 @@ main table th {
 { font-style: italic }
 .org-tree-sitter-hl-faceXkeyword,
 .org-keyword,
+.org-constant,
 .org-highlight-numbers-number,
 .org-tree-sitter-hl-faceXtag,
 .org-builtin,

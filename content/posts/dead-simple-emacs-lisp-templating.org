@@ -1,0 +1,126 @@
+#+TITLE: Dead Simple HTML Templating in Emacs Lisp
+#+SLUG: dead-simple-emacs-lisp-templating
+#+DATE: 2021-10-10T20:51:05+08:00
+#+DESCRIPTION: A lispy, single-function templating engine that has only a few key rules to remember. Use what you already know about Emacs Lisp to get you the rest of the way.
+
+If you've ever needed to generate HTML from within Emacs, you know it can be a pain to use either buffer or string manipulation to build the markup from scratch. You know in your gut that it's never a good idea to put code inside strings inside other code. There must be another way --- and there is!
+
+Consider the humble [[https://en.wikipedia.org/wiki/S-expression][S-expression]]. It's the fundamental building block of Lisp syntax, and thus of Emacs Lisp and all other Lisp dialects too. S-expressions are used to represent all sorts of arbitrary code and data, and it turns out that it's not too far of a stretch to make it represent HTML.
+
+Hard to believe? Have a look at this Lisp expression and see how straightforward it can be:
+
+#+name: example-menu-template
+#+begin_src emacs-lisp :exports code :results silent :cache yes
+`(nav :class "main-menu"
+      (ul (li "Home")
+          (li :class "active" (b "About"))
+          (li "Contact Us"))
+      (button :class "search-button"
+              (img :src "search-icon.svg"
+                   :alt "Magnifying glass icon")))
+#+end_src
+
+If you're familiar with HTML and comfortable with Lisp, it probably won't take you long to recognize that it represents this HTML:
+
+#+begin_src emacs-lisp :exports results :results raw :cache yes :var template=example-menu-template :wrap "src html :exports code :eval never"
+(charge-prettify-html (charge-html template))
+#+end_src
+
+#+RESULTS[c5514964f12d60819342df6b8197330eae319148]:
+#+begin_src html :exports code :eval never
+<nav class="main-menu">
+  <ul>
+    <li>Home</li>
+    <li class="active">
+      <b>About</b>
+    </li>
+    <li>Contact Us</li>
+  </ul>
+  <button class="search-button">
+    <img src="search-icon.svg" alt="Magnifying glass icon"/>
+  </button>
+</nav>
+#+end_src
+
+In fact, the Lisp expression from before doesn't just represent the HTML above --- it actually /generates/ it. All it takes is one function with no external dependencies, which I'll copy here for you to use, extend and play with.
+
+#+begin_src emacs-lisp :exports code :results silent
+(require 'subr-x)
+
+(defun my/template-html (&rest template)
+  (let (tag attr-name (content (list)) (attrs (list)))
+    (mapc
+     (lambda (x)
+       (cond ((and x (listp x))
+              (push (apply #'my/template-html x) content))
+             ((and (not tag) x (symbolp x))
+              (setq tag x))
+             ((keywordp x)
+              (setq attr-name x))
+             (attr-name
+              (push (cons attr-name x) attrs)
+              (setq attr-name nil))
+             (t
+              (unless (null x) (push (format "%s" x) content)))))
+     template)
+    (let ((tag-is-void
+           (memq tag
+                 '(area base br col embed
+                        hr img input link meta
+                        param track wbr))))
+      (concat
+       (when tag
+         (thread-last
+           attrs
+           (nreverse)
+           (mapcar
+            (lambda (attr)
+              (format
+               (if (cdr attr) " %s=\"%s\"" " %s")
+               (substring (symbol-name (car attr)) 1) (cdr attr))))
+           (apply #'concat)
+           (format
+            (if tag-is-void "<%s%s/>" "<%s%s>")
+            tag)))
+       (unless tag-is-void
+         (thread-last
+           content
+           (nreverse)
+           (apply #'concat)))
+       (when (and tag (not tag-is-void))
+         (format "</%s>" tag))))))
+#+end_src
+
+And to use it to generate the example HTML above, just call it like this (although it won't be prettified and indented, since it's optimized for rendering):
+
+#+begin_src emacs-lisp :exports code :eval no-export
+(my/template-html
+ `(nav :class "main-menu"
+       (ul (li "Home")
+           (li :class "active" (b "About"))
+           (li "Contact Us"))
+       (button :class "search-button"
+               (img :src "search-icon.svg"
+                    :alt "Magnifying glass icon"))))
+#+end_src
+
+* Inspiration & Goal
+Those of you familiar with the Emacs package [[https://github.com/Kinneyzhang/pp-html][pp-html]] might recognize the style of expression used above. I was definitely inspired by it.
+
+However, I didn't need all of pp-html's shortcuts and fancy features, so I decided to write one extremely minimal function to cover just the basics of tag rendering. By [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Backquote.html][backquoting]] and using the regular everday power of Emacs Lisp, I could get myself the rest of the way towards full template functionality without having to build any intrinsic "magic" into the system. It really is just 98% Emacs Lisp, without any shenanigans.
+
+I only need to remember 6 rules when templating with ~my/template-html~:
+#+BEGIN_COMFY
+1. The template expression must be either quoted or backquoted so that symbols like ~p~ and ~div~ aren't called as functions in Emacs Lisp
+
+2. The first symbol in the list is the tag name of the element. If it isn't present, the opening and closing tags will be omitted.
+
+3. Attributes follow the tag name as [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Property-Lists.html][plist]]-like pairs of ~:keyword~ attribute names and string attribute values. They are optional.
+
+4. If an attribute has no value (i.e. only its name should be rendered), then assign ~nil~ as its value
+
+5. Tag content collected from all the arguments that come after the attribute pairs. It can be zero or more things that will ~format~ to a string, or even more nested template expressions.
+
+6. For anything more complicated, like non-constant values, variable substitution, conditional rendering, looping, advanced string formatting, etc, escape out of the backquote using ~,~ or ~,@~ and *Just Use Lisp*. Evaluated Lisp can return any content or nested template expressions.
+#+END_COMFY
+
