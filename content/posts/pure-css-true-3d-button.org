@@ -7,7 +7,7 @@ Sometimes you just need a big, shiny call-to-action that draws the user's attent
 
 ...and what could pop more than a chunky, glowing, animated 3D button? 😎
 
-#+BEGIN_SRC html :noweb yes :exports results :results html
+#+BEGIN_SRC html :noweb yes :exports results :results html :cache yes
 <style>
   <<button-styles>>
   .chunky-button .front {
@@ -26,7 +26,7 @@ The CSS and HTML markup are provided below. The key parts to note are:
 1. [[https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties][CSS variables]] allowing reuse of repetitive properties (e.g. color)
 2. 3D transforms to move and rotate the bottom and side faces of the button into realistic positions
 3. =perspective= and =perspective-origin= on the whole button to reveal the bottom and side faces
-4. =filter: brightness= to darken the bottom and side faces
+4. =filter: brightness= to darken the bottom and side faces and light up the front face on hover
 5. =box-shadow= for the glow effect
 6. =transform: scale= and =transform-origin=[fn:1] to change the sizes of the bottom and side faces on hover/click
 7. =transform: translateZ= to move the front face in and out of the "screen" on hover/click
@@ -63,6 +63,7 @@ The CSS and HTML markup are provided below. The key parts to note are:
 .chunky-button:hover .front {
   transform: translateZ(calc(var(--virtual-height)*var(--factor)));
   box-shadow: 0 0 3rem var(--color);
+  filter: brightness(1.1);
 }
 .chunky-button:active .front {
   transform: translateZ(calc(-1*var(--virtual-height)*var(--factor)));

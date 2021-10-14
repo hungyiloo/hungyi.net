@@ -8,8 +8,8 @@ In [[https://reactjs.org/][React]], component state can sometimes change very qu
 A common pattern is [[https://en.wiktionary.org/wiki/debounce][debouncing]] behavior, which we can achieve with this hook.
 
 #+name: hook
-#+begin_src tsx :results silent
-function useDebounce(value, delay: number) {
+#+begin_src tsx :exports both :results html :cache yes
+function useDebounce<T>(value: T, delay: number) {
   // State and setters for debounced value
   const [debouncedValue, setDebouncedValue] = useState(value)
   useEffect(
@@ -27,7 +27,7 @@ function useDebounce(value, delay: number) {
     },
     [value, delay] // Only re-call effect if value or delay changes
   )
-  return [debouncedValue, () => setDebouncedValue(value)]
+  return [debouncedValue, () => setDebouncedValue(value)] as [T, () => void]
 }
 #+end_src
 
@@ -36,7 +36,7 @@ This version of the ~useDebounce~ hook contains a bonus "short circuiting" behav
 Here's an example of how to implement the hook, including the short circuiting.
 
 #+name: component
-#+begin_src tsx :results silent
+#+begin_src tsx :exports both :results html :cache yes
 function DebouncedInputExample() {
   const [input, setInput] = useState('')
   const [debouncedInput, shortCircuit] = useDebounce(input, 1000)
@@ -65,19 +65,16 @@ function DebouncedInputExample() {
 
 And here's the whole demo in action.
 
-#+BEGIN_SRC html :noweb yes :exports results :results html
+#+BEGIN_EXPORT html
 <div class="demo">
   <div id="demo-container">Demo is loading (requires JavaScript)...</div>
 </div>
 <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
 <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
-<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
-<script type="text/babel">
-  const { useState, useEffect } = React
-  <<hook>>
-  <<component>>
-  const domContainer = document.querySelector('#demo-container')
-  ReactDOM.render(<DebouncedInputExample/>, domContainer)
-</script>
-#+END_SRC
+#+END_EXPORT
 
+#+begin_src tsx :exports results :results html
+const { useState, useEffect } = React
+const domContainer = document.querySelector('#demo-container')
+ReactDOM.render(<DebouncedInputExample/>, domContainer)
+#+end_src
