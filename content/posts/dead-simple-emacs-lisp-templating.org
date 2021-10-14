@@ -296,7 +296,7 @@ Oh, and tags can have more template strings as their content too (otherwise it w
 #+end_src
 
 * Rule #6: Use lisp for anything more fancy
-If you need formatting, concatenating, joining, mapping, looping, conditionals, filtering, sorting, or number of things templating engines usually provide, just use Emacs Lisp! It's at your disposal, even with a template.
+If you need formatting, concatenating, joining, mapping, looping, conditionals, filtering, sorting, or any number of things templating engines usually provide, just use Emacs Lisp! It's at your disposal, even with a template.
 
 #+begin_src emacs-lisp :exports both :results raw :wrap "src html :eval never" :cache yes
 (require 'seq)
