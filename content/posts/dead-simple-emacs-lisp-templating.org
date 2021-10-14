@@ -296,7 +296,7 @@ Oh, and tags can have more template strings as their content too (otherwise it w
 #+end_src
 
 * Rule #6: Use lisp for anything more fancy
-If you need formatting, concatenating, joining, mapping, looping, conditionals, filtering, sorting, or any number of things templating engines usually provide, just use Emacs Lisp! It's at your disposal, even with a template.
+If you need formatting, concatenating, joining, mapping, looping, conditionals, filtering, sorting, or any number of things templating engines usually provide, *just use Emacs Lisp*! It's completely at your disposal, even within a template.[fn:1]
 
 #+begin_src emacs-lisp :exports both :results raw :wrap "src html :eval never" :cache yes
 (require 'seq)
@@ -316,6 +316,8 @@ If you need formatting, concatenating, joining, mapping, looping, conditionals, 
 #+begin_src html :eval never
 <ol>Prime numbers under ten: <li>2</li><li>3</li><li>5</li><li>7</li></ol>
 #+end_src
+
+[fn:1] You should probably put complex logic /outside/ the template though, as usual. Code inside templates should be limited to basic presentation logic.
 
 * Next, a static website generator
 ~charge-html~ is actually the cornerstone of my personal static website generator =charge.el=, which I'm still actively developing. But to give you an idea of its power despite its simplicity, this whole blog is now generated using it!
