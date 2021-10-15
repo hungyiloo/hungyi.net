@@ -1,13 +1,11 @@
 #+TITLE: Dead Simple HTML Templating in Emacs Lisp
 #+SLUG: dead-simple-emacs-lisp-templating
 #+DATE: 2021-10-14T22:15:59+08:00
-#+DESCRIPTION: A lispy, single-function templating engine that has only a few key rules to remember. Use what you already know about Emacs Lisp to get you the rest of the way.
+#+DESCRIPTION: A lispy, one-function templating engine that has only a few key rules to remember. Use what you already know about Emacs Lisp to get you the rest of the way.
 
 If you've ever needed to generate HTML from within Emacs, you know it can be a pain to use either buffer or string manipulation to build the markup from scratch. You know in your gut that it's never a good idea to put code inside strings inside other code. There must be another way --- and there is!
 
-Consider the humble [[https://en.wikipedia.org/wiki/S-expression][S-expression]]. It's the fundamental building block of Lisp syntax, and thus of Emacs Lisp and all other Lisp dialects too. S-expressions are used to represent all sorts of arbitrary code and data, and it turns out that it's not too far of a stretch to make it represent HTML.
-
-Hard to believe? Have a look at this Lisp expression and see how straightforward it can be:
+What if you could turn these Lisp [[https://en.wikipedia.org/wiki/S-expression][s-expressions]]...
 
 #+name: example
 #+begin_src emacs-lisp :exports code :eval never
@@ -20,7 +18,7 @@ Hard to believe? Have a look at this Lisp expression and see how straightforward
                    :alt "Magnifying glass icon")))
 #+end_src
 
-If you're familiar with HTML and comfortable with Lisp, it probably won't take you long to recognize that it represents this HTML:
+Into HTML like this?
 
 #+begin_src emacs-lisp :exports results :results raw :cache yes :noweb yes :wrap "src html :exports code :eval never"
 (require 'charge)
@@ -45,12 +43,28 @@ If you're familiar with HTML and comfortable with Lisp, it probably won't take y
 </nav>
 #+end_src
 
-In fact, the Lisp expression from before doesn't just represent the HTML above --- it actually /generates/ it. All it takes is one function with no external dependencies, which I'll copy here for you to use, extend and play with.
+I wrote a single function, which I'm calling ~charge-html~, that does exactly that. It is a little long, so I'm pasting it at the end of this blog post[fn:1] for you to extend and play with later.
+
+To use it, simply call it with a bunch of s-expressions in the same format as I showed you before:
+
+#+begin_src emacs-lisp :exports code :eval never
+(charge-html
+ `(nav :class "main-menu"
+       (ul (li "Home")
+           (li :class "active" (b "About"))
+           (li "Contact Us"))
+       (button :class "search-button"
+               (img :src "search-icon.svg"
+                    :alt "Magnifying glass icon"))))
+#+end_src
+
+[fn:1] Here's the source code for ~charge-html~:
 
 #+begin_src emacs-lisp :exports code :eval never
 (require 'subr-x)
 
 (defun charge-html (&rest template)
+  "Turns a list of TEMPLATE s-exps (tag :attr value ...content) into HTML."
   (let (tag attr-name (content (list)) (attrs (list)))
     (mapc
      (lambda (x)
@@ -94,38 +108,12 @@ In fact, the Lisp expression from before doesn't just represent the HTML above -
          (format "</%s>" tag))))))
 #+end_src
 
-And to use it to generate the example HTML above, just call it like this (although it won't be prettified and indented, since it's optimized for rendering):
-
-#+begin_src emacs-lisp :exports code :eval never
-(charge-html
- `(nav :class "main-menu"
-       (ul (li "Home")
-           (li :class "active" (b "About"))
-           (li "Contact Us"))
-       (button :class "search-button"
-               (img :src "search-icon.svg"
-                    :alt "Magnifying glass icon"))))
-#+end_src
-
-* Inspiration & Goal
-Those of you familiar with the Emacs package [[https://github.com/Kinneyzhang/pp-html][pp-html]] might recognize the style of expression used above. I was definitely inspired by its template format.
+* Why did I make this?
+I needed a HTML templating system to do some static content generation (like this blog). In researching that, I came across the Emacs package [[https://github.com/Kinneyzhang/pp-html][pp-html]] and found its core templating syntax really easy to understand.
 
 However, I didn't need all of pp-html's shortcuts and fancy features, so I decided to write one extremely minimal function to cover just the basics of tag rendering. By [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Backquote.html][backquoting]] and using the regular everday power of Emacs Lisp, I could get myself the rest of the way towards full template functionality without having to build any intrinsic "magic" into the system. It really is just 98% Emacs Lisp, without any shenanigans.
 
-I only need to remember 6 rules when templating with ~charge-html~:
-#+BEGIN_COMFY
-1. The template expression must be either quoted or backquoted so that symbols like ~p~ and ~div~ aren't called as functions in Emacs Lisp
-
-2. The first symbol in the list is the tag name of the element. If it isn't present, the opening and closing tags will be omitted.
-
-3. Attributes follow the tag name as [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Property-Lists.html][plist]]-like pairs of ~:keyword~ attribute names and string attribute values. They are optional.
-
-4. If an attribute has no value (i.e. only its name should be rendered), then assign ~nil~ as its value
-
-5. Tag content is collected from all the arguments that come after the attribute pairs. It can be zero or more things that will ~format~ to a string, or even more nested template expressions.
-
-6. For anything more complicated, like non-constant values, variable substitution, conditional rendering, looping, advanced string formatting, etc, escape out of the backquote using ~,~ or ~,@~ and *Just Use Lisp*. Evaluated Lisp can return any content or nested template expressions.
-#+END_COMFY
+So I ended up with a system where *I only need to remember 6 simple rules when templating*.
 
 * Rule #1: Backquote the template
 Since the template is defined as an S-expression with tag names in place of function calls, we can't evaluate the expression as normal lisp. It's more like a list of symbols.
@@ -150,7 +138,7 @@ Here's an example of variable substitution using =`= and =,= (on the button labe
 #+end_src
 
 * Rule #2: Tags are first, but can be omitted
-If the first item in a template string list is a symbol, then a pair of tags will be generated around the content.
+If the first item in a template expression list is a symbol, then a pair of tags will be generated around the content.
 
 #+begin_src emacs-lisp :exports both :results raw :wrap "src html :eval never" :cache yes
 (charge-html
@@ -166,7 +154,7 @@ If the first item in a template string list is a symbol, then a pair of tags wil
 <p>The quick brown fox.</p>
 #+end_src
 
-But it can also be omitted if all you need is the naked content.
+But it can also be omitted[fn:2] if all you need is the naked content.
 
 #+begin_src emacs-lisp :exports both :results raw :wrap "src html :eval never"
 (charge-html
@@ -181,19 +169,21 @@ But it can also be omitted if all you need is the naked content.
 The quick brown fox.
 #+end_src
 
-*Why would you need to do this?* Allowing a list of things to be rendered without needing a tag name lets you worry less about "expanding" lists of dynamic content into a container tag. Here's an example:
+*Why would you need to do this?* Allowing a list of things to be rendered without needing a tag name lets you expand lists of dynamic content into a container element without generating unnecessary tags. Here's an example:
 
 #+begin_src emacs-lisp :exports both :results raw :wrap "src html :eval never" :cache yes
 (charge-html
  `(p
-   "Here are all the roman numerals: "
+   "Here are all the arabic numerals: "
    (0 1 2 3 4 5 6 7 8 9)))
 #+end_src
 
-#+RESULTS[0887b49f04fe7435eb31c3e1d41f56e367721f80]:
+#+RESULTS[864e8e5ed6af6405cb14ce0ddc9922bdd8bfceb9]:
 #+begin_src html :eval never
-<p>Here are all the roman numerals: 0123456789</p>
+<p>Here are all the arabic numerals: 0123456789</p>
 #+end_src
+
+[fn:2] If you omit the tag name at the beginning, then you shouldn't define any attributes or attribute values. I'm not sure what will happen if you do 🙈
 
 * Rule #3: Attributes are a plist of keywords
 In Emacs, a keyword is a symbol that starts with a colon like ~:this~.
@@ -252,8 +242,8 @@ If you still want a value on an attribute but it must be an empty string, then y
 <img src="placeholder.png" alt=""/>
 #+end_src
 
-* Rule #5: The rest is tag content
-Everything that comes after the tag name and attribute key-value pairs will be treated as the tag's inner content. Anything that supports being formatted as a string is fair game here.
+* Rule #5: The rest is element content
+Everything that comes after the tag name and attribute key-value pairs will be treated as the element's inner content. Anything that supports being formatted as a string is fair game here.
 
 #+begin_src emacs-lisp :exports both :results raw :wrap "src html :eval never" :cache yes
 (charge-html
@@ -271,7 +261,7 @@ Everything that comes after the tag name and attribute key-value pairs will be t
 <section class="example">foo7test123</section>
 #+end_src
 
-And of course, it's completely optional in case you specifically need nothing in the tag.
+And of course, it's completely optional in case you specifically need nothing in the element.
 
 #+begin_src emacs-lisp :exports both :results raw :wrap "src html :eval never" :cache yes
 (charge-html
@@ -283,7 +273,7 @@ And of course, it's completely optional in case you specifically need nothing in
 <a name="test"></a>
 #+end_src
 
-Oh, and tags can have more template strings as their content too (otherwise it would be a pretty useless templating engine, eh?)
+Oh, and elements can have more template expressions as their content too (otherwise it would be a pretty useless templating engine, eh?)
 
 #+begin_src emacs-lisp :exports both :results raw :wrap "src html :eval never" :cache yes
 (charge-html
@@ -296,7 +286,7 @@ Oh, and tags can have more template strings as their content too (otherwise it w
 #+end_src
 
 * Rule #6: Use lisp for anything more fancy
-If you need formatting, concatenating, joining, mapping, looping, conditionals, filtering, sorting, or any number of things templating engines usually provide, *just use Emacs Lisp*! It's completely at your disposal, even within a template.[fn:1]
+If you need formatting, concatenating, joining, mapping, looping, conditionals, filtering, sorting, or any number of things templating engines usually provide, *just use Emacs Lisp*! It's completely at your disposal, even within a template.[fn:3]
 
 #+begin_src emacs-lisp :exports both :results raw :wrap "src html :eval never" :cache yes
 (require 'seq)
@@ -317,10 +307,25 @@ If you need formatting, concatenating, joining, mapping, looping, conditionals, 
 <ol>Prime numbers under ten: <li>2</li><li>3</li><li>5</li><li>7</li></ol>
 #+end_src
 
-[fn:1] You should probably put complex logic /outside/ the template though, as usual. Code inside templates should be limited to basic presentation logic.
+[fn:3] You should probably put complex logic /outside/ the template though, as usual. Code inside templates should be limited to basic presentation logic.
+
+* Rule summary
+#+BEGIN_COMFY
+1. The template expression must be either quoted or backquoted so that symbols like ~p~ and ~div~ aren't called as functions in Emacs Lisp
+
+2. The first symbol in the list is the tag name of the element. If it isn't present, the opening and closing tags will be omitted.
+
+3. Attributes follow the tag name as [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Property-Lists.html][plist]]-like pairs of ~:keyword~ attribute names and string attribute values. They are optional.
+
+4. If an attribute has no value (i.e. only its name should be rendered), then assign ~nil~ as its value
+
+5. Element content is collected from all the arguments that come after the attribute pairs. It can be zero or more things that will ~format~ to a string, or even more nested template expressions.
+
+6. For anything more complicated, like non-constant values, variable substitution, conditional rendering, looping, advanced string formatting, etc, escape out of the backquote using ~,~ or ~,@~ and *Just Use Lisp*. Evaluated Lisp can return any content or nested template expressions.
+#+END_COMFY
 
 * Next, a static website generator
-~charge-html~ is actually the cornerstone of my personal static website generator =charge.el=, which I'm still actively developing. But to give you an idea of its power despite its simplicity, this whole blog is now generated using it!
+~charge-html~ is actually one of the cornerstones of my personal static website generator =charge.el=, which I'm still actively developing. But to give you an idea of its power despite its simplicity, this whole blog is now generated using it!
 
 Have a look at my progress on =charge.el= [[https://github.com/hungyiloo/doom-emacs-conf/blob/master/lisp/charge.el][here, on GitHub]]. You can also look at [[https://github.com/hungyiloo/hungyi.net][the source code for my blog]] to see how I'm using ~charge-html~ to generate these components:
 - [[https://github.com/hungyiloo/hungyi.net/blob/master/templates/base-template.el][Main template and site theme]]
