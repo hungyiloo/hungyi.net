@@ -13,7 +13,8 @@
 ;; Enable syntax highlighting using tree-sitter
 (require 'tree-sitter)
 (require 'tree-sitter-langs)
-(global-tree-sitter-mode 1)
+(unless global-tree-sitter-mode
+  (global-tree-sitter-mode 1))
 
 ;; Load templates
 (mapc (lambda (template) (load-file template)) (file-expand-wildcards "templates/*.el"))

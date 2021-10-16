@@ -18,7 +18,7 @@ What if you could turn these Lisp [[https://en.wikipedia.org/wiki/S-expression][
                    :alt "Magnifying glass icon")))
 #+end_src
 
-Into HTML like this?
+...into HTML like this?
 
 #+begin_src emacs-lisp :exports results :results raw :cache yes :noweb yes :wrap "src html :exports code :eval never"
 (require 'charge)
