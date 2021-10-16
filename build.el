@@ -4,8 +4,9 @@
 ;;; builds my static blog using charge.el
 ;;;
 ;;; Code:
-(load-file "~/.config/emacs/early-init.el")
-(load-file "~/.config/emacs/init.el")
+(unless (bound-and-true-p doom-init-p)
+  (load-file "~/.config/emacs/early-init.el")
+  (load-file "~/.config/emacs/init.el"))
 
 (require 'charge)
 
@@ -45,7 +46,7 @@
    :output "output" ; where all the output files go
 
    ;; More key-value pairs can be added here; whatever you want.
-   ;; They'll end up as a `site' alist inside the emitter lambdas.
+   ;; They'll end up as a `site' plist inside the emitter lambdas.
    ;; Useful for side-wide variables and properties.
 
    ;; Each route takes either a single particle or list of particles
@@ -61,7 +62,7 @@
               (my/blog/render-base
                site
                (my/blog/template-post particle (charge-export-particle-org particle))
-               (alist-get :title particle)
+               (plist-get particle :title)
                (my/blog/template-post-meta particle site))
               destination)))
 
@@ -72,7 +73,7 @@
              (charge-write
               (my/blog/render-base
                site
-               (my/blog/template-blog-index (alist-get :posts particle) site))
+               (my/blog/template-blog-index (plist-get particle :posts) site))
               destination)))
 
    (charge-route pages
@@ -83,7 +84,7 @@
               (my/blog/render-base
                site
                (my/blog/template-page particle (charge-export-particle-org particle))
-               (alist-get :title particle))
+               (plist-get particle :title))
               destination)))
 
    (charge-route static-files
@@ -91,7 +92,7 @@
      :path (charge-format "%s" :filename)
      :emit (lambda (destination particle _route _site)
              ;; Something different here --- we copy the file to the destination
-             (copy-file (alist-get :path particle) destination t)))))
+             (copy-file (plist-get particle :path) destination t)))))
 
 (provide 'build)
 ;;; build.el ends here

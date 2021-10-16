@@ -9,8 +9,8 @@
 
 (defun my/blog/render-base (site main &optional subtitle meta)
   "Renders base template with SITE, MAIN content, SUBTITLE and META tags."
-  (let ((site-name (alist-get :name site))
-        (base-url (alist-get :base-url site)))
+  (let ((site-name (plist-get site :name))
+        (base-url (plist-get site :base-url)))
     (charge-html
      "<!DOCTYPE html>"
      `(html

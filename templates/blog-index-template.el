@@ -12,11 +12,11 @@
   ;; Sort posts in reverse date order.
   ;; ISO8601 date strings are sortable lexicographically
   (setq posts
-        (sort posts
+        (sort (copy-sequence posts)
               (lambda (a b)
                 (string-greaterp
-                 (alist-get :date a)
-                 (alist-get :date b)))))
+                 (plist-get a :date)
+                 (plist-get b :date)))))
   `((div :class "section-header" "Latest")
     (ul
      :class "featured posts"
@@ -36,12 +36,12 @@
     :class "post-item"
     (a
      :href ,(charge-url site post)
-     (span :class "post-title" ,(alist-get :title post))
-     ,(when-let ((post-date (alist-get :date post)))
+     (span :class "post-title" ,(plist-get post :title))
+     ,(when-let ((post-date (plist-get post :date)))
         `(span
           :class "post-date datestamp"
           ,(format-time-string "%e %B, %Y" (date-to-time post-date))))
-     ,(when-let ((post-description (alist-get :description post)))
+     ,(when-let ((post-description (plist-get post :description)))
         `(div :class "post-description" ,post-description)))))
 
 (provide 'blog-index-template)

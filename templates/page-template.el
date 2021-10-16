@@ -11,7 +11,7 @@
   "Renders page template with PAGE particle and MAIN content."
   `(article
     :class "page"
-    (h1 :class "page__title" ,(alist-get :title page))
+    (h1 :class "page__title" ,(plist-get page :title))
     (section ,main)))
 
 (provide 'page-template)
