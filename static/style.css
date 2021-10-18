@@ -1,5 +1,5 @@
 :root {
-  /* --- Nord Theme */
+  /* Palette */
   --nord-polar-night-0-rgb: 30, 36, 48;
   --nord-polar-night-0:     #1E2430;
   --nord-polar-night-1-rgb: 46, 52, 64;
@@ -22,6 +22,8 @@
   --nord-snow-storm-3:      #ECEFF4;
   --nord-snow-storm-4-rgb:  242, 244, 248;
   --nord-snow-storm-4:      #F2F4F8;
+  --nord-snow-storm-5-rgb:  242, 244, 248;
+  --nord-snow-storm-5:      #FFFFFF;
   --nord-red-rgb:           191, 97, 106;
   --nord-red:               #BF616A;
   --nord-orange-rgb:        208, 135, 112;
@@ -40,35 +42,69 @@
   --nord-frost-4:           #5E81AC;
   --nord-purple-rgb:        180, 142, 173;
   --nord-purple:            #B48EAD;
+  --dark-greene:            #222e00;
 
-  /* colors */
+  /* Theme */
   --border: rgba(var(--nord-snow-storm-0-rgb), 0.5);
   --foreground: var(--nord-polar-night-0);
-  --background: #ffffff;
+  --background: var(--nord-snow-storm-5);
+  --foreground-rgb: var(--nord-polar-night-0-rgb);
+  --background-rgb: var(--nord-snow-storm-5-rgb);
   --muted: var(--nord-polar-night-5);
   --note: var(--nord-yellow);
   --link: var(--nord-frost-4);
-
-  /* -- Code Block Colors -- */
-  --code-background:           var(--nord-polar-night-1);
-  --code-foreground:           var(--nord-snow-storm-1);
-
+  --link-rgb: var(--nord-frost-4-rgb);
+  --link-hover: var(--nord-polar-night-2);
+  --code-block-bg: var(--nord-polar-night-1);
+  --code-block-fg: var(--nord-snow-storm-1);
+  --code-fg: var(--dark-greene);
+  --code-bg: rgba(var(--nord-green-rgb), 0.2);
+  --code-border: rgba(var(--nord-green-rgb), 0.5);
   --font-code: "JetBrains Mono", monospace;
   --font-body: "Noto Sans", sans-serif;
   --font-display: Rubik, sans-serif;
-
-  /* -- Spacing -- */
   --rhythm: 1.5rem;
   --content-width: calc(var(--rhythm) * 30);
-
-  /* -- Animations -- */
   --speed: 0.2s;
-
-  /* -- Shapes -- */
   --radius: 0.2rem;
-  --shadow: calc(var(--rhythm) * 0.25) calc(var(--rhythm) * 0.25) var(--rhythm) rgba(var(--nord-polar-night-4-rgb), 0.2);
-  --inset-shadow: inset 0 0 calc(var(--rhythm) * 0.65) rgba(var(--nord-polar-night-4-rgb), 0.1);
-  --shadow-dark: calc(var(--rhythm) * 0.25) calc(var(--rhythm) * 0.25) var(--rhythm) rgba(var(--nord-polar-night-4-rgb), 0.5);
+  --shadow: calc(var(--rhythm) * 0.25) calc(var(--rhythm) * 0.25) var(--rhythm) rgba(0, 0, 0, 0.2);
+  --inset-shadow: inset 0 0 calc(var(--rhythm) * 0.5) rgba(0, 0, 0, 0.15);
+  --shadow-dark: calc(var(--rhythm) * 0.25) calc(var(--rhythm) * 0.25) var(--rhythm) rgba(0, 0, 0, 0.5);
+  --heading: var(--nord-polar-night-4);
+  --header-bg: var(--nord-polar-night-0);
+  --header-fg: var(--nord-snow-storm-5);
+  --header-separator: var(--nord-frost-1);
+  --footer-swoosh-bg: var(--nord-snow-storm-4);
+  --footer-swoosh-fg: var(--nord-polar-night-5);
+  --bg-pattern: url("/pattern1.svg");
+  --input-border: var(--border);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --border: rgba(var(--nord-polar-night-4-rgb), 0.5);
+    --foreground: var(--nord-snow-storm-1);
+    --background: var(--nord-polar-night-0);
+    --foreground-rgb: var(--nord-snow-storm-0-rgb);
+    --background-rgb: var(--nord-polar-night-0-rgb);
+    --code-block-bg: rgba(0,0,0,0.5);
+    --code-bg: rgba(var(--nord-green-rgb), 0.05);
+    --code-border: rgba(var(--nord-green-rgb), 0.1);
+    --heading: var(--nord-snow-storm-5);
+    --header-bg: rgba(0,0,0,0.4);
+    --header-fg: var(--nord-snow-storm-4);
+    --header-separator: rgba(0,0,0,0.2);
+    --link: var(--nord-frost-3);
+    --link-rgb: var(--nord-frost-3-rgb);
+    --link-hover: var(--nord-snow-storm-5);
+    --code-fg: var(--nord-green);
+    --muted: rgba(var(--nord-snow-storm-0-rgb), 0.70);
+    --footer-swoosh-bg: var(--nord-snow-storm-0);
+    --footer-swoosh-fg: var(--nord-polar-night-5);
+    --inset-shadow: inset 0 0 calc(var(--rhythm) * 0.65) rgba(0, 0, 0, 0.5);
+    --bg-pattern: url("/pattern1_dark.svg");
+    --input-border: transparent;
+  }
 }
 
 body {
@@ -94,10 +130,10 @@ body {
 header {
   display: flex;
   justify-content: center;
-  background-color: var(--foreground);
-  color: var(--background);
+  background-color: var(--header-bg);
+  color: var(--header-fg);
   padding: calc(var(--rhythm) * 2) calc(var(--rhythm) * 0.5);
-  border-bottom: calc(var(--rhythm)*0.25) solid var(--nord-frost-1);
+  border-bottom: calc(var(--rhythm)*0.25) solid var(--header-separator);
 }
 
 header > div {
@@ -112,7 +148,7 @@ header h1 {
   font-size: 150%;
 }
 header h1 a {
-  color: var(--background);
+  color: var(--header-fg);
   text-decoration: none;
   white-space: nowrap;
 }
@@ -164,7 +200,7 @@ header .menu a:hover {
   }
   header nav ul {
     margin-top: calc(var(--rhythm) * -2);
-    margin-left: calc(var(--rhythm) * 4.175);
+    margin-left: calc(var(--rhythm) * 4);
   }
   header .menu li { margin-left: 0; margin-right: calc(var(--rhythm) * 0.5); }
 }
@@ -175,10 +211,10 @@ header .menu a:hover {
 
 /* -- Typography -- */
 h1, h2, h3, h4, h5, h6 {
-  color: var(--nord-polar-night-4);
+  color: var(--heading);
   line-height: 1.3;
-  margin-block-start: 1.75em;
-  margin-block-end: 0.25em;
+  margin-block-start: 2.5em;
+  margin-block-end: 0.5em;
   font-family: var(--font-display);
 }
 h1 { font-size: 200% }
@@ -200,10 +236,10 @@ sup { font-size: 65%; }
 sup a { text-decoration: none; }
 sup a:hover { text-decoration: underline; }
 code {
-  background-color: rgba(var(--nord-green-rgb), 0.15);
+  background-color: var(--code-bg);
   border-radius: var(--radius);
-  border: 1px solid rgba(var(--nord-green-rgb), 0.4);
-  color: #000000cc;
+  border: 1px solid var(--code-border);
+  color: var(--code-fg);
   padding: 0 0.2rem;
   font-size: 90%;
 }
@@ -232,7 +268,7 @@ blockquote p:last-of-type {
   margin-bottom: 0;
 }
 .muted {
-  color: var(--muted);
+  opacity: 0.6;
 }
 hr {
   border-color: var(--border);
@@ -244,11 +280,15 @@ hr {
 /* -- Content -- */
 a {
   color: var(--link);
+  text-decoration-color: rgba(var(--link-rgb), 0.15);
+  text-decoration-thickness: 4px;
 }
 a:hover {
   transition: var(--speed);
-  color: var(--nord-polar-night-2);
+  color: var(--link-hover);
   text-decoration: underline;
+  text-decoration-color: rgba(var(--link-rgb), 0.5);
+  text-decoration-thickness: 4px;
 }
 main {
   flex-grow: 1;
@@ -258,7 +298,7 @@ main {
   align-self: center;
   width: calc(100vw - var(--rhythm)*2);
   margin-bottom: calc(var(--rhythm)*2);
-  background-image: url("/pattern1.svg");
+  background-image: var(--bg-pattern);
   background-size: 35%;
   background-repeat: repeat-x;
 }
@@ -331,7 +371,7 @@ main h1:first-of-type {
 }
 .posts .post-item {
   list-style: none;
-  margin-bottom: calc(var(--rhythm)*2);
+  margin-bottom: calc(var(--rhythm)*2.5);
   display: flex;
 }
 .posts .post-item a {
@@ -347,7 +387,7 @@ main h1:first-of-type {
 }
 .posts .post-item .post-title {
   font-family: var(--font-display);
-  color: var(--nord-polar-night-4);
+  color: var(--heading);
   font-size: 130%;
   font-weight: 600;
   line-height: 1.3;
@@ -464,8 +504,8 @@ main table th {
 { color: var(--nord-yellow); }
 
 .org-src-container {
-  color: var(--code-foreground);
-  background: var(--code-background);
+  color: var(--code-block-fg);
+  background: var(--code-block-bg);
   padding: calc(0.75 * var(--rhythm));
   font-size: 0.9rem;
   max-width: calc(100vw - var(--rhythm)*2.5);
@@ -491,15 +531,16 @@ li li .org-src-container {
   padding: var(--rhythm);
   display: flex;
   flex-direction: column;
-  background-color: rgba(var(--nord-snow-storm-4-rgb), 0.2);
+  background-color: rgba(var(--background-rgb), 0.2);
   border: 1px solid rgba(var(--nord-frost-1-rgb), 0.2);
   background-size: calc(var(--rhythm)*0.5) calc(var(--rhythm)*0.5);
   background-image: linear-gradient(to right, rgba(var(--nord-frost-1-rgb), 0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(var(--nord-frost-1-rgb), 0.05) 1px, transparent 1px);
 }
 .demo pre {
   border-radius: var(--radius);
-  background: rgba(var(--nord-green-rgb), 0.1);
-  border: 1px solid rgba(var(--nord-green-rgb), 0.25);
+  background: var(--code-bg);
+  border: 1px solid var(--code-border);
+  color: var(--code-fg);
   margin: 0;
   padding: calc(var(--rhythm) * 0.5);
 }
@@ -509,10 +550,10 @@ label {
   display: block;
   font-family: var(--font-display);
   text-transform: uppercase;
-  font-size: 70%;
+  font-size: 75%;
   font-weight: 500;
   letter-spacing: 0.05em;
-  color: var(--nord-polar-night-5);
+  color: var(--muted);
   margin-bottom: calc(var(--rhythm)*0.125)
 }
 * + label {
@@ -522,9 +563,9 @@ label.muted, label .muted {
   opacity: 0.6;
 }
 input {
-  border: 1px solid var(--border);
+  border: 1px solid var(--input-border);
   padding: calc(var(--rhythm)*0.5);
-  color: var(--nord-polar-night-5);
+  color: var(--nord-polar-night-0);
   font-size: 1rem;
 }
 input:focus {
@@ -559,22 +600,21 @@ sup a.footref:target {
 
 /* -- Footer -- */
 footer {
-  background: var(--nord-snow-storm-4);
+  background: var(--footer-swoosh-bg);
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: calc(var(--rhythm) * 2) calc(var(--rhythm) * 0.5);
 }
 .footer-swoosh path {
-  fill: var(--nord-snow-storm-4);
+  fill: var(--footer-swoosh-bg);
 }
 footer > div {
   max-width: var(--content-width);
   flex-grow: 1;
-  color: var(--nord-polar-night-4);
+  color: var(--footer-swoosh-fg);
   font-family: var(--font-display);
   font-size: 90%;
   text-align: center;
   line-height: 1.7;
-  opacity: 50%;
 }

@@ -51,7 +51,7 @@ The CSS and HTML markup are provided below. The key parts to note are:
 
 .chunky-button .front {
   background-color: var(--color);
-  color: rgba(0, 0, 0, 0.5);
+  color: rgba(0, 0, 0, 0.7);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
