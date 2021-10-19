@@ -342,12 +342,13 @@ hr {
 /* -- Content -- */
 a {
   color: var(--link);
-  transition: var(--speed);
+  transition: text-decoration-color ease var(--speed);
   text-decoration-color: rgba(var(--link-rgb), 0.15);
   text-decoration-thickness: 4px;
 }
 a:hover {
   color: var(--link-hover);
+  transition: text-decoration-color ease var(--speed), color ease var(--speed);
   text-decoration: underline;
   text-decoration-color: rgba(var(--link-rgb), 0.5);
   text-decoration-thickness: 4px;
