@@ -3,9 +3,9 @@
 #+DATE: 2021-02-24T22:22:07+08:00
 #+DESCRIPTION: Emacs has convenient functions for upcasing and downcasing, but why not title casing? This was my journey to write a native Emacs Lisp function that does exactly that.
 
-It turns out that writing in proper title case can be important for a front-end developer, since there are often things on screen that need to appear as a title to convey importance: dialog headers, menu items, buttons labels, to name a few.
+It turns out that writing in proper title case can be important for a front-end developer, since there are often things on screen that need to appear as a title to convey importance --- things like dialog headers, menu items, buttons labels, to name a few. The problem is, I had always dismissed it as something only grammar nazis and academics cared about, so I never actually bothered to learn the rules. Over the years, this resulted in many distracting trips to https://titlecase.com/.
 
-The problem is I had always dismissed it as something for school, academics or "real" writers, so I never bothered to learn the rules properly. This meant many distracting trips to https://titlecase.com/. Realising this, I used Emacs to make a quick way to convert something to title case without relying on my brain. This post is my journey on how I wrote that thing.
+One day I finally realised how much time I was wasting, and naturally I chose Emacs to make things better. This post records my journey towards that goal.
 
 # more
 
@@ -56,7 +56,7 @@ And better handling for:
 - Windows file system paths (e.g. =C:\Windows\System32=)
 - Relative unix file system paths (e.g. =~/.config/emacs= and =./documents/tax=)
 
-Here's the title casing code, in fully portable Emacs Lisp with no external dependencies:
+Here's the title casing code, in fully portable Emacs Lisp with no external dependencies: [fn:2]
 
 #+begin_src emacs-lisp
 (require 'cl-lib)
@@ -159,6 +159,8 @@ the region to title case.  Otherwise, work on the current line."
       (titlecase-region (region-beginning) (region-end))
     (titlecase-region (point-at-bol) (point-at-eol))))
 #+end_src
+
+[fn:2] You can save the code as a file, load it as part of your Emacs config, then bind ~titlecase-dwim~ to a keybinding of your choice.
 
 * Bonus Evil Operator
 If you use [[https://github.com/emacs-evil/evil][evil]], then this might be useful to you. I bound it to =g `= for no other reason than it was available in Doom, and I remember that it's close to the =~= key in vim that inverts a character's case.
