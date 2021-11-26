@@ -78,6 +78,8 @@
   --footer-swoosh-fg: var(--nord-polar-night-5);
   --bg-pattern: url("/pattern1.svg");
   --input-border: var(--border);
+  --table-alt-row-bg: rgba(var(--nord-snow-storm-4-rgb), 0.5);
+    --bold-fg: var(--fg);
 }
 
 @media (prefers-color-scheme: light) {
@@ -104,6 +106,8 @@
     --inset-shadow: inset 0 0 calc(var(--rhythm) * 0.65) rgba(0, 0, 0, 0.5);
     --bg-pattern: url("/pattern1_dark.svg");
     --input-border: transparent;
+    --table-alt-row-bg: rgba(var(--nord-polar-night-1-rgb), 0.3);
+    --bold-fg: var(--header-fg);
   }
   #inverter:not(:checked) + #theme-container #sun { display: none; }
   #inverter:checked + #theme-container #moon { display: none; }
@@ -133,6 +137,8 @@
     --inset-shadow: inset 0 0 calc(var(--rhythm) * 0.65) rgba(0, 0, 0, 0.5);
     --bg-pattern: url("/pattern1_dark.svg");
     --input-border: transparent;
+    --table-alt-row-bg: rgba(var(--nord-polar-night-1-rgb), 0.3);
+    --bold-fg: var(--header-fg);
   }
   #inverter:not(:checked) + #theme-container #moon { display: none; }
   #inverter:checked + #theme-container #sun { display: none; }
@@ -294,6 +300,7 @@ h6 { font-size: 75% }
   h6 { font-size: 75% }
 }
 p { margin: 0 0 var(--rhythm) 0; }
+b { color: var(--bold-fg); }
 sup { font-size: 65%; }
 sup a { text-decoration: none; }
 sup a:hover { text-decoration: underline; }
@@ -503,7 +510,7 @@ main thead tr:first-child th:last-child {
   border-top-right-radius: var(--radius);
 }
 main table tr:nth-child(2n) {
-  background-color: rgba(var(--nord-snow-storm-4-rgb), 0.5);
+  background-color: var(--table-alt-row-bg);
 }
 main table tr:last-child {
   border-bottom: 3px solid var(--nord-polar-night-4);
