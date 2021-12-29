@@ -17,7 +17,9 @@
   (global-tree-sitter-mode 1))
 
 ;; Load templates
-(mapc (lambda (template) (load-file template)) (file-expand-wildcards "templates/*.el"))
+(mapc
+ (lambda (template) (load-file (expand-file-name template (file-name-directory load-file-name))))
+ (file-expand-wildcards "templates/*.el"))
 (declare-function my/blog/render-base ())
 (declare-function my/blog/template-blog-index ())
 (declare-function my/blog/template-post ())
