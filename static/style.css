@@ -319,6 +319,7 @@ ul, ol {
 ul li > p:last-child, ol li > p:last-child {
   margin-bottom: 0;
 }
+ol ol { list-style-type: lower-alpha; }
 .comfy li, .COMFY li {
   margin-bottom: var(--rhythm);
 }

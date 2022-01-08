@@ -10,16 +10,20 @@ Earlier this week I went looking for "how to search and replace in a whole proje
 Today, I'm documenting the process so that I won't forget again. Hopefully it'll help someone out there too.
 
 TL;DR:
-- for ivy module users =SPC s p foo C-c C-e :%s/foo/bar/g RET Z Z=
-- for vertico module users =SPC s p foo C-; E C-c C-p :%s/foo/bar/g RET Z Z=
+- for *ivy* module users \\
+  =SPC s p foo C-c C-e :%s/foo/bar/g RET Z Z=
+
+
+- for *vertico* module users \\
+  =SPC s p foo C-; E C-c C-p :%s/foo/bar/g RET Z Z=
 
 Entering those keys will replace "foo" with "bar" in your whole project. Magic!
 
 #+begin_quote
-Not sure if you're using ivy or vertico? If you set up Doom Emacs after [2021-07-29 Thu], you're probably using vertico. Otherwise, probably ivy. See this footnote for more details[fn:3]
+Not sure if you're using ivy or vertico? If you set up Doom Emacs after [2021-07-29 Thu], you're probably using vertico. Otherwise, probably ivy. Check your =init.el= file to see which is active[fn:3]
 #+end_quote
 
-* The Long Explanation (for ivy users[fn:3])
+* The Long Explanation
 
 #+BEGIN_COMFY
 1. Make sure you're in the right project and all your open buffers/files are saved. If you're making a large change, maybe a =git commit= would give you a little extra insurance.
@@ -28,7 +32,17 @@ Not sure if you're using ivy or vertico? If you set up Doom Emacs after [2021-07
 
 3. Type in a search string or regular expression, =foo= in this example, to get some results. This doesn't have to be exactly what you want to replace; it just needs to be specific enough to get the right results into view.
 
-4. =C-c C-e= to transform the search results into a /wgrep/ or writable grep buffer. This calls ~+ivy/woccur~, which is equivalent to pressing =C-c C-o C-c C-p= (i.e. ~ivy-occur~ for turning ivy results into a buffer and ~wgrep-change-to-wgrep-mode~ to make it writable).
+4. This step depends on which completion engine you've set up for Doom.
+
+   a. *for ivy users*[fn:3] \\
+      =C-c C-e= to transform the search results into a /wgrep/ or writable grep buffer. This calls ~+ivy/woccur~, which is equivalent to pressing =C-c C-o C-c C-p= (i.e. ~ivy-occur~ for turning ivy results into a buffer and ~wgrep-change-to-wgrep-mode~ to make it writable).
+
+   b. *for vertico users*[fn:3] \\
+      =C-;= to run ~embark-act~. This [[https://github.com/oantolin/embark][Embark]] command is like a context menu for what you're currently looking at.
+
+      =E= to run ~embark-export~, which exports what you're looking at into a new buffer. Embark is smart enough to know that you're looking at grep search results, so it will export to a new buffer in ~grep-mode~
+
+      =C-c C-p= to run ~wgrep-change-to-wgrep-mode~ to make the search results writable.
 
 5. Use your preferred method of search and replace in a single file. Doom relies heavily on evil's vim emulation, so the smoothest option for me was to type ~:%s/foo/bar/g~ to preview the changes and hitting =RET= to apply.
 
@@ -39,32 +53,6 @@ Not sure if you're using ivy or vertico? If you set up Doom Emacs after [2021-07
    You can also =SPC : wgrep=  or =M-x wgrep= to look at the other advanced wgrep actions.
 
 6. Hit =Z Z= to write all the changes to their respective files, or =Z Q= to abort the search and replace.
-#+END_COMFY
-
-* The Long Explanation (for vertico users[fn:3])
-
-#+BEGIN_COMFY
-1. Make sure you're in the right project and all your open buffers/files are saved. If you're making a large change, maybe a =git commit= would give you a little extra insurance.
-
-2. =SPC s p= to launch the project search. This is what you would normally use to search strings or regular expressions[fn:1] within your project.
-
-3. Type in a search string or regular expression, =foo= in this example, to get some results. This doesn't have to be exactly what you want to replace; it just needs to be specific enough to get the right results into view.
-
-4. =C-;= to run ~embark-act~. This [[https://github.com/oantolin/embark][Embark]] command is like a context menu for what you're currently looking at.
-
-5. =E= to run ~embark-export~, which exports what you're looking at into a new buffer. Embark is smart enough to know that you're looking at grep search results, so it will export to a new buffer in ~grep-mode~
-
-6. =C-c C-p= to run ~wgrep-change-to-wgrep-mode~ to make the search results writable.
-
-7. Use your preferred method of search and replace in a single file. Doom relies heavily on evil's vim emulation, so the smoothest option for me was to type ~:%s/foo/bar/g~ to preview the changes and hitting =RET= to apply.
-
-   You can also edit the buffer manually using any technique you want. =M-%= or =C-M-%= to do a regular Emacs query replace? Sure. =C-x SPC= or =C-v= to do a rectangle/visual block edit? Go for it. =g z z= for [[https://github.com/gabesoft/evil-mc][evil-mc]] multiple cursors? No worries—just be careful of the readonly region of filenames on the left.
-
-   At this stage nothing has been written to the files yet, so you can still undo easily. Go through all the lines in the search results to check if the changes are as expected.
-
-   You can also =SPC : wgrep=  or =M-x wgrep= to look at the other advanced wgrep actions.
-
-8. Hit =Z Z= to write all the changes to their respective files, or =Z Q= to abort the search and replace.
 #+END_COMFY
 
 [fn:1] Just a reminder that Emacs has its own idiosyncratic [[https://www.emacswiki.org/emacs/RegularExpression][version]] of regular expressions. It's weird, I know.
@@ -78,6 +66,6 @@ Not sure if you're using ivy or vertico? If you set up Doom Emacs after [2021-07
                                (t . 3))))
 #+END_SRC
 
-[fn:3] [2021-08-01 Sun] This post was originally written back when Ivy was still the default completion engine used by Doom Emacs. However, since [[https://github.com/hlissner/doom-emacs/commit/c2e6db27d030f20d3aead4b2049695e4b2d942ba][this commit]]  on [2021-07-29 Thu], new users of Doom will be using the [[https://github.com/minad/vertico][vertico]] completion stack. Existing users upgrading to the current version of Doom will keep using Ivy.
+[fn:3] This post was originally written back when [[https://github.com/abo-abo/swiper][ivy]] was still the default completion engine used by Doom Emacs. However, since [[https://github.com/hlissner/doom-emacs/commit/c2e6db27d030f20d3aead4b2049695e4b2d942ba][this commit]] on [2021-07-29 Thu], new users of Doom will be using the [[https://github.com/minad/vertico][vertico]] completion stack. Existing users upgrading to the current version of Doom will keep using Ivy.
 
 How can you tell if you're using Ivy or vertico? Have a look at your =init.el= file in your Doom config to check if ~ivy~ or ~vertico~ are present and uncommented. Whichever one is uncommented is the one you're using.
