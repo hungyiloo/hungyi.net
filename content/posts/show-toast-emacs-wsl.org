@@ -34,7 +34,8 @@ $Notifier.Show($Toast);
   (with-temp-buffer
     (shell-command
      (concat
-      "powershell.exe -ExecutionPolicy Bypass -File ~/.config/doom/scripts/toast.ps1 -Title"
+      ;; replace the path to the powershell script to wherever you saved it
+      "powershell.exe -ExecutionPolicy Bypass -File ~/path/to/toast.ps1 -Title"
       " \""
       title
       "\" \""
