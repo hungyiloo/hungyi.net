@@ -1,0 +1,77 @@
+#+TITLE: Windows Toasts From Emacs Within WSL
+#+SLUG: show-toast-emacs-wsl
+#+DATE: 2022-01-20T19:01:59+08:00
+#+DESCRIPTION: With some PowerShell and Emacs Lisp, you can easily pop up a native Windows toast straight from Emacs, even within WSL.
+
+I wanted my [[https://orgmode.org/][Org Mode]] scheduled reminders and deadlines to interrupt my attention while I'm working on my laptop. There is the wonderful [[https://github.com/spegoraro/org-alert][org-alert]] package, which uses the equally fantastic [[https://github.com/jwiegley/alert][alert]] Emacs package, but unfortunately =libnotify= toasts [[https://github.com/microsoft/WSL/issues/2466][wouldn't work for me]] on Windows Subsystem for Linux (WSL).
+
+Thankfully, WSL has built-in command line capability to reach back into the host Windows system, which lets me run this PowerShell[fn:1] script:
+
+#+begin_src powershell
+param($Title)
+$ErrorActionPreference = "Stop"
+[Windows.UI.Notifications.ToastNotificationManager, Windows.UI.Notifications, ContentType = WindowsRuntime] > $null
+$Template = [Windows.UI.Notifications.ToastNotificationManager]::GetTemplateContent([Windows.UI.Notifications.ToastTemplateType]::ToastText02)
+
+$RawXml = [xml] $Template.GetXml()
+($RawXml.toast.visual.binding.text | Where-Object { $_.id -eq "1" }).AppendChild($RawXml.CreateTextNode($Title)) > $null
+($RawXml.toast.visual.binding.text | Where-Object { $_.id -eq "2" }).AppendChild($RawXml.CreateTextNode($args[0])) > $null
+
+$SerializedXml = New-Object Windows.Data.Xml.Dom.XmlDocument
+$SerializedXml.LoadXml($RawXml.OuterXml)
+
+$Toast = [Windows.UI.Notifications.ToastNotification]::new($SerializedXml)
+$Toast.ExpirationTime = [DateTimeOffset]::Now.AddMinutes(30)
+
+$Notifier = [Windows.UI.Notifications.ToastNotificationManager]::CreateToastNotifier("Emacs")
+$Notifier.Show($Toast);
+#+end_src
+
+...via an Emacs Lisp function (in Emacs running within WSL):
+
+#+begin_src emacs-lisp
+(defun toast (title message)
+  (with-temp-buffer
+    (shell-command
+     (concat
+      "powershell.exe -ExecutionPolicy Bypass -File ~/.config/doom/scripts/toast.ps1 -Title"
+      " \""
+      title
+      "\" \""
+      message
+      "\" > /dev/null 2>&1")
+     t)))
+#+end_src
+
+...which lets me script a toast by calling it like this:
+
+#+begin_src emacs-lisp
+(toast "This Is a Title" "This is some longer text content below the title")
+#+end_src
+
+For a basic toast, that's all you need! You can stop here if all you were interested in was toasting from within WSL.[fn:2] Read on for some additional tips in setting up =org-alert= and =alert=.
+
+[fn:1] The old, system-provided PowerShell (a.k.a. =powershell.exe=) is needed here, as the =Notification= modules don't seem to be loadable in PowerShell Core (a.k.a. =pwsh.exe=)
+
+[fn:2] Since we're just calling =powershell.exe= with =shell-command=, this would probably work outside WSL, directly in Windows too.
+
+* Integration with org-alert and alert
+By following =alert='s documentation, I learned to create my own simplified alert style which called into my toast function.
+
+#+begin_src emacs-lisp
+(alert-define-style 'wsl :title "WSL Toast"
+                    :notifier
+                    (lambda (info)
+                      (toast (plist-get info :title) (plist-get info :message))))
+
+;; set the default alert style to the one we just created
+(setq alert-default-style 'wsl)
+#+end_src
+
+You can test that it's working properly by executing this, which should pop up a toast as if you were calling the =toast= function manually:
+
+#+begin_src emacs-lisp
+(alert "Text content" :title "Title")
+#+end_src
+
+Now =org-alert= just needs to be configured to your liking, and you'll get basic toasts in Windows for all your agenda events.
