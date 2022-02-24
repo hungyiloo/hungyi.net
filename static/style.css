@@ -642,6 +642,30 @@ input:focus {
   border-color: transparent;
   outline: 3px solid var(--nord-frost-1);
 }
+button {
+  font-family: var(--font-display);
+  border-radius: var(--radius);
+  border: none;
+  background: var(--nord-purple);
+  padding: calc(var(--rhythm)*0.5) var(--rhythm);
+  color: var(--nord-polar-night-0);
+  font-size: 1rem;
+  text-transform: uppercase;
+  font-weight: 500;
+  letter-spacing: 0.030em;
+}
+button:hover {
+  filter: brightness(1.2);
+}
+button:active {
+  filter: brightness(1.1);
+}
+button:disabled {
+  filter: saturate(0.2);
+  opacity: 0.8;
+  color: var(--nord-polar-night-5);
+  cursor: not-allowed;
+}
 
 /* -- Footnotes -- */
 #footnotes { font-size: 90%; }

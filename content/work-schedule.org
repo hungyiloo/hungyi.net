@@ -1,0 +1,83 @@
+#+title: Work Schedule
+#+slug: work-schedule
+#+options: \n:t
+
+🟩 Available: working full time \\
+🟦 Partial: working but may be interrupted \\
+🟥 Leave: not working \\
+🟪 Pending: to be decided \\
+⬛ Non-working: public holidays, etc.
+
+#+begin_export html
+<style>
+  table th:first-child { width: 10em; }
+  tr.highlight td { background: rgba(var(--nord-purple-rgb), 0.3); }
+  #todayButton { border-radius: 0.2rem; }
+</style>
+<script>
+  function findTodayTableRow() {
+    function f(today) {
+      const year = today.getFullYear();
+      const month = today.getMonth() + 1;
+      const day = today.getDate();
+      const dayName = today.toLocaleDateString("en-AU", { weekday: 'long' }).substring(0, 3);
+      const stamp = `[${String(year).padStart(4, '0')}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')} ${dayName}]`;
+      return Array.from(document.querySelectorAll(".timestamp")).find(x => x.textContent === stamp)?.closest("tr");
+    }
+    const today = new Date();
+    let result = f(today);
+    for (let ii = 0; ii <= 7; ii++) {
+      if (result) return result;
+      today.setDate(today.getDate() + 1);
+      result = f(today);
+    }
+    return undefined;
+  }
+  window.addEventListener('DOMContentLoaded', () => {
+    const tr = findTodayTableRow();
+    tr?.classList.add("highlight");
+    const todayButton = document.querySelector("#todayButton");
+    if (tr) {
+      todayButton.addEventListener('click', () => {
+        findTodayTableRow()?.scrollIntoView({ behavior: "smooth", block: "center"});
+      });
+    } else {
+      todayButton.disabled = true;
+    }
+  });
+</script>
+<button id="todayButton">Go to nearest day</button>
+#+end_export
+
+* Week 1
+|------------------+-------------------------------------|
+| Day              | Status                              |
+|------------------+-------------------------------------|
+| [2022-02-28 Mon] | 🟥 Leave (traveling)                |
+| [2022-03-01 Tue] | 🟪 Pending (quarantine uncertainty) |
+| [2022-03-02 Wed] | 🟪 Pending (quarantine uncertainty) |
+| [2022-03-03 Thu] | 🟩 Available                        |
+| [2022-03-04 Fri] | 🟦 Partial (quarantine logistics)   |
+|------------------+-------------------------------------|
+
+* Week 2
+|------------------+---------------|
+| Day              | Status        |
+|------------------+---------------|
+| [2022-03-07 Mon] | ⬛ Labour Day |
+| [2022-03-08 Tue] | 🟩 Available  |
+| [2022-03-09 Wed] | 🟩 Available  |
+| [2022-03-10 Thu] | 🟥 Leave      |
+| [2022-03-11 Fri] | 🟩 Available  |
+|------------------+---------------|
+
+* Week 3
+|------------------+--------------+
+| Day              | Status       |
+|------------------+--------------+
+| [2022-03-14 Mon] | 🟩 Available |
+| [2022-03-15 Tue] | 🟩 Available |
+| [2022-03-16 Wed] | 🟩 Available |
+| [2022-03-17 Thu] | 🟥 Leave     |
+| [2022-03-18 Fri] | 🟩 Available |
+|------------------+--------------+
