@@ -10,7 +10,7 @@
 
 #+begin_export html
 <style>
-  table th:first-child { width: 10em; }
+  table th:first-child { width: 8.5em; }
   tr.highlight td { background: rgba(var(--nord-purple-rgb), 0.3); }
   #todayButton { border-radius: 0.2rem; }
 </style>
@@ -72,12 +72,12 @@
 |------------------+---------------|
 
 * Week 3
-|------------------+--------------+
+|------------------+--------------|
 | Day              | Status       |
-|------------------+--------------+
+|------------------+--------------|
 | [2022-03-14 Mon] | 🟩 Available |
 | [2022-03-15 Tue] | 🟩 Available |
-| [2022-03-16 Wed] | 🟩 Available |
+| [2022-03-16 Wed] | 🟥 Leave     |
 | [2022-03-17 Thu] | 🟥 Leave     |
 | [2022-03-18 Fri] | 🟩 Available |
-|------------------+--------------+
+|------------------+--------------|
