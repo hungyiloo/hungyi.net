@@ -12,33 +12,41 @@ window.addEventListener('DOMContentLoaded', async () => {
 
   let consonant = null;
   const answerInput = document.getElementById('answer');
+  const flashcard = document.getElementById('flashcard');
 
   function newCard() {
-    const flashcard = document.getElementById('flashcard');
     consonant = getRandom(consonants);
     flashcard.innerHTML = consonant.char;
-    flashcard.title = consonant.name;
     answerInput.value = '';
     answerInput.focus();
   }
-
 
   function isAnswerCorrect() {
     return answerInput.value === consonant.name;
   }
 
-  answerInput.addEventListener('keyup', () => {
+  function checkAnswer() {
     if (isAnswerCorrect()) {
       answerInput.classList.add('correct');
     } else {
       answerInput.classList.remove('correct');
     }
+  }
+
+  answerInput.addEventListener('keyup', () => {
+    checkAnswer();
   });
 
   answerInput.addEventListener('keypress', e => {
-    if (e.key === 'Enter') {
+    if (e.key === 'Enter' && isAnswerCorrect()) {
       newCard();
     }
+  });
+
+  flashcard.addEventListener('click', () => {
+    answerInput.value = consonant.name;
+    checkAnswer();
+    answerInput.focus();
   });
 
   newCard();
@@ -53,6 +61,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   align-items: center;
 }
 #flashcard {
+  cursor: pointer;
   font-family: 'Sarabun', sans-serif;
   background: white;
   border: 1px solid rgba(0,0,0,0.2);
@@ -72,6 +81,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   background: rgba(200,100,100,0.1);
   font-size: 2rem;
   text-align: center;
+  max-width: calc(100vw - 4rem);
 }
 #answer.correct {
   outline-color: rgb(100,200,100);
@@ -93,7 +103,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   <<logic>>
 </script>
 <div id="container">
-  <div id="flashcard"></div>
-  <input type="text" id="answer"/>
+  <div id="flashcard" title="Click to reveal answer"></div>
+  <input type="text" id="answer" autocapitalize="off" autocorrect="off" autocomplete="hidden" spellcheck="false"/>
 </div>
 #+end_src
