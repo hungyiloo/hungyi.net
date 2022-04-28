@@ -1,0 +1,99 @@
+#+title: Learn Thai
+#+slug: learn-thai
+
+#+name: logic
+#+begin_src javascript :exports none
+window.addEventListener('DOMContentLoaded', async () => {
+  const consonants = await fetch('/thai-consonants.json').then(r => r.json());
+
+  function getRandom(arr) {
+    return arr[Math.floor(Math.random()*arr.length)];
+  }
+
+  let consonant = null;
+  const answerInput = document.getElementById('answer');
+
+  function newCard() {
+    const flashcard = document.getElementById('flashcard');
+    consonant = getRandom(consonants);
+    flashcard.innerHTML = consonant.char;
+    flashcard.title = consonant.name;
+    answerInput.value = '';
+    answerInput.focus();
+  }
+
+
+  function isAnswerCorrect() {
+    return answerInput.value === consonant.name;
+  }
+
+  answerInput.addEventListener('keyup', () => {
+    if (isAnswerCorrect()) {
+      answerInput.classList.add('correct');
+    } else {
+      answerInput.classList.remove('correct');
+    }
+  });
+
+  answerInput.addEventListener('keypress', e => {
+    if (e.key === 'Enter') {
+      newCard();
+    }
+  });
+
+  newCard();
+});
+#+end_src
+
+#+name: styles
+#+begin_src css :exports none
+#container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+#flashcard {
+  font-family: 'Sarabun', sans-serif;
+  background: white;
+  border: 1px solid rgba(0,0,0,0.2);
+  box-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+  border-radius: 0.5rem;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  height: 18.5rem;
+  line-height: 15rem;
+  padding: 0 5rem;
+  font-size: 15rem;
+  font-weight: 100;
+}
+#answer {
+  outline-color: rgb(200,100,100);
+  border-color: rgb(200,100,100);
+  background: rgba(200,100,100,0.1);
+  font-size: 2rem;
+  text-align: center;
+}
+#answer.correct {
+  outline-color: rgb(100,200,100);
+  border-color: rgb(100,200,100);
+  background: rgba(100,200,100,0.1);
+}
+#+end_src
+
+* Consonant Flash Cards
+
+#+begin_src html :noweb yes :exports results :results html
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@100&display=swap" rel="stylesheet">
+<style>
+  <<styles>>
+</style>
+<script>
+  <<logic>>
+</script>
+<div id="container">
+  <div id="flashcard"></div>
+  <input type="text" id="answer"/>
+</div>
+#+end_src
