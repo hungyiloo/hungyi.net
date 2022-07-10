@@ -91,6 +91,7 @@ window.addEventListener('DOMContentLoaded', async () => {
 #+end_src
 
 * Consonant Flash Cards
+Guess the english name of the character (e.g. go gai) and press enter when it turns green (that means you got it right!). If you can't remember, click or tap the flash card to reveal the answer.
 
 #+begin_src html :noweb yes :exports results :results html
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -104,6 +105,6 @@ window.addEventListener('DOMContentLoaded', async () => {
 </script>
 <div id="container">
   <div id="flashcard" title="Click to reveal answer"></div>
-  <input type="text" id="answer" autocapitalize="off" autocorrect="off" autocomplete="hidden" spellcheck="false"/>
+  <input type="text" id="answer" autocapitalize="off" autocorrect="off" autocomplete="hidden" spellcheck="false" placeholder="Enter character name"/>
 </div>
 #+end_src
