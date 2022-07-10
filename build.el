@@ -6,7 +6,7 @@
 ;;; Code:
 (unless (bound-and-true-p doom-init-p)
   (load-file "~/.config/emacs/early-init.el")
-  (load-file "~/.config/emacs/init.el"))
+  (load-file "~/.config/emacs/core/core-start.el"))
 
 (require 'charge)
 

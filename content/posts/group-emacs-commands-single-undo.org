@@ -1,0 +1,46 @@
+#+TITLE: How to Group Multiple Emacs Commands Into a Single Undo
+#+SLUG: group-emacs-commands-single-undo
+#+DESCRIPTION: If you've got some Emacs Lisp to do a bunch of things, but you call it by mistake and want to be able to undo it in one go.
+#+DATE: 2022-07-10T21:13:18+08:00
+
+It's surprisingly hard to search for documentation on this concept. Point of view: you've written a clever custom command ~do-a-million-repetitive-things~ to save you time and effort by doing a million repetitive things on a simple key press. This works great most of the time, but one day you trigger it accidentally and you've ruined your document.
+
+"Never mind", you say to yourself, "I can just undo it". So you hit =C-x u= and expect your document to be back in working order, but alas...Emacs only undoes one step. And there were 999,999 other ways in which your document was so cleverly mangled.
+
+Was there a way you could have written ~do-a-million-repetitive-things~ to allow you to undo it all at once? Maybe Emacs Lisp has some incantation to let you /amalgamate/[fn:3] all those changes into one /change group/[fn:3]?
+
+Heck yeah![fn:1][fn:2]
+
+#+BEGIN_SRC emacs-lisp :eval never
+(defmacro with-single-undo (&rest body)
+  "Execute BODY as a single undo step."
+  `(let ((marker (prepare-change-group)))
+     (unwind-protect ,@body
+       (undo-amalgamate-change-group marker))))
+#+END_SRC
+
+This defines a new macro called ~with-single-undo~ that lets you wrap any arbitrary Emacs Lisp code and have all changes to a buffer be amalgamated into one change group, which tells Emacs' undo system to treat it as a single undo step.
+
+#+begin_quote
+/Hey there!/ If you're lucky enough to be using an up-to-date build of Emacs 29, there should be a macro ~with-undo-amalgamate~ that does this already.[fn:4] You should use it if you can!
+#+end_quote
+
+To continue our example from above, this is how you might put it to use:
+
+#+begin_src emacs-lisp :eval never
+(defun do-a-million-repetitive-things ()
+  (interactive)
+  (with-single-undo
+     (do-thing-1)
+     (do-thing-2)
+     (do-thing-3)
+     ;; 999,997 more repetitive things
+     ))
+#+end_src
+
+Of course, in normal usage nothing will change, but the next time you need to undo ~do-a-million-repetitive-things~, it'll be quick and painless.
+
+[fn:3] "Amalgamate" and "change group" are the concept keywords you need to be searching for, in order to read more about this functionality.
+[fn:1] Thanks to [[https://www.reddit.com/r/emacs/comments/hll3i4/are_there_any_facilities_for_undo_grouping/][this reddit post]] for pointing me in the right direction.
+[fn:2] And big thanks to [[https://github.com/oantolin/emacs-config/blob/master/my-lisp/block-undo.el][original code from oantolin]] for showing everyone how it's done.
+[fn:4] https://emacs.stackexchange.com/a/54411
