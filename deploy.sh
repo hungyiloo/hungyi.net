@@ -2,5 +2,5 @@
 set -euo pipefail
 
 rm -rf output
-PRODUCTION="t" emacs --script build.el
+PRODUCTION="t" ./build.el
 cp -r output/* ~/sites/hungyi.net/
