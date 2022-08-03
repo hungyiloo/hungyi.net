@@ -1,5 +1,3 @@
-#!/usr/bin/env doomscript
-
 ;; Using Doom Emacs' new doomscript feature for running batch elisp against my config
 ;; see: https://github.com/doomemacs/doomemacs/issues/6494#issuecomment-1162483877
 (defcli! build-site ()

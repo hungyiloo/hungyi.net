@@ -2,5 +2,5 @@
 set -euo pipefail
 
 rm -rf output
-PRODUCTION="t" ./build.el
+PRODUCTION="t" doomscript ./build.el
 cp -r output/* ~/sites/hungyi.net/
