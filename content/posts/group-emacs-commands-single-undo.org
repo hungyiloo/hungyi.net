@@ -1,6 +1,6 @@
 #+TITLE: How to Group Multiple Emacs Commands Into a Single Undo
 #+SLUG: group-emacs-commands-single-undo
-#+DESCRIPTION: If you've got some Emacs Lisp to do a bunch of things, but you call it by mistake and want to be able to undo it in one go.
+#+DESCRIPTION: If you've got some Emacs Lisp to do a bunch of things, but you call it by mistake and want to be able to undo it all in one go.
 #+DATE: 2022-07-10T21:13:18+08:00
 
 It's surprisingly hard to search for documentation on this concept. Point of view: you've written a clever custom command ~do-a-million-repetitive-things~ to save you time and effort by doing a million repetitive things on a simple key press. This works great most of the time, but one day you trigger it accidentally and you've ruined your document.
