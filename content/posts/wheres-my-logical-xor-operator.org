@@ -29,10 +29,10 @@ Until you realize that it can be simplified /greatly/ into:
 
 #+begin_src typescript
 // A XOR B
-A !== B
+A != B
 
 // A XNOR B
-A === B
+A == B
 #+end_src
 
 Super elegant, isn't it? 🪄
@@ -44,16 +44,16 @@ Observe that we're checking equality between boolean[fn:2] values, so the truth 
 
 #+begin_src typescript
 // XOR
-false !== false // => false
-false !== true  // => true
-true !== false  // => true
-true !== true   // => false
+false != false // => false
+false != true  // => true
+true != false  // => true
+true != true   // => false
 
 // XNOR
-false === false // => true
-false === true  // => false
-true === false  // => false
-true === true   // => true
+false == false // => true
+false == true  // => false
+true == false  // => false
+true == true   // => true
 #+end_src
 
 The key insight is that if the two conditions are different, then /one and only one of them must be true/, which gives you the =XOR= condition. Inverting it trivially gives you =XNOR=.
