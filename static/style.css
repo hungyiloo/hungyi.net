@@ -327,7 +327,7 @@ blockquote {
   font-family: var(--font-display);
   font-size: 120%;
   border-left: calc(var(--rhythm) * 0.2) solid var(--nord-frost-1);
-  background-color: rgba(var(--nord-snow-storm-4-rgb), 0.5);
+  background-color: var(--table-alt-row-bg);
   margin: 0 0 var(--rhythm) 0;
   padding: var(--rhythm);
   border-top-right-radius: var(--radius);
