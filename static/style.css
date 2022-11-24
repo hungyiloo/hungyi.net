@@ -61,8 +61,8 @@
   --code-bg: rgba(var(--nord-green-rgb), 0.2);
   --code-border: rgba(var(--nord-green-rgb), 0.5);
   --font-code: "JetBrains Mono", monospace;
-  --font-body: "Noto Sans", sans-serif;
-  --font-display: Rubik, sans-serif;
+  --font-body: "Nunito", sans-serif;
+  --font-display: "Sen", sans-serif;
   --rhythm: 1.5rem;
   --content-width: calc(var(--rhythm) * 30);
   --speed: 0.2s;

@@ -12,13 +12,13 @@ You may have heard that there are fonts[fn:1] designed specifically for programm
 
 * Ligatures?
 
-A ligature is when a *special combination of one or more characters is joined together to form a new symbol*. Look closely at the letters 'f' and 'i' below.
+A ligature is when a *special combination of one or more characters is joined together to form a new symbol*. Look closely at "tt" characters below.
 
 #+begin_quote
-Let's fight fire with fire.
+The pitter-patter of the rain was of little matter.
 #+end_quote
 
-Because the dot of the 'i' normally collides with the hook of the 'f', most good fonts will combine them such that the dot is "removed". It just looks neater that way.
+Some fonts will combine the crossbars of the two "t" characters (instead of having a tiny gap between them) to make the word look more cohesive. If you were taught traditional cursive handwriting, you might have been taught to combine the crossbars of double Ts exactly like this.
 
 #+BEGIN_NOLIGATURES
 /Programming/ ligatures take this to the extreme with special code-related combinations. A prime example is the arrow operator that is often used for lambda functions: ~=>~. Most fonts with programming ligatures will combine it into an arrow like this: ~⇒~.
