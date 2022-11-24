@@ -5,6 +5,10 @@
 
   (require 'charge)
 
+  ;; Fix errors with referencing `font-lock-reference-face'
+  ;; REVIEW: see when this is fixed in org and remove the hack
+  (setq font-lock-reference-face font-lock-constant-face)
+
   ;; Enable syntax highlighting using tree-sitter
   (require 'tree-sitter)
   (require 'tree-sitter-langs)
