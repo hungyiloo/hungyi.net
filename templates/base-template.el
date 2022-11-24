@@ -65,7 +65,8 @@
            " running on "
            (a :href "https://github.com/hlissner/doom-emacs" "Doom Emacs"))))
         (script :src ,(concat base-url "script.js?1"))
-        (script :async nil :src "https://www.googletagmanager.com/gtag/js?id=UA-180663322-1"))))))
+        ;; (script :async nil :src "https://www.googletagmanager.com/gtag/js?id=UA-180663322-1")
+        )))))
 
 (provide 'base-template)
 ;;; base-template.el ends here
