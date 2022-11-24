@@ -42,6 +42,9 @@ The CSS and HTML markup are provided below. The key parts to note are:
   perspective: 2000px;
   perspective-origin: 1200px 1000px;
   transform-style: preserve-3d;
+  cursor: default;
+  font-size: 0.8rem;
+  user-select: none;
 
   --color: #46e4bc;
   --transition: transform 0.1s ease, box-shadow 0.1s ease;
@@ -114,13 +117,13 @@ Then place this HTML where you want the marker to appear.
 
 #+NAME: button-markup
 #+BEGIN_SRC html :eval never
-<button class="chunky-button">
+<div class="chunky-button">
   <div class="bottom"></div>
   <div class="side"></div>
   <div class="front">
     Click me, I won't hurt you!
   </div>
-</button>
+</div>
 #+END_SRC
 
 [fn:1] I went through many iterations of janky and crunchy animations before figuring out that =transform-origin= was the best approach to anchoring the bottom and side faces of the button "in place" while they changed sizes. It's important to use the simplest =transform= changes possible on hover/click to keep the animation clean.
