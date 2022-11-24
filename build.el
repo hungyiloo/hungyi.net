@@ -9,11 +9,9 @@
   ;; REVIEW: see when this is fixed in org and remove the hack
   (setq font-lock-reference-face font-lock-constant-face)
 
-  ;; Enable syntax highlighting using tree-sitter
-  (require 'tree-sitter)
-  (require 'tree-sitter-langs)
-  (unless global-tree-sitter-mode
-    (global-tree-sitter-mode 1))
+  ;; Forcibly enable tree-sitter highlighting in as many places as possible
+  (global-tree-sitter-mode 1)
+  (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
 
   ;; Load templates
   (mapc
