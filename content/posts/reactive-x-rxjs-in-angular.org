@@ -229,7 +229,7 @@ With the reactive approach, each of your streams are immutable and they have jus
 
 ** Concerns With The Reactive & Declarative Way
 
-I'll be the first to admit that RxJS is undoubtedly obtuse. The operators only make sense once you've learned what they do, and you may spend hours looking at [[https://rxmarbles.com/][marble diagrams]] to try to nut things out.
+I'll be the first to admit that RxJS is undoubtedly abstruse. The operators only make sense once you've learned what they do, and you may spend hours looking at [[https://rxmarbles.com/][marble diagrams]] to try to nut things out.
 
 Angular in particular also tends to have this "all in" or "all out" vibe with RxJS. Once you convert one thing to a stream, you'll start to feel that you have to convert everything else to a stream too.
 
