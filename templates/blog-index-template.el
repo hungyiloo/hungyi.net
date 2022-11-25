@@ -41,6 +41,8 @@
         `(span
           :class "post-date datestamp"
           ,(format-time-string "%e %B, %Y" (date-to-time post-date))))
+     ,(when-let ((post-feature (plist-get post :feature)))
+        `(div :class "post-feature" ,post-feature))
      ,(when-let ((post-description (plist-get post :description)))
         `(div :class "post-description" ,post-description)))))
 

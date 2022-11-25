@@ -1,0 +1,254 @@
+#+TITLE: A Beautiful Pseudo-3D Neural Network Animation Using Zdog
+#+SLUG: pseudo-3d-force-graph
+#+DATE: 2022-11-25T18:28:58+07:00
+#+FEATURE: <img src="/feature-images/pseudo-3d-force-graph.png" class="rounded-xl shadow"/>
+#+DESCRIPTION: A neural-network-like visualisation of a randomly connected network with neuron firing effects made with Zdog and D3.js.
+
+#+BEGIN_SRC html :noweb yes :exports results :results html :cache yes
+<script type="module">
+  <<script>>
+</script>
+<style>
+  #zdog-canvas {
+    height: 30rem;
+    width: 100%;
+    background: #12161d;
+    border-radius: 2rem;
+    box-shadow: var(--shadow-dark);
+  }
+</style>
+<div style="display:flex; justify-content: center; margin-bottom: 2rem;">
+  <canvas id="zdog-canvas"></canvas>
+</div>
+#+END_SRC
+
+[[https://zzz.dog/][Zdog]] is a pseudo-3D engine that makes it easier and faster to draw 3D-like graphics in a browser using JavaScript. It takes shapes defined in 3D space and projects them onto 2D space in a HTML canvas, without having to calculate any lighting. This makes it easy to reason with and potentially much faster than other in-browser 3D rendering libraries, given the right circumstances. It's perfect for small, simple and clean visualizations and illustrations with minimal interactivity.
+
+In this animation, we:
+1. Randomly generate nodes and links with some minor tweaks to create an organic-looking structure;
+2. Run [[https://d3js.org/][D3.js]] [[https://github.com/vasturiano/d3-force-3d][d3-force-3d]] layouting[fn:2] on the graph to bring connected nodes together and push less connected nodes apart
+   (this step makes the graph less "messy" and more visually digestible to human eyes);
+3. Animate a neural-firing blink on randomly selected links and nodes to liven things up.
+
+The full JavaScript[fn:1] follows:
+
+#+NAME: script
+#+BEGIN_SRC javascript :eval never
+import * as Zdog from "https://cdn.skypack.dev/zdog";
+import {
+  forceSimulation,
+  forceLink,
+  forceManyBody
+} from "https://cdn.skypack.dev/d3-force-3d";
+
+const YELLOW = '#EBCB8B';
+const GREY_LIGHT = '#D0D6E1';
+const BLINK_DURATION = 70;
+let TICKS = 0;
+
+class Node {
+  constructor(id, { x, y, z }) {
+    this.id = id;
+    this.position = { x, y, z };
+  }
+
+  // This interface ensures D3 can work with us
+  get x() { return this.position.x }
+  set x(v) { this.position.x = v }
+  get y() { return this.position.y }
+  set y(v) { this.position.y = v }
+  get z() { return this.position.z }
+  set z(v) { this.position.z = v }
+
+  blink() {
+    this._blinkT0 = TICKS;
+  }
+
+  render() {
+    if (!this._renderable) {
+      this._renderable = new Zdog.Ellipse({
+        addTo: ILLO,
+        diameter: 0,
+        stroke: 1 + Math.random() * 3,
+        color: GREY_LIGHT + 'dd',
+      });
+    }
+
+    this._renderable.translate = { ...this.position };
+
+    this.renderBlink();
+  }
+
+  renderBlink() {
+    const blinkProgress = (TICKS - this._blinkT0) / BLINK_DURATION;
+    if (blinkProgress <= 1) {
+      const alpha = Zdog.easeInOut(blinkProgress, 3);
+      if (!this._blinkRenderable) {
+        this._blinkRenderable = new Zdog.Ellipse({
+          addTo: this._renderable,
+          diameter: 0,
+          stroke: this._renderable.stroke,
+          color: YELLOW + '00',
+        });
+      }
+      this._blinkRenderable.color = YELLOW + alphaToOpacity(1 - alpha);
+      this._blinkRenderable.diameter = alpha * this._renderable.stroke * 7;
+      this._blinkRenderable.stroke = alpha * this._renderable.stroke * 7;
+    } else {
+      if (this._blinkRenderable) {
+        this._renderable.removeChild(this._blinkRenderable);
+        this._blinkRenderable = null;
+      }
+    }
+  }
+}
+
+class Link {
+  constructor(sourceId, targetId) {
+    this.id = `${sourceId}->${targetId}`;
+    this.source = NODE_MAP.get(sourceId);
+    this.target = NODE_MAP.get(targetId);
+  }
+
+  blink() {
+    this._blinkT0 = TICKS;
+    this.source.blink();
+    this.target.blink();
+  }
+
+  render() {
+    if (!this._renderable) {
+      this._renderable = new Zdog.Shape({
+        addTo: ILLO,
+        path: [
+          { ...this.source.position },
+          { ...this.target.position },
+        ],
+        stroke: 1,
+        color: GREY_LIGHT + '16',
+      });
+    }
+
+    this.renderBlink();
+
+    this._renderable.path = [
+      { ...this.source.position },
+      { ...this.target.position },
+    ];
+    this._renderable.updatePath();
+  }
+
+  renderBlink() {
+    const blinkProgress = (TICKS - this._blinkT0) / BLINK_DURATION;
+    if (blinkProgress <= 1) {
+      // Fade in and out with easing
+      const alpha = (0.5-Math.abs(Zdog.easeInOut(blinkProgress, 3)-0.5))/2;
+
+      // If nothing rendered for the blink effect, create the shape
+      if (!this._blinkRenderable) {
+        this._blinkRenderable = new Zdog.Shape({
+          addTo: this._renderable,
+          path: [
+            { ...this.source.position },
+            { ...this.target.position },
+          ],
+          stroke: 3,
+          color: YELLOW + '00',
+        });
+      }
+
+      // Update colors for blink effect and main Link shape
+      this._blinkRenderable.color = YELLOW + alphaToOpacity(alpha);
+      this._renderable.color = YELLOW + alphaToOpacity(0.2 + alpha)
+    } else {
+      // If not blinking or blinking done, remove the blink effect shape
+      if (this._blinkRenderable) {
+        this._renderable.removeChild(this._blinkRenderable);
+        this._blinkRenderable = null;
+        this._renderable.color = GREY_LIGHT + '16';
+      }
+    }
+  }
+}
+
+const ILLO = new Zdog.Illustration({
+  element: '#zdog-canvas',
+  dragRotate: true,
+  resize: true,
+  onResize: function(width, height) {
+    let minSize = Math.min( width, height );
+    this.zoom = minSize / 380;
+  },
+});
+
+// Generate random nodes and space them out reasonably randomly
+const NODES = new Array(450)
+  .fill(null)
+  .map((_,  i) => new Node(
+    i,
+    {
+      x: Math.random()*400 - 200,
+      y: Math.random()*400 - 200,
+      z: Math.random()*400 - 200
+    }
+  ));
+
+// Easier ways to access nodes quickly
+const NODE_MAP = new Map(NODES.map(n => [n.id, n]));
+const NODE_IDS = Array.from(NODE_MAP.keys());
+
+// Generate links with some "clustering" structure
+const LINKS = new Array(150).fill(null).flatMap(() => {
+  // Choose a random start node
+  const startNodeId = NODE_IDS[Math.floor(Math.random() * NODE_IDS.length)];
+  // Link the start node to one or more end nodes.
+  // One outgoing link will be way more likely than
+  // 10+ outgoing links by using Math.pow distribution
+  return new Array(Math.ceil(Math.pow(Math.random() * 1.8, 4)))
+    .fill(null)
+    .map(() => new Link(
+      startNodeId,
+      NODE_IDS[Math.floor(Math.random() * NODE_IDS.length)]
+    ));
+});
+
+// Apply 3d force-directed layout using D3.js
+forceSimulation(NODES, 3)
+  .force("link", forceLink(LINKS).id(d => d.id))
+  .force("charge", forceManyBody());
+
+// Update & render
+function animate() {
+  // Each update is one tick
+  TICKS++;
+
+  // Update the rendering for nodes and links
+  NODES.forEach(node => node.render());
+  LINKS.forEach(link => {
+    link.render();
+
+    // Small chance to randomly blink each link
+    if (Math.random() > 0.9995) {
+      link.blink();
+    }
+  });
+
+  // Rotate the whole illustration slowly
+  ILLO.rotate.y += 0.0004;
+  ILLO.rotate.x += 0.0008;
+  ILLO.rotate.z += 0.0006;
+
+  ILLO.updateRenderGraph();
+  requestAnimationFrame(animate);
+}
+animate();
+
+// Converts an alpha value [0,1] to a hex string
+// for appending to a hex color string
+function alphaToOpacity(alpha) {
+  return Math.floor(alpha * 256).toString(16).padStart(2, '0')
+}
+#+END_SRC
+
+[fn:1] No TypeScript this time, as I wanted a quick-and-dirty proof of concept.
+[fn:2] Specifically, we're using [[https://en.wikipedia.org/wiki/Force-directed_graph_drawing][force-directed graph drawing]] which uses spring-like physics to lay out vertices and edges in a nicer way than just dumping them all on screen randomly.
