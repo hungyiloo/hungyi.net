@@ -51,7 +51,6 @@ To get the above result, include the following CSS somewhere on the page (or in 
     transform: translate(-50%, -50%);
 
     /* optional fanciness */
-    border: 1px solid #881100;
     box-shadow: 0.1rem 0.1rem 0.2rem 0.1rem rgba(0, 0, 0, 0.1);
 }
 /* shadow (optional if you don't need a shadow) */
