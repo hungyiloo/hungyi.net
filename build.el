@@ -40,7 +40,7 @@
                                                ;; Any key-value pairs can go in this plist.
                                                ;; Whatever is meaninful to you, as long as the emitter
                                                ;; lambda in your route understands what to do with it
-                                               :posts posts)))
+                                               :posts (seq-filter (lambda (post) (not (plist-get post :draft))) posts))))
 
            ;; Setup and render the site
            (charge-site
