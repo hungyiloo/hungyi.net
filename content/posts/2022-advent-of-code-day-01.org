@@ -21,13 +21,13 @@ const elves: number[] = puzzleInput
   );
 
 const part1 = Math.max(...elves);
-console.log("Part 1: ", part1);
+console.log("Part 1:", part1);
 
 const part2 = elves
   .sort()
   .slice(-3)
   .reduce((sum, x) => sum + x, 0);
-console.log("Part 2: ", part2);
+console.log("Part 2:", part2);
 #+end_src
 
 #+name: code
@@ -36,10 +36,10 @@ console.log("Part 2: ", part2);
 <<solution>>
 #+end_src
 
-#+RESULTS[918be410c3d723246c30cff89fd3e853b626bc06]: code
+#+RESULTS[5e2a0ea0e77c802511e7e4fb6bb0475039706826]: code
 #+begin_src typescript
-Part 1:  67658
-Part 2:  200158
+Part 1: 67658
+Part 2: 200158
 #+end_src
 
 #+name: input
@@ -2281,6 +2281,5 @@ const puzzleInput =
 2639
 10883
 10054
-13688
-`;
+13688`;
 #+end_src
