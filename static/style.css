@@ -480,6 +480,9 @@ img {
 }
 .posts .post-item a:hover .post-title { text-decoration: underline; }
 .featured.posts .post-item .post-title { font-size: 180%; }
+.posts .post-item img, .post img {
+  width:100%;
+}
 
 
 /* -- Table -- */

@@ -1,0 +1,9 @@
+#+TITLE: Nord Landscape
+#+SLUG: nord-landscape
+#+DATE: 2022-11-27T21:33:50+07:00
+#+FEATURE: <img src="/feature-images/nord_landscape.svg" class="rounded-xl"/>
+#+DESCRIPTION: My first go at illustrating in a particular art style that I admire, using a palette inspired by the Nord theme.
+
+#+begin_src html :exports results :results html
+<img src="/feature-images/nord_landscape.svg" class="rounded-xl"/>
+#+end_src
