@@ -1,7 +1,7 @@
 #+TITLE: 2022 Advent of Code: Day 2
 #+SLUG: 2022-advent-of-code-day-02
 #+DATE: 2022-12-03T22:40:38+07:00
-#+DESCRIPTION: A TypeScript solution for the 2022 Advent of Code, Day 2 puzzle.
+#+DESCRIPTION: A TypeScript solution for the 2022 Advent of Code, Day 2 puzzle: taking advantage of combinations and lookup tables.
 
 The key insight for a simple solution to [[https://adventofcode.com/2022/day/2][today's puzzle]] is that there are only *9 different combinations of moves in any given strategy*[fn:1], and each combination has a fixed score. Instead of being clever with code, we can just work out the 9 different possible scores and put them in a lookup table.
 
@@ -11,47 +11,49 @@ First we split the strategy into moves, as each line represents one move.
 const strategy: string[] = puzzleInput.split('\n');
 #+end_src
 
-Then we make a reducer factory that takes any given score lookup table (i.e. ~Record<string, number>~) and translates the 9 possible moves into scores and totals them up.
+Then we make a reducer factory that takes a list of 9 lookup entries, generates a lookup table (i.e. ~Map<string, number>~) which translates any of the 9 possible moves into scores and totals them up.
 #+name: sol2
 #+begin_src typescript :exports code :results code :eval never
-const scoreReducer = (lookup: Record<string, number>) =>
-  (sum: number, move: string) =>
-    sum + lookup[move]
+const scoreReducer = (lookup: [string, number][]) => {
+  const lookupTable = new Map<string, number>(lookup);
+  return (sum: number, move: string) =>
+    sum + lookupTable.get(move)
+}
 #+end_src
 
 For part 1, =X=, =Y= and =Z= mean our move should be rock, paper or scissors respectively, so determine the outcome and calculate the scores for the 9 different moves and ~reduce~ the strategy to get the final score.
 #+name: sol3
 #+begin_src typescript :exports code :results code :eval never
-const part1 = strategy.reduce(scoreReducer({
-  'A X': 1 + 3, // rock -> rock + draw
-  'A Y': 2 + 6, // rock -> paper + win
-  'A Z': 3 + 0, // rock -> scissors + lose
-  'B X': 1 + 0, // paper -> rock + lose
-  'B Y': 2 + 3, // paper -> paper + draw
-  'B Z': 3 + 6, // paper -> scissors + win
-  'C X': 1 + 6, // scissors -> rock + win
-  'C Y': 2 + 0, // scissors -> paper + lose
-  'C Z': 3 + 3, // scissors -> scissors + draw
-}), 0);
+const part1 = strategy.reduce(scoreReducer([
+  ['A X', 1 + 3], // rock -> rock + draw
+  ['A Y', 2 + 6], // rock -> paper + win
+  ['A Z', 3 + 0], // rock -> scissors + lose
+  ['B X', 1 + 0], // paper -> rock + lose
+  ['B Y', 2 + 3], // paper -> paper + draw
+  ['B Z', 3 + 6], // paper -> scissors + win
+  ['C X', 1 + 6], // scissors -> rock + win
+  ['C Y', 2 + 0], // scissors -> paper + lose
+  ['C Z', 3 + 3], // scissors -> scissors + draw
+]), 0);
 #+end_src
 
 For part 2, =X=, =Y= and =Z= mean we should lose, draw or win respectively, so infer our move based on the desired outcome, then score the 9 different combos and ~reduce~ the strategy again.
 #+name: sol4
 #+begin_src typescript :exports code :results code :eval never
-const part2 = strategy.reduce(scoreReducer({
-  'A X': 0 + 3, // rock -> lose + scissors
-  'A Y': 3 + 1, // rock -> draw + rock
-  'A Z': 6 + 2, // rock -> win + paper
-  'B X': 0 + 1, // paper -> lose + rock
-  'B Y': 3 + 2, // paper -> draw + paper
-  'B Z': 6 + 3, // paper -> win + scissors
-  'C X': 0 + 2, // scissors -> lose + paper
-  'C Y': 3 + 3, // scissors -> draw + scissors
-  'C Z': 6 + 1, // scissors -> win + rock
-}), 0);
+const part2 = strategy.reduce(scoreReducer([
+  ['A X', 0 + 3], // rock -> lose + scissors
+  ['A Y', 3 + 1], // rock -> draw + rock
+  ['A Z', 6 + 2], // rock -> win + paper
+  ['B X', 0 + 1], // paper -> lose + rock
+  ['B Y', 3 + 2], // paper -> draw + paper
+  ['B Z', 6 + 3], // paper -> win + scissors
+  ['C X', 0 + 2], // scissors -> lose + paper
+  ['C Y', 3 + 3], // scissors -> draw + scissors
+  ['C Z', 6 + 1], // scissors -> win + rock
+]), 0);
 #+end_src
 
-And here's the entire solution.
+* Final Solution
 #+name: solution
 #+begin_src typescript :exports code :results code :eval never :noweb yes
 <<sol1>>
@@ -72,7 +74,7 @@ console.log("Part 2:", part2);
 <<solution>>
 #+end_src
 
-#+RESULTS[6785dfbd4c2d8d36de153d4d4f722cdc6096f323]: code
+#+RESULTS[46b7512e3a3b2721f28deefc9aef3248b0b94543]: code
 #+begin_src typescript
 Part 1: 12156
 Part 2: 10835
