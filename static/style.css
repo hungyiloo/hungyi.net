@@ -607,6 +607,9 @@ li .org-src-container {
 li li .org-src-container {
   max-width: calc(100vw - var(--rhythm)*(2.5 + 1.5*2));
 }
+pre.example {
+  margin: calc(var(--rhythm) * 1.2) 0;
+}
 .noligatures, .NOLIGATURES { font-variant-ligatures: none; }
 .demo {
   border-radius: var(--radius);

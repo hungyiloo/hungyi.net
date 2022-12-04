@@ -3,7 +3,20 @@
 #+DATE: 2022-12-03T21:09:19+07:00
 #+DESCRIPTION: A TypeScript solution for the 2022 Advent of Code, Day 1 puzzle: beginning the journey with basic grouping, sorting and summation.
 
-In the [[https://adventofcode.com/2022/day/1][puzzle]] input, a *blank line separates the groups of numbers* that represent the calorie counts for each elf, so we can total up the calories for each elf by calling ~reduce~ over the lines and adding each new number to the previous item in the accumulated list, but adding a new item to the list if there's a blank line.
+[[https://adventofcode.com/2022/day/1][Today's puzzle]] input looks something like this.
+#+begin_example
+1000
+2000
+3000
+
+4000
+
+5000
+6000
+#+end_example
+
+We see that a *blank line separates the groups of numbers* that represent the calorie counts for each elf, so we can total up the calories for each elf by calling ~reduce~ over the lines and adding each new number to the last element in the accumulated list, but adding a new element to the end of the accumulated list if there's a blank line (i.e. a new group total).
+
 #+name: sol1
 #+begin_src typescript :exports code :results code :eval never
 const elves: number[] = puzzleInput

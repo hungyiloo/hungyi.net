@@ -5,6 +5,13 @@
 
 The key insight for a simple solution to [[https://adventofcode.com/2022/day/2][today's puzzle]] is that there are only *9 different combinations of moves in any given strategy*[fn:1], and each combination has a fixed score. Instead of being clever with code, we can just work out the 9 different possible scores and put them in a lookup table.
 
+The puzzle input (a.k.a. strategy) looks something like this.
+#+begin_example
+A Y
+B X
+C Z
+#+end_example
+
 First we split the strategy into moves, as each line represents one move.
 #+name: sol1
 #+begin_src typescript :exports code :results code :eval never

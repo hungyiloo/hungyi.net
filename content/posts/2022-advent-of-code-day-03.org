@@ -5,11 +5,20 @@
 
 [[https://adventofcode.com/2022/day/3][Today's puzzle]] deals heavily with sets and intersections. JavaScript gives you a [[https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set][Set]] object to help with this, but lacks an ~intersection~ function, so we'll have to write our own.
 
+The puzzle input looks something like this.
+#+begin_example
+vJrwpWtwJgWrhcsFMMfFFhFp
+jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL
+PmmdzqPrVvPwwTWBwg
+wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn
+ttgJtRGJQctTZtZT
+CrZsJsPPZsGzwwsLwLmpwMDw
+#+end_example
+
 First we split the data into individual rucksacks (one per line).
 #+name: sol1
 #+begin_src typescript :exports code :results code :eval never
-const rucksacks: string[] =
-  puzzleInput.split('\n');
+const rucksacks: string[] = puzzleInput.split('\n');
 #+end_src
 
 Now define an ~intersection~ function to find the overlapping characters between two or more strings.
@@ -33,14 +42,17 @@ function intersection(...xs: string[]): string[] {
 For our final puzzle answers, we also need a lookup table of characters (=a-z= and =A-Z=) that maps them to a priority number. We can build it succinctly with clever usage of ~map()~ and its index parameter.
 #+name: sol3
 #+begin_src typescript :exports code :results code :eval never
-const alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('');
+const alphabet = 'abcdefghijklmnopqrstuvwxyz';
 const priorityMap = new Map([
   // lowercase letters 1 through 26
-  ...alphabet.map((char, i) =>
-    [char, i+1] as const),
+  ...alphabet
+    .split('')
+    .map((char, i) => [char, i+1] as const),
   // uppercase letters 27 through 52
-  ...alphabet.map((char, i) =>
-    [char.toUpperCase(), i+27] as const)
+  ...alphabet
+    .toUpperCase()
+    .split('')
+    .map((char, i) => [char, i+27] as const)
 ]);
 #+end_src
 
@@ -68,9 +80,7 @@ const part2 = rucksacks
   // creating a new group whenever index mod 3 is 0
   .reduce(
     (acc, curr, i) => {
-      if (i % 3 === 0) {
-        acc.push([]);
-      }
+      if (i % 3 === 0) { acc.push([]); }
       const prev = acc.length - 1;
       acc[prev].push(curr);
       return acc;
@@ -107,8 +117,8 @@ console.log("Part 2:", part2);
 <<solution>>
 #+end_src
 
-#+RESULTS[25aa6cc896e5e23cfc6d962decd75d40a3613d0e]: code
-#+begin_src typescript :eval never
+#+RESULTS[b355cf67249e9207763edffcfabeb46ef88b0395]: code
+#+begin_src typescript
 Part 1: 7908
 Part 2: 2838
 #+end_src

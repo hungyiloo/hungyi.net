@@ -5,72 +5,65 @@
 
 Even though [[https://adventofcode.com/2022/day/4][today's puzzle]] makes it sound like you want to use the set intersection techniques from yesterday, it's actually much simpler than that. We just need a couple of functions to check the high and low points of the ranges with basic inequality operators (e.g. =<== and =>==) to find the answer.
 
+The puzzle input data looks something like this.
+#+begin_example
+2-4,6-8
+2-3,4-5
+5-7,7-9
+2-8,3-7
+6-6,4-6
+2-6,4-8
+#+end_example
+
 First we split the puzzle data into =Pairs= of =Range= structures that have =hi= and =lo= values. Curiously, data parsing seems to be the most challenging part of today's puzzle.
 #+name: sol1
 #+begin_src typescript :exports code :results code :eval never
-interface Range {
-  lo: number;
-  hi: number;
-}
-
-interface Pair {
-  left: Range;
-  right: Range;
-}
+interface Range { lo: number; hi: number; }
+interface Pair { left: Range; right: Range; }
 
 const pairs: Pair[] = puzzleInput
   .split('\n')
   .map(line => line
-    // Each line is a pair, separated by a comma;
     .split(',')
-    // and each member of the pair is a range,
-    // with low and high separated by a hyphen.
     .map(member => member.split('-').map(x => parseInt(x)))
     .map(([lo, hi]) => ({ lo, hi } as Range))
   )
   .map(([left, right]) => ({ left, right } as Pair));
 #+end_src
 
-Define a function ~inRange~ that checks if a number is within a =Range=.
+Define a function ~within~ that checks if a number is within a =Range=.
 #+name: sol2
 #+begin_src typescript :exports code :results code :eval never
-function inRange(x: number, range: Range) {
-  return range.lo <= x && x <= range.hi;
-}
+const within = (x: number, range: Range) =>
+  range.lo <= x && x <= range.hi;
 #+end_src
 
-Define a function ~isRedundant~ that checks two ranges to see if one of them is redundant (i.e. one entirely contains the other). To check, we see if *both of* the low/high values of range =a= are within range =b=, or vice versa.
+Define a function ~isRedundant~ that checks a =Pair= of ranges to see if one of them is redundant (i.e. one entirely contains the other). To check, we see if *both of* the low/high values of range =left= are within range =right=, or vice versa.
 #+name: sol3
 #+begin_src typescript :exports code :results code :eval never
-function isRedundant(a: Range, b: Range) {
-  return (inRange(a.lo, b) && inRange(a.hi, b))
-    || (inRange(b.lo, a) && inRange(b.hi, a));
-}
+const isRedundant = (p: Pair) =>
+  (within(p.left.lo, p.right) && within(p.left.hi, p.right))
+  || (within(p.right.lo, p.left) && within(p.right.hi, p.left));
 #+end_src
 
-Define a function ~isOverlap~ that checks if two ranges overlap at all.  To check, we see if *either of* the low/high values of range =a= are within range =b=, or vice versa.
+Define a function ~isOverlap~ that checks if a =Pair='s ranges overlap at all.  To check, we see if *either of* the low/high values of range =left= are within range =right=, or vice versa.
 #+name: sol4
 #+begin_src typescript :exports code :results code :eval never
-function isOverlap(a: Range, b: Range) {
-  return (inRange(a.lo, b) || inRange(a.hi, b))
-    || (inRange(b.lo, a) || inRange(b.hi, a));
-}
+const isOverlap = (p: Pair) =>
+  (within(p.left.lo, p.right) || within(p.left.hi, p.right))
+  || (within(p.right.lo, p.left) || within(p.right.hi, p.left));
 #+end_src
 
 For part 1, ~filter~ the pairs to where ranges are redundant, then interrogate ~length~ to get a count.
 #+name: sol5
 #+begin_src typescript :exports code :results code :eval never
-const part1 = pairs
-  .filter(({ left, right }) => isRedundant(left, right))
-  .length;
+const part1 = pairs.filter(isRedundant).length;
 #+end_src
 
 Part 2 is the very similar to part 1, except we ~filter~ for overlapping pairs instead.
 #+name: sol6
 #+begin_src typescript :exports code :results code :eval never
-const part2 = pairs
-  .filter(({ left, right }) => isOverlap(left, right))
-  .length;
+const part2 = pairs.filter(isOverlap).length;
 #+end_src
 
 * Final Solution
@@ -98,8 +91,8 @@ console.log("Part 2:", part2);
 <<solution>>
 #+end_src
 
-#+RESULTS[19468e427b3de37bfda82235b00a69ab494a58fc]: code
-#+begin_src typescript :eval never
+#+RESULTS[5879f5f7488e06e1453e6a5e2b2c873925f4e74a]: code
+#+begin_src typescript
 Part 1: 560
 Part 2: 839
 #+end_src
