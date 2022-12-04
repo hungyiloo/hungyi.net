@@ -27,7 +27,7 @@ To remind myself of these 2 core concepts, I usually use a lambda with the input
 
 Summing a list of numbers is an example that's been repeated ad nauseam[fn:2] on every page of documentation ever written on [[https://en.wikipedia.org/wiki/Fold_(higher-order_function)][fold/reduce/accumulate/aggregate/compress/inject]]:
 
-#+BEGIN_SRC js :eval no
+#+BEGIN_SRC js :eval never
 // Calculate the sum of a list of numbers
 [1,2,3,4].reduce((acc, curr) => acc + curr, 0); // => 10
 #+END_SRC
@@ -62,7 +62,7 @@ return {
 #+END_SRC
 
 #+RESULTS[7bc4ba5f37dcbb16a716854ca39cedf927d65c7f]: map-example
-#+begin_src js
+#+begin_src js :eval never
 { roundedMap: [ 2, 3, 3, 3 ], roundedReduce: [ 2, 3, 3, 3 ] }
 #+end_src
 
@@ -84,7 +84,7 @@ return {
 #+END_SRC
 
 #+RESULTS[ed453d6fd87d99cfea3f4fdb904fedacb5f4bc4a]: filter-example
-#+begin_src js
+#+begin_src js :eval never
 {
   above2Filtered: [ 2.718, 3.141592653, 2.5029 ],
   above2Reduced: [ 2.718, 3.141592653, 2.5029 ]
@@ -110,7 +110,7 @@ return {
 #+END_SRC
 
 #+RESULTS[a3eba31ee15ca56c56be7ae62364981e1f22b185]: includes-example
-#+begin_src js
+#+begin_src js :eval never
 { containsPiIncludes: true, containsPiReduced: true }
 #+end_src
 
@@ -132,7 +132,7 @@ return {
 #+END_SRC
 
 #+RESULTS[43efb23dc594947152ee4b0568c7fc70e4d8d68a]: find-example
-#+begin_src js
+#+begin_src js :eval never
 { firstAbove2Find: 2.718, firstAbove2Reduced: 2.718 }
 #+end_src
 
@@ -161,7 +161,7 @@ return pairs.reduce((acc, curr) => ({...acc, [curr.key]: curr.value}), {});
 #+END_SRC
 
 #+RESULTS[824c1bdde5d2c2ba1c0406d10c304b6de9859538]:
-#+begin_src js
+#+begin_src js :eval never
 { apple: 5, orange: 3, banana: 10 }
 #+end_src
 
@@ -201,7 +201,7 @@ return ingredients.reduce((acc, curr) => {
 #+END_SRC
 
 #+RESULTS[913622d6ea079ecdb5fec1131195ecee510441b0]:
-#+begin_src js
+#+begin_src js :eval never
 Map(4) {
   'fiber' => [
     { name: 'celery', category: 'fiber' },
@@ -246,7 +246,7 @@ return people.reduce((acc, curr, i) => {
 #+END_SRC
 
 #+RESULTS[4e34a78dbb2be115c8b4ee9b6f6f9f8754752fdb]:
-#+begin_src js
+#+begin_src js :eval never
 [
   [ 'Alice', 'Bob' ],
   [ 'Charlie', 'Daisy' ],
@@ -298,7 +298,7 @@ return actions.reduce(
 #+END_SRC
 
 #+RESULTS[e22c4e975ea036ceed6e02e0760e4928ce3012d0]:
-#+begin_src js
+#+begin_src js :eval never
 [
      0,    5,   4,  32,
   1024, 1000, 200, 202,

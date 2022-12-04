@@ -30,6 +30,6 @@ console.log(result);
 Which prints the result:
 
 #+RESULTS[ece53d9e88d087e48bf69c2622f50a0c41c34db6]: sum-an-array-of-arrays
-#+begin_src typescript
+#+begin_src typescript :eval never
 [ 3, 6, 9, 12 ]
 #+end_src

@@ -15,7 +15,7 @@ Here's a quick demonstration of it in action:
 #+end_src
 
 #+RESULTS[453b1696f0a89045577931a0f7b8e1535f841cab]:
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :eval never
 ((1 2 3 4)
  (5 6 7 8)
  (9))
@@ -60,7 +60,7 @@ For example, splitting a list of ~(1 2 3 4 5 6 7 8 9)~ into batches of max size 
 #+end_src
 
 #+RESULTS[bf39b14fa53a380faf59960de24042158aad00c6]:
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :eval never
 ((1 2 3)
  (4 5 6)
  (7 8 9))
@@ -74,7 +74,7 @@ And a batch size of ~4~ to see what happens when the ~size~ doesn't evenly divid
 
 /Spoiler: the last batch is chopped short compared to the others 🪓/
 #+RESULTS[8153da06914e14728e4484209fa3be2f7dccb7a8]: not-even
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :eval never
 ((1 2 3 4)
  (5 6 7 8)
  (9))
@@ -88,7 +88,7 @@ Like a ~size~ that is equal to the length of the ~input~ list
 #+end_src
 
 #+RESULTS[8ff1b42b8794d96336eb8d36e407bae9a9149db4]:
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :eval never
 ((1 2 3 4 5 6 7 8 9))
 #+end_src
 
@@ -98,7 +98,7 @@ Or a ~size~ that exceeds the length of ~input~
 #+end_src
 
 #+RESULTS[4f511a102d7c1000d75ac5e9e73d5b4ca574a818]:
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :eval never
 ((1 2 3 4 5 6 7 8 9))
 #+end_src
 
@@ -108,7 +108,7 @@ How about a batch ~size~ of ... just ~1~?
 #+end_src
 
 #+RESULTS[97314a797dda32c8b0e6816312d76df2deded669]:
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :eval never
 ((1)
  (2)
  (3)

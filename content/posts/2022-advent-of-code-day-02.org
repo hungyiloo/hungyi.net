@@ -75,7 +75,7 @@ console.log("Part 2:", part2);
 #+end_src
 
 #+RESULTS[46b7512e3a3b2721f28deefc9aef3248b0b94543]: code
-#+begin_src typescript
+#+begin_src typescript :eval never
 Part 1: 12156
 Part 2: 10835
 #+end_src

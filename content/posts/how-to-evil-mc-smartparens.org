@@ -7,7 +7,7 @@
 
 It turns out that they can! By my estimate, this simple approach works for 90% of the use cases:
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :eval never
 (after! (:and evil-mc smartparens)
   (dolist (sp-command '(sp-up-sexp
                         sp-copy-sexp
