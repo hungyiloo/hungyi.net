@@ -3,30 +3,54 @@
 #+DATE: 2022-12-03T21:09:19+07:00
 #+DESCRIPTION: A TypeScript solution for the 2022 Advent of Code, Day 1 puzzle.
 
-
-#+name: solution
+In the [[https://adventofcode.com/2022/day/1][puzzle]] input, a *blank line separates the groups of numbers* that represent the calorie counts for each elf, so we can total up the calories for each elf by calling ~reduce~ over the lines and adding each new number to the previous item in the accumulated list, but adding a new item to the list if there's a blank line.
+#+name: sol1
 #+begin_src typescript :exports code :results code :eval never
 const elves: number[] = puzzleInput
   .split('\n')
   .reduce(
-    (acc, curr) => {
+    (acc: number[], curr: string) => {
       if (curr === '') {
+        // blank line means new group;
+        // so start a new total
         acc.push(0);
       } else {
-        acc[acc.length - 1] += parseInt(curr);
+        // add to the previous group
+        const prev = acc.length - 1;
+        acc[prev] += parseInt(curr);
       }
       return acc;
     },
-    [0]
+    [0] // begin with one group
   );
+#+end_src
 
+For part 1, we just need the elf with the ~max~ total calories.
+#+name: sol2
+#+begin_src typescript :exports code :results code :eval never
 const part1 = Math.max(...elves);
-console.log("Part 1:", part1);
+#+end_src
 
+For part 2, we want the top 3 elves, so we might as well ~sort~ the list. We can get the top 3 by using a negative parameter in the ~slice()~ function, then add them up with a simple ~reduce~ for summation.
+#+name: sol3
+#+begin_src typescript :exports code :results code :eval never
 const part2 = elves
   .sort()
   .slice(-3)
   .reduce((sum, x) => sum + x, 0);
+#+end_src
+
+And here's the entire solution.
+
+#+name: solution
+#+begin_src typescript :exports code :results code :eval never :noweb yes
+<<sol1>>
+
+<<sol2>>
+
+<<sol3>>
+
+console.log("Part 1:", part1);
 console.log("Part 2:", part2);
 #+end_src
 
@@ -36,7 +60,7 @@ console.log("Part 2:", part2);
 <<solution>>
 #+end_src
 
-#+RESULTS[5e2a0ea0e77c802511e7e4fb6bb0475039706826]: code
+#+RESULTS[5631f7ce213fe10b4bf245fadf606ee900636b6e]: code
 #+begin_src typescript
 Part 1: 67658
 Part 2: 200158
