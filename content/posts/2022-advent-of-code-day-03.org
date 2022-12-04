@@ -107,7 +107,7 @@ console.log("Part 2:", part2);
 <<solution>>
 #+end_src
 
-#+RESULTS[72fe4e48613ed92bea4048ae706e2d644f5b6002]: code
+#+RESULTS[25aa6cc896e5e23cfc6d962decd75d40a3613d0e]: code
 #+begin_src typescript
 Part 1: 7908
 Part 2: 2838
