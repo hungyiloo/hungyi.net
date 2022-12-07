@@ -1,9 +1,11 @@
-#+TITLE: 2022 Advent of Code: Day 4
+#+TITLE: Advent of Code 2022: Day 4
 #+SLUG: 2022-advent-of-code-day-04
 #+DATE: 2022-12-04T16:58:25+07:00
-#+DESCRIPTION: A TypeScript solution for the 2022 Advent of Code, Day 4 puzzle: it looks like set intersection, but actually it's much easier than that.
+#+DESCRIPTION: A TypeScript solution for the Advent of Code 2022, Day 4 puzzle: it looks like set intersection, but actually it's much easier than that.
 
-Even though [[https://adventofcode.com/2022/day/4][today's puzzle]] makes it sound like you want to use the set intersection techniques from yesterday, it's actually much simpler than that. We just need a couple of functions to check the high and low points of the ranges with basic inequality operators (e.g. =<== and =>==) to find the answer.
+[[https://adventofcode.com/2022/day/4][Today's puzzle]] asks us to check if two ranges of numbers overlap or not. We have to check for complete overlaps and partial overlaps.
+
+Even though the puzzle makes it sound like you want to use the set intersection techniques from yesterday, it's actually much simpler than that. We just need a couple of functions to check the high and low points of the ranges with basic inequality operators (e.g. =<== and =>==) to find the answer.
 
 The puzzle input data looks something like this.
 #+begin_example
@@ -92,7 +94,7 @@ console.log("Part 2:", part2);
 #+end_src
 
 #+RESULTS[5879f5f7488e06e1453e6a5e2b2c873925f4e74a]: code
-#+begin_src typescript
+#+begin_src typescript eval never
 Part 1: 560
 Part 2: 839
 #+end_src

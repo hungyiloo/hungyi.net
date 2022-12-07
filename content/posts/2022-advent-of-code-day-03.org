@@ -1,9 +1,11 @@
-#+TITLE: 2022 Advent of Code: Day 3
+#+TITLE: Advent of Code 2022: Day 3
 #+SLUG: 2022-advent-of-code-day-03
 #+DATE: 2022-12-04T14:32:19+07:00
-#+DESCRIPTION: A TypeScript solution for the 2022 Advent of Code, Day 3 puzzle: playing with sets and intersections.
+#+DESCRIPTION: A TypeScript solution for the Advent of Code 2022, Day 3 puzzle: playing with sets and intersections.
 
-[[https://adventofcode.com/2022/day/3][Today's puzzle]] deals heavily with sets and intersections. JavaScript gives you a [[https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set][Set]] object to help with this, but lacks an ~intersection~ function, so we'll have to write our own.
+[[https://adventofcode.com/2022/day/3][Today's puzzle]] deals heavily with sets and intersections. We're asked to find a character that appears somewhere in one or more strings, then combine results by mapping the repeated characters with a simple scoring system.
+
+JavaScript gives you a [[https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set][Set]] object to help with this, but lacks an ~intersection~ function, so we'll have to write our own.
 
 The puzzle input looks something like this.
 #+begin_example
@@ -118,7 +120,7 @@ console.log("Part 2:", part2);
 #+end_src
 
 #+RESULTS[b355cf67249e9207763edffcfabeb46ef88b0395]: code
-#+begin_src typescript
+#+begin_src typescript :eval never
 Part 1: 7908
 Part 2: 2838
 #+end_src

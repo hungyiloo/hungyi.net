@@ -1,9 +1,11 @@
-#+TITLE: 2022 Advent of Code: Day 2
+#+TITLE: Advent of Code 2022: Day 2
 #+SLUG: 2022-advent-of-code-day-02
 #+DATE: 2022-12-03T22:40:38+07:00
-#+DESCRIPTION: A TypeScript solution for the 2022 Advent of Code, Day 2 puzzle: taking advantage of combinations and lookup tables.
+#+DESCRIPTION: A TypeScript solution for the Advent of Code 2022, Day 2 puzzle: taking advantage of combinations and lookup tables.
 
-The key insight for a simple solution to [[https://adventofcode.com/2022/day/2][today's puzzle]] is that there are only *9 different combinations of moves in any given strategy*[fn:1], and each combination has a fixed score. Instead of being clever with code, we can just work out the 9 different possible scores and put them in a lookup table.
+[[https://adventofcode.com/2022/day/2][Today's puzzle]] encodes a strategy for rock, paper scissors into moves that are represented by pairs of characters. We're asked to score the strategy based on different interpretations of what the characters mean and by following a simple scoring system based on the play (i.e. rock = 1, paper = 2, scissors = 3) and outcome (i.e. win = 6, draw = 3, lose = 0).
+
+The key insight for a simple solution is that there are only *9 different combinations of moves in any given strategy*[fn:1], and each combination has a fixed score. Instead of being clever with code, we can just work out the 9 different possible scores and put them in a lookup table.
 
 The puzzle input (a.k.a. strategy) looks something like this.
 #+begin_example

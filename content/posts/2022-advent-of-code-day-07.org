@@ -1,0 +1,1308 @@
+#+TITLE: Advent of Code 2022: Day 7
+#+SLUG: 2022-advent-of-code-day-07
+#+DATE: 2022-12-07T18:01:32+07:00
+#+DESCRIPTION: A TypeScript solution for the Advent of Code 2022, Day 7 puzzle: simulating an imaginary file system by inspecting terminal input & ouput.
+
+[[https://adventofcode.com/2022/day/7][Today's puzzle]] asks us to inspect the input and output of =cd= and =ls= commands in a made-up terminal session in order to calculate the directory structure and sizes of an imaginary file system.
+
+The puzzle input looks something like this.
+#+name: example-input
+#+begin_example
+$ cd /
+$ ls
+dir a
+14848514 b.txt
+8504156 c.dat
+dir d
+$ cd a
+$ ls
+dir e
+29116 f
+2557 g
+62596 h.lst
+$ cd e
+$ ls
+584 i
+$ cd ..
+$ cd ..
+$ cd d
+$ ls
+4060174 j
+8033020 d.log
+5626152 d.ext
+7214296 k
+#+end_example
+
+* Differentiating Between Terminal Input & Output
+We start by defining an ~Action~ type, which represents a single action with a command, an optional argument, and an array of output strings.
+#+name: sol1a
+#+begin_src typescript :exports code :results code :eval never
+type Action = { cmd: string, arg?: string, out: string[] };
+#+end_src
+
+To convert the puzzle input into an array of ~actions~, split the input into individual lines and ~reduce()~ over them:
+#+begin_comfy
+- If a line starts with a =$= symbol, then the code extracts the command and argument from the line and adds a new ~Action~ object to the actions array with the extracted values and an empty ~out~ array.
+- If the line does not start with a =$= symbol, then it is assumed to be output for the previous action and is added to the ~out~ array of the previous action in the ~actions~ array.
+#+end_comfy
+
+#+name: sol1b
+#+begin_src typescript :exports code :results code :eval never
+const actions = puzzleInput.split('\n').reduce(
+  (actions, line) => {
+    if (line.startsWith("$")) {
+      const [,cmd,arg] = line.split(' ');
+      actions.push({ cmd, arg, out: [] });
+    } else {
+      const prev = actions.length - 1;
+      actions[prev].out.push(line);
+    }
+    return actions;
+  },
+  [] as Action[]
+);
+#+end_src
+
+For example, with the input at the top of the post, the resulting ~actions~ array would contain the following values:
+#+begin_src typescript :exports results :results example :noweb yes :cache yes
+const puzzleInput = `$ cd /
+$ ls
+dir a
+14848514 b.txt
+8504156 c.dat
+dir d
+$ cd a
+$ ls
+dir e
+29116 f
+2557 g
+62596 h.lst
+$ cd e
+$ ls
+584 i
+$ cd ..
+$ cd ..
+$ cd d
+$ ls
+4060174 j
+8033020 d.log
+5626152 d.ext
+7214296 k`;
+<<sol1a>>
+<<sol1b>>
+console.log(actions);
+#+end_src
+
+#+RESULTS[381a3847e17d387a639539276e9626cab39dbb15]:
+#+begin_example
+[
+  { cmd: 'cd', arg: '/', out: [] },
+  {
+    cmd: 'ls',
+    arg: undefined,
+    out: [ 'dir a', '14848514 b.txt', '8504156 c.dat', 'dir d' ]
+  },
+  { cmd: 'cd', arg: 'a', out: [] },
+  {
+    cmd: 'ls',
+    arg: undefined,
+    out: [ 'dir e', '29116 f', '2557 g', '62596 h.lst' ]
+  },
+  { cmd: 'cd', arg: 'e', out: [] },
+  { cmd: 'ls', arg: undefined, out: [ '584 i' ] },
+  { cmd: 'cd', arg: '..', out: [] },
+  { cmd: 'cd', arg: '..', out: [] },
+  { cmd: 'cd', arg: 'd', out: [] },
+  {
+    cmd: 'ls',
+    arg: undefined,
+    out: [ '4060174 j', '8033020 d.log', '5626152 d.ext', '7214296 k' ]
+  }
+]
+#+end_example
+
+* The Problem of Nested Directories
+To solve this, we define an ~ancestors()~ function, which takes a path string as an argument and returns an array of ancestor paths leading up to that path. We achieve this by splitting the path into individual segments using the ~split()~ method, then removing the first and last segments using the ~slice()~ method. This is because the first segment is always the root directory / and the last segment is the current directory, which is not an ancestor.[fn:2]
+
+The function uses ~reduce()~ to create an array of paths, calling the ~pathJoin()~[fn:1] function on each directory name and the previous path to create a new *absolute* path, which is added to the array of paths and returned. Note that we start with the root directory =/= as the initial value for the accumulator.
+#+name: sol2
+#+begin_src typescript :exports code :results code :eval never
+const ancestors = (path: string) => path
+  .split('/')
+  .slice(1, -1)
+  .reduce(
+    (acc, curr) => [...acc, pathJoin(acc[acc.length - 1], curr)],
+    ['/']
+  )
+
+const pathJoin = (...paths: string[]) => paths
+  .map(path => path?.replace(/\/$/, '') ?? '')
+  .join('/');
+#+end_src
+
+For example, calling the ~ancestors()~ function with the path ="/a/b/c"= would return the following array of ancestor paths:
+#+begin_example
+["/", "/a", "/a/b"]
+#+end_example
+
+It may not be clear right now, but we can use ~ancestors()~ later when we're adding up file sizes such that the directory sizes will track all of their children, including nested children.
+
+* Parsing the Output of =ls=
+Now we should deal with the ~out~ lines of the ~actions~ array we parsed out from before. Remember that these lines represent the output of =ls=, which are file and directory entries, so we define an ~Entry~ type as an object with two properties: size (an optional number representing the size of the entry) and path (the *full* path of the entry).
+
+#+name: sol3a
+#+begin_src typescript :exports code :results code :eval never
+type Entry = { size?: number, path: string };
+#+end_src
+
+We then define a ~parseEntry()~ function that takes two arguments: a ~line~ string and a ~cwd~ string representing the /current working directory/. To parse an output line, the function first splits the line on the space character and inspects the ~left~ segment to determine whether the entry is a directory or a file.
+#+begin_comfy
+- If ~left~ isn't "dir", it is a file, so set the ~size~ property to the integer value which is contained in the ~left~ segment, passing it through ~parseInt()~.
+- Always set path property using ~right~ and ~cwd~ with the ~pathJoin()~ function (which we defined earlier) to get the full, absolute path.
+#+end_comfy
+
+#+name: sol3b
+#+begin_src typescript :exports code :results code :eval never
+const parseEntry = (line: string, cwd: string): Entry => {
+  const [left, right] = line.split(' ');
+  return {
+    size: left !== 'dir' ? parseInt(left) : undefined,
+    path: pathJoin(cwd, right)
+  }
+}
+#+end_src
+
+For example, calling ~parseEntry()~ with a ~line~ of ="dir b"= and a ~cwd~ of ="/a"= would just result in:
+#+begin_example
+{ path: "/a/b" }
+#+end_example
+
+But calling ~parseEntry()~ with a ~line~ of ="14848514 b.txt"= and a ~cwd~ of ="/a"= would result in:
+#+begin_example
+{ size: 14848514, path: "/a/b.txt" }
+#+end_example
+
+* Building the Directory Structure & Collecting Sizes
+We're ready to combine everything to run the final simulation. ~reduce()~ over the ~actions~ array and calculate the size of each directory in the puzzle input. As we traverse through the file system, we track the /current working directory/ in ~cwd~ and the directory sizes in ~dirSizeMap~ (a ~Map~ object that maps directory paths to their sizes).
+
+The ~cwd~ value is updated in the accumulated state by essentially simulating simple =cd= navigation through the file system:
+#+begin_comfy
+- If the ~cmd~ is "cd", the ~cwd~ is set to the ~arg~ property of the ~Action~ object, with some special handling for the "/" and ".." arguments;
+- If the ~cmd~ is anything other than "cd", the ~cwd~ remains unchanged.
+#+end_comfy
+
+For the directory sizes:
+1. ~map()~ to convert the output lines into ~Entry~ objects using ~parseEntry()~
+2. ~filter()~ the entries to those that have a size (i.e. file entries only)
+3. Call ~ancestors()~ on the file path, ~map()~ to a list of pairs of =[ancestorPath, fileSizeToAdd]= then flatten to a giant list of pairs using ~flatMap()~
+4. ~reduce()~ the pairs onto ~dirSizeMap~ to accumulate the file sizes onto the correct paths
+#+name: sol4
+#+begin_src typescript :exports code :results code :eval never
+const { dirSizeMap } = actions.reduce(
+  ({ cwd, dirSizeMap }, { cmd, arg, out }) => ({
+    cwd: cmd === 'cd'
+      ? arg === '/'
+        ? '/'
+        : arg === '..'
+          ? ancestors(cwd).slice(-1)[0]
+          : pathJoin(cwd, arg)
+      : cwd,
+    dirSizeMap: out
+      .map(line => parseEntry(line, cwd))
+      .filter(entry => !!entry.size)
+      .flatMap(({ path, size }) =>
+        ancestors(path).map(path => [path, size] as const))
+      .reduce(
+        (map, [path, size]) =>
+          map.set(path, (map.get(path) ?? 0) + size),
+        dirSizeMap
+      )
+  }),
+  { cwd: '', dirSizeMap: new Map<string, number>() }
+);
+const dirSizes = [...dirSizeMap.values()];
+#+end_src
+
+At the end, we convert ~dirSizeMap~ into an array of numbers using the ~Map.prototype.values()~ method and the spread operator =...=, and assign the result to the ~dirSizes~ variable. We do this because the directory path information is no longer relevant to our final answers.
+
+* Calculating the Answers
+For part 1, we filter the ~dirSizes~ array and keep only the sizes that are less than or equal to 100,000. We then ~reduce()~ to sum up the remaining sizes.
+#+name: sol5
+#+begin_src typescript :exports code :results code :eval never
+const part1 = dirSizes
+  .filter(s => s <= 100_000)
+  .reduce((s, x) => s + x, 0);
+#+end_src
+
+For part 2, we first define some constants that are used in the calculation of the answer:
+- ~totalDiskSpace~ represents the total disk space on the computer,
+- ~usedDiskSpace~  represents the amount of disk space used by the directories in the input,
+- ~unusedDiskSpace~ represents the amount of disk space that is unused,
+- ~requiredDiskSpace~ represents the total amount of disk space that is required for the new software,
+- and ~diskSpaceToFree~ represents the amount of disk space that must be freed up in order to install the new software.
+
+This time we ~filter()~ the ~dirSizes~ array and keep only the sizes that are greater than or equal to the ~diskSpaceToFree~. We then find the minimum value in this list using ~Math.min()~, which is the smallest directory that satisfies the ~diskSpaceToFree~.
+#+name: sol6
+#+begin_src typescript :exports code :results code :eval never
+const totalDiskSpace = 70_000_000;
+const usedDiskSpace = dirSizeMap.get('/');
+const unusedDiskSpace  = totalDiskSpace - usedDiskSpace;
+const requiredDiskSpace = 30_000_000;
+const diskSpaceToFree = requiredDiskSpace - unusedDiskSpace;
+
+const part2 = Math.min(
+  ...dirSizes.filter(s => s >= diskSpaceToFree)
+);
+#+end_src
+
+* Final Solution
+#+name: solution
+#+begin_src typescript :exports code :results code :eval never :noweb yes
+<<sol1a>>
+<<sol1b>>
+
+<<sol2>>
+
+<<sol3a>>
+<<sol3b>>
+
+<<sol4>>
+
+<<sol5>>
+
+<<sol6>>
+
+console.log("Part 1:", part1);
+console.log("Part 2:", part2);
+#+end_src
+
+#+name: code
+#+begin_src typescript :exports results :results code :noweb yes :cache yes
+<<input>>
+<<solution>>
+#+end_src
+
+#+RESULTS[cef479ca8488ba8bc68191c1d6460e78efaddf95]: code
+#+begin_src typescript
+Part 1: 1915606
+Part 2: 5025657
+#+end_src
+
+#+name: input
+#+begin_src typescript :exports none :eval never
+const puzzleInput =
+`$ cd /
+$ ls
+dir ddpgzpc
+dir mqjrd
+dir mrqjg
+dir rglgbsq
+298050 tjmjp.cqm
+dir wlqhpwqv
+$ cd ddpgzpc
+$ ls
+290515 cvrd.hcf
+dir mlm
+122034 rrtnthnt.zgs
+12680 tvnrl
+49534 vljqzqg
+dir zffbmlbd
+18557 zfhnw.jfd
+$ cd mlm
+$ ls
+102897 zfhnw.zpd
+$ cd ..
+$ cd zffbmlbd
+$ ls
+dir bqpwdh
+dir gqrlmdhs
+315267 mjm.dhc
+294364 mrqdw.npr
+dir szqz
+76621 tvnrl
+285948 vpdbrh
+155914 vwl.vsq
+dir zfhnw
+$ cd bqpwdh
+$ ls
+dir bhmw
+27669 dtzw
+dir lfhgjw
+dir pjqwq
+$ cd bhmw
+$ ls
+190433 zbcbr
+$ cd ..
+$ cd lfhgjw
+$ ls
+dir ndrcgmd
+$ cd ndrcgmd
+$ ls
+98160 mjm.dhc
+$ cd ..
+$ cd ..
+$ cd pjqwq
+$ ls
+50937 dtzw
+186171 mjm.dhc
+305433 mlm
+272969 mlm.rhf
+$ cd ..
+$ cd ..
+$ cd gqrlmdhs
+$ ls
+dir blc
+331077 dcchtmp
+dir mlm
+199021 rlzjl
+253162 vghhgvjq
+dir zfhnw
+$ cd blc
+$ ls
+53872 drjdcqw.szd
+115417 ggh.qsl
+65105 pjqwq
+$ cd ..
+$ cd mlm
+$ ls
+dir bqpwdh
+200734 gjhzr.ffz
+277561 lwnl.jsl
+dir sdjnlsf
+dir trqhm
+140014 tvnrl
+$ cd bqpwdh
+$ ls
+dir jzfgz
+$ cd jzfgz
+$ ls
+334790 dtzw
+$ cd ..
+$ cd ..
+$ cd sdjnlsf
+$ ls
+326446 mjm.dhc
+dir vpdbrh
+$ cd vpdbrh
+$ ls
+20883 bwjjdszc
+10518 dtzw
+64779 ppmwtlj.btf
+320555 rpf.tmw
+295126 vwl.vsq
+$ cd ..
+$ cd ..
+$ cd trqhm
+$ ls
+184138 rmnmsl
+$ cd ..
+$ cd ..
+$ cd zfhnw
+$ ls
+dir pjqwq
+$ cd pjqwq
+$ ls
+dir qjzscp
+$ cd qjzscp
+$ ls
+299311 tvnrl
+$ cd ..
+$ cd ..
+$ cd ..
+$ cd ..
+$ cd szqz
+$ ls
+dir bqpwdh
+107678 jmqq
+109752 vtmgq.bcz
+301721 zjdlztw
+dir zwvzzz
+$ cd bqpwdh
+$ ls
+dir mlm
+$ cd mlm
+$ ls
+178616 mlm.rnn
+$ cd ..
+$ cd ..
+$ cd zwvzzz
+$ ls
+135690 rrbv.ntn
+$ cd ..
+$ cd ..
+$ cd zfhnw
+$ ls
+dir dtgnbb
+55267 dtzw
+119612 mjm.dhc
+$ cd dtgnbb
+$ ls
+74360 zjq
+$ cd ..
+$ cd ..
+$ cd ..
+$ cd ..
+$ cd mqjrd
+$ ls
+dir ccnpn
+176761 rmnmsl
+$ cd ccnpn
+$ ls
+116424 pjqwq.ctj
+$ cd ..
+$ cd ..
+$ cd mrqjg
+$ ls
+dir bsphvqnh
+266338 lwfdlqzq.wmj
+287488 mjm.dhc
+211569 mlm.mbn
+231144 vpdbrh
+260476 vtqjh.wfj
+$ cd bsphvqnh
+$ ls
+101783 pscn.zdh
+$ cd ..
+$ cd ..
+$ cd rglgbsq
+$ ls
+dir bqpwdh
+dir fdmhnzw
+dir fgz
+213313 hbj.lgh
+dir lftcr
+dir pjqwq
+1614 rmnmsl
+dir rpz
+dir vpcq
+dir zfhnw
+$ cd bqpwdh
+$ ls
+35649 mjm.dhc
+53750 nqdlf.trh
+102195 vpdbrh.lbn
+$ cd ..
+$ cd fdmhnzw
+$ ls
+222384 dtzw
+$ cd ..
+$ cd fgz
+$ ls
+dir rzrsgst
+dir tqdghbj
+$ cd rzrsgst
+$ ls
+120970 dtzw
+dir zfhnw
+$ cd zfhnw
+$ ls
+154286 fmbzztww.hvt
+$ cd ..
+$ cd ..
+$ cd tqdghbj
+$ ls
+275314 rmblptm
+$ cd ..
+$ cd ..
+$ cd lftcr
+$ ls
+148378 cwjj.trb
+215545 zfhnw.fjl
+$ cd ..
+$ cd pjqwq
+$ ls
+dir bppdtc
+dir dnlzz
+$ cd bppdtc
+$ ls
+276258 zfhnw.rfn
+$ cd ..
+$ cd dnlzz
+$ ls
+286311 cjzm.nhs
+239107 ggdr.rgz
+dir zfhnw
+$ cd zfhnw
+$ ls
+dir rzht
+$ cd rzht
+$ ls
+100504 thj
+$ cd ..
+$ cd ..
+$ cd ..
+$ cd ..
+$ cd rpz
+$ ls
+182300 brsnhb
+dir pblmwf
+261712 rmnmsl
+dir zfhnw
+$ cd pblmwf
+$ ls
+121117 mlm.zdq
+$ cd ..
+$ cd zfhnw
+$ ls
+281353 gwbrctf
+dir hgpnj
+dir lvhwhz
+dir mlm
+dir pcfljzhm
+dir vpdbrh
+$ cd hgpnj
+$ ls
+103619 vwl.vsq
+$ cd ..
+$ cd lvhwhz
+$ ls
+236328 bqpwdh.qtn
+dir gjwth
+118100 jfcmcq
+dir lwsdfhg
+51327 mjm.dhc
+41403 mlm
+dir vpdbrh
+313830 zmwhlcsw
+$ cd gjwth
+$ ls
+dir bqpwdh
+128093 css
+290123 pjqwq.djg
+89091 whdwbssf.tss
+$ cd bqpwdh
+$ ls
+186274 rmnmsl
+$ cd ..
+$ cd ..
+$ cd lwsdfhg
+$ ls
+218938 mjm.dhc
+$ cd ..
+$ cd vpdbrh
+$ ls
+139398 lrrjnvr
+$ cd ..
+$ cd ..
+$ cd mlm
+$ ls
+278462 fdlb.jsr
+176936 tvnrl
+29208 vwl.vsq
+$ cd ..
+$ cd pcfljzhm
+$ ls
+295983 nnvq.lcg
+$ cd ..
+$ cd vpdbrh
+$ ls
+16998 lswwmjc.vmv
+52872 pmbzp.mmg
+$ cd ..
+$ cd ..
+$ cd ..
+$ cd vpcq
+$ ls
+dir tnrpllzj
+$ cd tnrpllzj
+$ ls
+226232 nqrjs.qds
+$ cd ..
+$ cd ..
+$ cd zfhnw
+$ ls
+188324 dtzw
+263511 lnwwh
+217287 lst.wvw
+178366 vzctflm
+$ cd ..
+$ cd ..
+$ cd wlqhpwqv
+$ ls
+dir bqpwdh
+dir ffw
+dir lpzgcrd
+dir lszdbd
+51178 mlm
+dir ntcpvg
+dir pjqwq
+dir pmpftw
+dir ppf
+dir vpdbrh
+dir zfhnw
+$ cd bqpwdh
+$ ls
+194389 dnqngfzh
+$ cd ..
+$ cd ffw
+$ ls
+dir mfqd
+dir npgnwwf
+dir tcvt
+$ cd mfqd
+$ ls
+214846 vwl.vsq
+$ cd ..
+$ cd npgnwwf
+$ ls
+dir ddqsmtsj
+dir gcq
+dir ldtpnr
+1802 vwl.vsq
+$ cd ddqsmtsj
+$ ls
+309790 rmnmsl
+$ cd ..
+$ cd gcq
+$ ls
+80203 lvqhwzfn
+$ cd ..
+$ cd ldtpnr
+$ ls
+dir spzj
+123522 tvnrl
+$ cd spzj
+$ ls
+139171 bpgpdzt.zzp
+$ cd ..
+$ cd ..
+$ cd ..
+$ cd tcvt
+$ ls
+dir jcvcjz
+dir qmtcr
+dir vpdbrh
+$ cd jcvcjz
+$ ls
+274564 hsv.wsr
+309010 vpdbrh
+$ cd ..
+$ cd qmtcr
+$ ls
+dir mfjd
+dir pmbdsb
+$ cd mfjd
+$ ls
+202111 vpdbrh
+$ cd ..
+$ cd pmbdsb
+$ ls
+dir brghd
+313440 chwzrz.bmf
+$ cd brghd
+$ ls
+216516 dtzw
+$ cd ..
+$ cd ..
+$ cd ..
+$ cd vpdbrh
+$ ls
+134552 sbs.bsn
+$ cd ..
+$ cd ..
+$ cd ..
+$ cd lpzgcrd
+$ ls
+244257 bqpwdh.hsz
+118275 flgfbstp.flp
+dir gcwg
+dir mlm
+dir nfj
+189443 rtwwbgfs.nvl
+dir trbwtdb
+dir vpdbrh
+dir ztwbpvbq
+$ cd gcwg
+$ ls
+dir bqpwdh
+304960 dtzw
+9496 pfpwtsp
+dir pjqwq
+dir vpdbrh
+dir vqp
+186883 vwl.vsq
+$ cd bqpwdh
+$ ls
+79064 fbjdqsn.cgp
+$ cd ..
+$ cd pjqwq
+$ ls
+106371 cplcj
+204740 mhdq.lhc
+313462 pjqwq.lsn
+249876 rmnmsl
+209574 vwl.vsq
+$ cd ..
+$ cd vpdbrh
+$ ls
+166549 mjm.dhc
+270734 rmnmsl
+$ cd ..
+$ cd vqp
+$ ls
+dir nbq
+dir nts
+dir rlbhdgm
+dir srvqpq
+dir zfhnw
+$ cd nbq
+$ ls
+63369 mjm.dhc
+314393 smd
+70181 tbwpwtt.ccj
+97954 vpdbrh.fmw
+$ cd ..
+$ cd nts
+$ ls
+11300 zfhnw.pnj
+$ cd ..
+$ cd rlbhdgm
+$ ls
+dir bzd
+dir hfhzj
+65400 mbrqjnp.wqz
+dir pztwz
+$ cd bzd
+$ ls
+dir bqpwdh
+168832 cdlg.zhp
+dir dtb
+22418 fttt.twt
+dir gmlgvnq
+101839 hnpjbjsc.whd
+dir pdmqn
+122491 smvjvw
+dir wmtdbrqm
+52142 zfhnw.gmt
+$ cd bqpwdh
+$ ls
+dir btb
+37220 gzj.mhf
+dir lwl
+112215 qcfqd.fwz
+210303 qlwgqnsp
+dir trpm
+$ cd btb
+$ ls
+dir rqftrtb
+dir vsb
+$ cd rqftrtb
+$ ls
+dir ndwphjw
+dir pjqwq
+dir zfhnw
+$ cd ndwphjw
+$ ls
+256159 lpprpwjq.srz
+$ cd ..
+$ cd pjqwq
+$ ls
+dir fpb
+$ cd fpb
+$ ls
+42692 pjqwq
+$ cd ..
+$ cd ..
+$ cd zfhnw
+$ ls
+dir bqpwdh
+$ cd bqpwdh
+$ ls
+17467 mshfwzv.ppr
+$ cd ..
+$ cd ..
+$ cd ..
+$ cd vsb
+$ ls
+278554 rmnmsl
+$ cd ..
+$ cd ..
+$ cd lwl
+$ ls
+28409 mjm.dhc
+$ cd ..
+$ cd trpm
+$ ls
+dir mlm
+$ cd mlm
+$ ls
+304742 dtzw
+108223 mjm.dhc
+dir mvh
+52532 nzc.vhj
+dir tdhrrhm
+$ cd mvh
+$ ls
+99770 cgfw.pgm
+$ cd ..
+$ cd tdhrrhm
+$ ls
+326653 lrmsnt.fdh
+157903 mlm
+$ cd ..
+$ cd ..
+$ cd ..
+$ cd ..
+$ cd dtb
+$ ls
+179072 vpdbrh
+3435 vpdbrh.hpv
+$ cd ..
+$ cd gmlgvnq
+$ ls
+dir rrjgswsd
+$ cd rrjgswsd
+$ ls
+dir zfhnw
+$ cd zfhnw
+$ ls
+278562 mvqbv
+$ cd ..
+$ cd ..
+$ cd ..
+$ cd pdmqn
+$ ls
+233744 pjqwq
+$ cd ..
+$ cd wmtdbrqm
+$ ls
+dir lngc
+dir wgpwcj
+225374 wphwht.nvn
+$ cd lngc
+$ ls
+4415 zfhnw
+$ cd ..
+$ cd wgpwcj
+$ ls
+165889 bqpwdh.ngg
+331254 dlpr
+97910 mzjlswr.spn
+dir rqhshd
+49222 vwl.vsq
+$ cd rqhshd
+$ ls
+145902 qwhr
+$ cd ..
+$ cd ..
+$ cd ..
+$ cd ..
+$ cd hfhzj
+$ ls
+92623 ldlpnvw
+146918 mjm.dhc
+$ cd ..
+$ cd pztwz
+$ ls
+dir jllmcfjf
+$ cd jllmcfjf
+$ ls
+245363 dtzw
+81345 mbh.vdq
+164199 ntwzgfr
+14466 rmnmsl
+$ cd ..
+$ cd ..
+$ cd ..
+$ cd srvqpq
+$ ls
+271019 zfhnw.rlc
+$ cd ..
+$ cd zfhnw
+$ ls
+104520 bqpwdh.qqv
+12312 lspg
+$ cd ..
+$ cd ..
+$ cd ..
+$ cd mlm
+$ ls
+259906 cbgmp
+dir rjshqvb
+$ cd rjshqvb
+$ ls
+309983 mlm.qmm
+$ cd ..
+$ cd ..
+$ cd nfj
+$ ls
+44759 mlm
+228634 njrrs.sjj
+dir rfmw
+$ cd rfmw
+$ ls
+273185 bcbjq.vlw
+$ cd ..
+$ cd ..
+$ cd trbwtdb
+$ ls
+307053 mjm.dhc
+301028 zzg
+$ cd ..
+$ cd vpdbrh
+$ ls
+dir bzdp
+169466 grnvt.mst
+dir pjqwq
+123590 vwl.vsq
+$ cd bzdp
+$ ls
+225941 trrzqz
+241249 vpdbrh.lsj
+$ cd ..
+$ cd pjqwq
+$ ls
+dir ddfpql
+dir fgbqzm
+329174 mjm.dhc
+6701 mlm.ffp
+dir phf
+$ cd ddfpql
+$ ls
+103799 lpbp.bpt
+$ cd ..
+$ cd fgbqzm
+$ ls
+dir spsz
+$ cd spsz
+$ ls
+34049 mfgph
+$ cd ..
+$ cd ..
+$ cd phf
+$ ls
+84883 qdj.hbt
+$ cd ..
+$ cd ..
+$ cd ..
+$ cd ztwbpvbq
+$ ls
+138429 bqpwdh.mlr
+151403 cqmbgfdh.gvh
+9087 ngm
+335933 sswtt
+318963 tvnrl
+dir wdhjpzp
+$ cd wdhjpzp
+$ ls
+119932 pjqwq
+$ cd ..
+$ cd ..
+$ cd ..
+$ cd lszdbd
+$ ls
+dir cpqpvbz
+dir hnl
+dir llprt
+$ cd cpqpvbz
+$ ls
+dir ltlcz
+dir wmpsvm
+$ cd ltlcz
+$ ls
+262150 zfhnw.zsg
+$ cd ..
+$ cd wmpsvm
+$ ls
+dir bqpwdh
+$ cd bqpwdh
+$ ls
+51488 pvhcb.qmw
+44038 zfhnw
+$ cd ..
+$ cd ..
+$ cd ..
+$ cd hnl
+$ ls
+dir pjqwq
+$ cd pjqwq
+$ ls
+170454 mhg.ddj
+$ cd ..
+$ cd ..
+$ cd llprt
+$ ls
+268114 bmvwwbdt.cqm
+207425 dtzw
+180660 mgqz
+297846 qbpcd
+112867 zdb
+$ cd ..
+$ cd ..
+$ cd ntcpvg
+$ ls
+74161 bqpwdh.gbr
+257792 vwl.vsq
+$ cd ..
+$ cd pjqwq
+$ ls
+279738 hwdgzvj
+dir jsdbnwrc
+dir pcjfjsgs
+11113 rqrtcq
+208212 tvnrl
+dir vllzsh
+$ cd jsdbnwrc
+$ ls
+11720 fvj
+$ cd ..
+$ cd pcjfjsgs
+$ ls
+dir bqpwdh
+195046 mjm.dhc
+dir ssq
+dir vpdbrh
+$ cd bqpwdh
+$ ls
+42769 dlrvsj
+159280 zfhnw
+239759 zqqcb
+$ cd ..
+$ cd ssq
+$ ls
+67639 bqpwdh.csb
+$ cd ..
+$ cd vpdbrh
+$ ls
+dir bqdpwrst
+dir qtj
+$ cd bqdpwrst
+$ ls
+57800 fndpnj.fgt
+132712 vpdbrh
+$ cd ..
+$ cd qtj
+$ ls
+dir szjtvcb
+$ cd szjtvcb
+$ ls
+93993 mgmqtdb.fzd
+dir stbczmlq
+$ cd stbczmlq
+$ ls
+dir nhq
+$ cd nhq
+$ ls
+27749 hqgngdt.tmq
+$ cd ..
+$ cd ..
+$ cd ..
+$ cd ..
+$ cd ..
+$ cd ..
+$ cd vllzsh
+$ ls
+dir nlwwrz
+237293 wlgbt
+dir zhmwl
+$ cd nlwwrz
+$ ls
+99990 bjv.szl
+$ cd ..
+$ cd zhmwl
+$ ls
+dir hbpps
+dir hfv
+$ cd hbpps
+$ ls
+7520 mlm.ltq
+$ cd ..
+$ cd hfv
+$ ls
+dir qpfrd
+$ cd qpfrd
+$ ls
+dir mlm
+$ cd mlm
+$ ls
+288919 qmtpwqn
+$ cd ..
+$ cd ..
+$ cd ..
+$ cd ..
+$ cd ..
+$ cd ..
+$ cd pmpftw
+$ ls
+118859 mlm
+103896 pjqwq
+128800 tvnrl
+$ cd ..
+$ cd ppf
+$ ls
+dir drszpqf
+dir fbs
+202594 gdpw.bds
+dir ldnrpg
+176398 mbbmmf.plr
+dir tfjnj
+$ cd drszpqf
+$ ls
+dir pjqwq
+dir qtblb
+191392 tvnrl
+$ cd pjqwq
+$ ls
+dir lrrlbgwh
+dir nfcc
+dir pqm
+$ cd lrrlbgwh
+$ ls
+182434 mjm.dhc
+238706 vpdbrh.lgz
+$ cd ..
+$ cd nfcc
+$ ls
+253846 vpdbrh
+268229 vwl.vsq
+$ cd ..
+$ cd pqm
+$ ls
+56573 vwl.vsq
+$ cd ..
+$ cd ..
+$ cd qtblb
+$ ls
+28941 zcm.dtw
+52282 zmhw.lhm
+$ cd ..
+$ cd ..
+$ cd fbs
+$ ls
+dir gpttw
+$ cd gpttw
+$ ls
+dir bqpwdh
+$ cd bqpwdh
+$ ls
+98780 wvzhlfht.rdd
+$ cd ..
+$ cd ..
+$ cd ..
+$ cd ldnrpg
+$ ls
+205523 bqpwdh.qlb
+54924 pcq.clf
+$ cd ..
+$ cd tfjnj
+$ ls
+237752 bqpwdh.bvf
+dir lwl
+295520 mjm.dhc
+dir qsgpsmzw
+278576 rmnmsl
+dir vljqlw
+225025 vwl.vsq
+100780 zgjhtrv
+$ cd lwl
+$ ls
+150713 dhrl
+$ cd ..
+$ cd qsgpsmzw
+$ ls
+265288 bqpwdh
+92636 ntgrlr
+182224 wdb
+$ cd ..
+$ cd vljqlw
+$ ls
+dir pcnd
+dir pjqwq
+317809 tvnrl
+$ cd pcnd
+$ ls
+8283 gmq
+195909 rmnmsl
+183891 tvnrl
+182837 vwl.vsq
+$ cd ..
+$ cd pjqwq
+$ ls
+dir vwp
+$ cd vwp
+$ ls
+dir crpztfmf
+dir fhrfrbqg
+$ cd crpztfmf
+$ ls
+257441 dpztgnd
+$ cd ..
+$ cd fhrfrbqg
+$ ls
+64573 mjm.dhc
+$ cd ..
+$ cd ..
+$ cd ..
+$ cd ..
+$ cd ..
+$ cd ..
+$ cd vpdbrh
+$ ls
+80449 mjm.dhc
+266777 qfjwb
+dir qzmz
+100029 tvnrl
+28910 zqnp
+$ cd qzmz
+$ ls
+9583 wsfwpznj
+$ cd ..
+$ cd ..
+$ cd zfhnw
+$ ls
+dir pmdsb
+106595 vwl.vsq
+dir zdv
+$ cd pmdsb
+$ ls
+dir bqpwdh
+dir pjqwq
+$ cd bqpwdh
+$ ls
+dir tstqlh
+143862 vpdbrh.thr
+$ cd tstqlh
+$ ls
+119310 tcmglrz.hzp
+$ cd ..
+$ cd ..
+$ cd pjqwq
+$ ls
+56885 rmnmsl
+$ cd ..
+$ cd ..
+$ cd zdv
+$ ls
+209148 nhcdqmd.hgh
+dir pjdhn
+119411 pjqwq.vrq
+154423 rmnmsl
+178813 vhbjqhhq.tbf
+$ cd pjdhn
+$ ls
+dir gnthzp
+116732 qhrz.ssb
+dir rvbw
+117225 svmpwv
+$ cd gnthzp
+$ ls
+dir bqpwdh
+$ cd bqpwdh
+$ ls
+312253 rmnmsl
+$ cd ..
+$ cd ..
+$ cd rvbw
+$ ls
+dir cjdhwbv
+268173 lsmmthf
+99445 vwl.vsq
+$ cd cjdhwbv
+$ ls
+302711 tbhb
+173182 tmj.frb`;
+#+end_src
+
+[fn:1] The ~pathJoin()~ function is a utility function that takes a variable number of paths as arguments and joins them together into a single path. The function first uses the ~map()~ method to remove any trailing =/= characters from the paths and then uses the join() method to combine the paths into a single string with =/= as the separator.
+
+[fn:2] Note that the ~ancestors()~ function only returns ancestor paths up to but not including the current directory. The current directory is not considered an ancestor because it is not "above" the current path in the file system hierarchy.

@@ -1,0 +1,662 @@
+#+TITLE: Advent of Code 2022: Day 5
+#+SLUG: 2022-advent-of-code-day-05
+#+DATE: 2022-12-05T12:49:03+07:00
+#+DESCRIPTION: A TypeScript solution for the Advent of Code 2022, Day 5 puzzle: stack manipulation, simulation, and a whole load of parsing.
+
+[[https://adventofcode.com/2022/day/5][Today's puzzle]] asks us to model stacks of crates, then simulate using a crane to shuffle the crates around. After shuffling, we get the final answer by inspecting the tops of all the stacks.
+
+This involves using the stack data structure and a lot of pushing and popping...or at least that's what part 1 of the puzzle wants you to think. Once part 2 is revealed, the stack push and pop mental model starts feeling less than ideal, and we're left with a more general solution that uses list splicing and reversing. Oh, and the *input parsing is particularly challenging*!
+
+The puzzle input data looks something like this.
+#+begin_example
+    [D]              ─┐
+[N] [C]               ├─ stack data
+[Z] [M] [P]          ─┘
+ 1   2   3           ─── stack IDs
+
+move 1 from 2 to 1   ─┐
+move 3 from 1 to 3    ├─ move data
+move 2 from 2 to 1    │
+move 1 from 1 to 2   ─┘
+#+end_example
+
+First we partition the input data into two sections, which are separated by a blank line. The first section is the ~stackData~ while the second section is the ~moveData~. They're entirely different, so they must be processed separately. We also take special care to single out the line (above the blank) that denotes the ~stackIds~.
+#+name: sol1
+#+begin_src typescript :exports code :results code :eval never
+const lines: string[] = puzzleInput.split('\n');
+const blankLinePosition = lines.findIndex(line => line === '');
+const stackData = lines.slice(0, blankLinePosition - 1);
+const stackIds = lines[blankLinePosition - 1];
+const moveData = lines.slice(blankLinePosition + 1);
+#+end_src
+
+Now we parse the ~moveData~ into a list of ~moves~ that have an ~amount~ of crates, and a ~from~ and ~to~ direction. This is made a little easier by *passing a regular expression to ~split()~*, letting us split the string on multiple tokens (e.g. "move ", " from ", " to ").
+
+Unfortunately, due use of the regex, the split result still contains parts that we're not interested in. We can skip those by destructuring the array with blanks in the places that we're not interested in.
+#+name: sol2
+#+begin_src typescript :exports code :results code :eval never
+const moves = moveData
+  // split on either "move ", " from " or " to "
+  .map(move => move.split(/(move | from | to )/))
+  // use blanks in destructuring to skip unimportant parts
+  .map(([,,amount,, from,, to]) => ({
+    amount: parseInt(amount),
+    from,
+    to
+  }));
+#+end_src
+
+Then we want the ~stackData~ parsed into a ~Map<string, string[]>~ (i.e. a lookup table of stacks as ~string[]~, keyed by the stack ID). But instead of parsing the data just once, we wrap it in a function ~makeStackMap()~ that produces a fresh ~Map~ on demand, since we are going to have to run the simulation more than once with the state reset.[fn:1]
+
+To handle the weird parsing requirement for the visually laid-out stacks, we inspect the ~stackIds~ line. By detecting in *which places this line has valid stack IDs*, we can look through the rest of the ~stackData~ lines using those place indices and get the letters for the corresponding stack.
+#+name: sol3
+#+begin_src typescript :exports code :results code :eval never
+const makeStackMap = () =>
+  stackIds.split('').reduce(
+    (stacks, stackId, ii) => {
+      if (stackId?.trim() !== '') {
+        // For each non-empty stack ID
+        // get its place index (ii)
+        stacks.set(
+          stackId,
+          // find all the letters in the
+          // stack data in place ii
+          stackData
+            .map(row => row[ii]?.trim())
+            .filter(x => !!x)
+        )
+      }
+      return stacks;
+    },
+    new Map<string, string[]>()
+  );
+#+end_src
+
+Define a helper function ~getTopLetters()~ to get the final answer of the puzzle from any given state of stacks: this is the top letter of all of the stacks in order, joined together as one string.
+#+name: sol4
+#+begin_src typescript :exports code :results code :eval never
+const getTopLetters = (stackMap: Map<string, string[]>) =>
+  Array.from(stackMap.values())
+    .map(stack => stack[0])
+    .join('');
+#+end_src
+
+Now we write the ~simulate()~ function, which:
+1. Makes a fresh ~Map~ of stacks at the starting state;
+2. Loops through all the moves and performs them on the stacks;
+3. Returns the final answer from the tops of the stacks
+
+The function takes a ~reverse~ boolean flag which indicates whether to reverse the order of the crates on the destination stack for any given movement.
+#+name: sol5
+#+begin_src typescript :exports code :results code :eval never
+const simulate = (reverse: boolean) => {
+  const stacks = makeStackMap();
+
+  for (const {amount, from, to} of moves) {
+    const fromStack = stacks.get(from);
+    const toStack = stacks.get(to);
+    const transfer = fromStack.splice(0, amount)
+    if (reverse) transfer.reverse();
+    toStack.splice(0, 0, ...transfer);
+  }
+
+  return getTopLetters(stacks);
+}
+#+end_src
+
+Now the only difference between part 1 and part 2 is whether the movements reverse order of the crates or not, so we call ~simulate()~ with ~true~ and ~false~ separately.
+#+name: sol6
+#+begin_src typescript :exports code :results code :eval never
+const part1 = simulate(true);
+const part2 = simulate(false);
+#+end_src
+
+* Final Solution
+#+name: solution
+#+begin_src typescript :exports code :results code :eval never :noweb yes
+<<sol1>>
+
+<<sol2>>
+
+<<sol3>>
+
+<<sol4>>
+
+<<sol5>>
+
+<<sol6>>
+
+console.log("Part 1:", part1);
+console.log("Part 2:", part2);
+#+end_src
+
+#+name: code
+#+begin_src typescript :exports results :results code :noweb yes :cache yes
+<<input>>
+<<solution>>
+#+end_src
+
+#+RESULTS[dd24af6c77742b976621693ae0ffc046a380e51d]: code
+#+begin_src typescript
+Part 1: CFFHVVHNC
+Part 2: FSZWBPTBG
+#+end_src
+
+
+#+name: input
+#+begin_src typescript :exports none :eval never
+const puzzleInput =
+`    [G]         [P]         [M]
+    [V]     [M] [W] [S]     [Q]
+    [N]     [N] [G] [H]     [T] [F]
+    [J]     [W] [V] [Q] [W] [F] [P]
+[C] [H]     [T] [T] [G] [B] [Z] [B]
+[S] [W] [S] [L] [F] [B] [P] [C] [H]
+[G] [M] [Q] [S] [Z] [T] [J] [D] [S]
+[B] [T] [M] [B] [J] [C] [T] [G] [N]
+ 1   2   3   4   5   6   7   8   9
+
+move 2 from 4 to 2
+move 6 from 9 to 7
+move 4 from 7 to 2
+move 2 from 4 to 1
+move 2 from 6 to 7
+move 1 from 3 to 8
+move 4 from 7 to 1
+move 2 from 3 to 2
+move 3 from 8 to 5
+move 3 from 1 to 4
+move 12 from 2 to 5
+move 2 from 6 to 8
+move 12 from 5 to 8
+move 3 from 7 to 9
+move 18 from 8 to 9
+move 2 from 8 to 6
+move 3 from 2 to 3
+move 14 from 9 to 4
+move 1 from 1 to 3
+move 7 from 9 to 3
+move 1 from 2 to 1
+move 8 from 4 to 5
+move 5 from 6 to 3
+move 2 from 7 to 9
+move 3 from 4 to 9
+move 4 from 9 to 6
+move 4 from 6 to 1
+move 8 from 4 to 6
+move 10 from 1 to 2
+move 13 from 3 to 2
+move 17 from 5 to 9
+move 2 from 5 to 1
+move 9 from 9 to 7
+move 1 from 3 to 6
+move 2 from 1 to 8
+move 11 from 2 to 4
+move 5 from 6 to 8
+move 1 from 6 to 3
+move 1 from 1 to 4
+move 3 from 8 to 6
+move 3 from 2 to 8
+move 9 from 7 to 9
+move 4 from 4 to 7
+move 1 from 9 to 5
+move 15 from 9 to 7
+move 7 from 8 to 3
+move 1 from 5 to 6
+move 2 from 6 to 9
+move 8 from 2 to 6
+move 3 from 4 to 3
+move 1 from 2 to 5
+move 4 from 9 to 3
+move 1 from 3 to 4
+move 13 from 6 to 2
+move 1 from 5 to 1
+move 4 from 4 to 9
+move 6 from 3 to 2
+move 11 from 2 to 7
+move 6 from 3 to 4
+move 3 from 3 to 2
+move 1 from 3 to 4
+move 1 from 1 to 3
+move 3 from 9 to 2
+move 1 from 3 to 1
+move 4 from 7 to 1
+move 1 from 9 to 5
+move 5 from 1 to 4
+move 11 from 2 to 4
+move 1 from 5 to 3
+move 1 from 2 to 3
+move 12 from 4 to 2
+move 2 from 7 to 2
+move 7 from 4 to 3
+move 5 from 4 to 1
+move 7 from 7 to 6
+move 4 from 1 to 8
+move 1 from 8 to 5
+move 8 from 3 to 2
+move 4 from 7 to 4
+move 13 from 7 to 1
+move 2 from 8 to 6
+move 5 from 4 to 9
+move 1 from 3 to 6
+move 1 from 5 to 8
+move 1 from 2 to 9
+move 4 from 2 to 6
+move 2 from 8 to 6
+move 10 from 1 to 3
+move 4 from 9 to 4
+move 2 from 1 to 3
+move 5 from 2 to 9
+move 4 from 9 to 2
+move 1 from 1 to 2
+move 13 from 2 to 4
+move 15 from 4 to 5
+move 3 from 6 to 8
+move 8 from 3 to 8
+move 1 from 4 to 2
+move 14 from 5 to 1
+move 1 from 5 to 4
+move 1 from 4 to 2
+move 8 from 6 to 7
+move 3 from 6 to 2
+move 2 from 9 to 1
+move 8 from 8 to 7
+move 9 from 1 to 5
+move 7 from 5 to 3
+move 14 from 7 to 9
+move 2 from 2 to 3
+move 7 from 2 to 1
+move 1 from 6 to 1
+move 4 from 9 to 2
+move 8 from 3 to 6
+move 2 from 4 to 3
+move 4 from 3 to 5
+move 5 from 5 to 7
+move 2 from 6 to 9
+move 6 from 6 to 2
+move 4 from 2 to 3
+move 1 from 6 to 2
+move 2 from 7 to 8
+move 13 from 9 to 5
+move 2 from 7 to 1
+move 14 from 1 to 5
+move 15 from 5 to 7
+move 3 from 8 to 7
+move 5 from 3 to 5
+move 6 from 5 to 7
+move 4 from 1 to 7
+move 1 from 2 to 5
+move 3 from 2 to 8
+move 11 from 5 to 2
+move 10 from 7 to 1
+move 1 from 3 to 4
+move 10 from 2 to 9
+move 1 from 5 to 8
+move 6 from 7 to 3
+move 1 from 4 to 6
+move 2 from 3 to 8
+move 1 from 2 to 1
+move 4 from 3 to 9
+move 3 from 1 to 6
+move 2 from 7 to 1
+move 1 from 5 to 6
+move 1 from 3 to 8
+move 4 from 1 to 4
+move 5 from 2 to 9
+move 3 from 1 to 4
+move 18 from 9 to 7
+move 4 from 8 to 4
+move 3 from 1 to 2
+move 1 from 9 to 7
+move 1 from 4 to 7
+move 1 from 6 to 2
+move 1 from 2 to 5
+move 25 from 7 to 3
+move 7 from 4 to 2
+move 8 from 7 to 9
+move 4 from 8 to 6
+move 1 from 8 to 5
+move 4 from 6 to 5
+move 2 from 9 to 5
+move 3 from 5 to 8
+move 4 from 6 to 4
+move 12 from 3 to 5
+move 11 from 3 to 2
+move 13 from 5 to 8
+move 4 from 9 to 6
+move 7 from 4 to 9
+move 2 from 6 to 2
+move 12 from 2 to 7
+move 1 from 6 to 3
+move 1 from 5 to 6
+move 2 from 5 to 3
+move 15 from 8 to 6
+move 4 from 6 to 7
+move 1 from 5 to 1
+move 10 from 2 to 8
+move 8 from 8 to 3
+move 8 from 6 to 8
+move 2 from 7 to 6
+move 9 from 9 to 7
+move 8 from 8 to 9
+move 1 from 1 to 3
+move 1 from 2 to 7
+move 7 from 3 to 1
+move 3 from 8 to 5
+move 3 from 1 to 6
+move 7 from 9 to 2
+move 2 from 3 to 7
+move 5 from 7 to 9
+move 17 from 7 to 5
+move 2 from 7 to 6
+move 10 from 6 to 3
+move 1 from 1 to 3
+move 6 from 9 to 3
+move 1 from 2 to 9
+move 2 from 7 to 9
+move 2 from 9 to 7
+move 1 from 5 to 8
+move 1 from 8 to 5
+move 6 from 2 to 5
+move 1 from 6 to 1
+move 5 from 3 to 5
+move 1 from 6 to 8
+move 1 from 7 to 9
+move 2 from 9 to 3
+move 15 from 5 to 2
+move 2 from 1 to 8
+move 2 from 3 to 7
+move 2 from 8 to 3
+move 3 from 5 to 9
+move 1 from 8 to 6
+move 1 from 9 to 6
+move 3 from 7 to 6
+move 17 from 3 to 4
+move 1 from 1 to 2
+move 6 from 2 to 9
+move 16 from 4 to 1
+move 4 from 6 to 8
+move 9 from 5 to 6
+move 8 from 6 to 2
+move 2 from 9 to 5
+move 2 from 3 to 5
+move 1 from 6 to 2
+move 1 from 4 to 8
+move 14 from 1 to 3
+move 8 from 5 to 3
+move 20 from 3 to 1
+move 1 from 8 to 2
+move 1 from 9 to 6
+move 1 from 6 to 7
+move 1 from 7 to 3
+move 22 from 1 to 2
+move 3 from 3 to 6
+move 27 from 2 to 8
+move 2 from 2 to 8
+move 2 from 6 to 9
+move 2 from 9 to 4
+move 2 from 4 to 8
+move 1 from 1 to 3
+move 14 from 8 to 5
+move 1 from 3 to 9
+move 3 from 9 to 2
+move 5 from 2 to 8
+move 10 from 2 to 9
+move 1 from 6 to 7
+move 1 from 7 to 5
+move 7 from 5 to 2
+move 2 from 9 to 2
+move 1 from 6 to 2
+move 2 from 9 to 5
+move 3 from 5 to 6
+move 6 from 5 to 3
+move 1 from 5 to 6
+move 4 from 3 to 9
+move 2 from 9 to 8
+move 3 from 9 to 5
+move 23 from 8 to 1
+move 2 from 6 to 1
+move 1 from 5 to 7
+move 2 from 3 to 5
+move 2 from 9 to 5
+move 4 from 9 to 7
+move 2 from 9 to 4
+move 1 from 5 to 4
+move 5 from 8 to 5
+move 2 from 6 to 2
+move 3 from 7 to 3
+move 1 from 3 to 4
+move 3 from 2 to 8
+move 4 from 1 to 6
+move 2 from 6 to 3
+move 4 from 1 to 2
+move 3 from 8 to 1
+move 13 from 2 to 5
+move 4 from 3 to 2
+move 14 from 5 to 7
+move 5 from 2 to 7
+move 18 from 7 to 9
+move 4 from 4 to 7
+move 2 from 5 to 4
+move 17 from 9 to 5
+move 1 from 9 to 1
+move 1 from 7 to 2
+move 5 from 7 to 2
+move 18 from 1 to 4
+move 1 from 7 to 3
+move 1 from 3 to 6
+move 2 from 1 to 3
+move 1 from 6 to 5
+move 2 from 6 to 8
+move 1 from 8 to 9
+move 1 from 8 to 3
+move 13 from 4 to 5
+move 1 from 1 to 6
+move 3 from 2 to 4
+move 1 from 6 to 1
+move 3 from 2 to 9
+move 3 from 3 to 1
+move 5 from 4 to 5
+move 30 from 5 to 3
+move 1 from 4 to 6
+move 1 from 9 to 8
+move 1 from 9 to 6
+move 21 from 3 to 7
+move 3 from 1 to 6
+move 1 from 1 to 4
+move 1 from 9 to 6
+move 1 from 8 to 2
+move 1 from 3 to 6
+move 1 from 9 to 3
+move 5 from 4 to 8
+move 1 from 2 to 4
+move 9 from 5 to 7
+move 2 from 5 to 9
+move 2 from 8 to 2
+move 2 from 6 to 3
+move 1 from 4 to 1
+move 4 from 3 to 8
+move 2 from 9 to 2
+move 4 from 2 to 6
+move 1 from 1 to 4
+move 2 from 6 to 9
+move 2 from 5 to 4
+move 1 from 3 to 1
+move 1 from 1 to 3
+move 2 from 9 to 1
+move 5 from 3 to 5
+move 1 from 1 to 8
+move 4 from 6 to 4
+move 5 from 5 to 6
+move 18 from 7 to 5
+move 1 from 3 to 4
+move 12 from 7 to 5
+move 15 from 5 to 6
+move 1 from 5 to 8
+move 1 from 3 to 7
+move 1 from 1 to 2
+move 1 from 2 to 4
+move 1 from 7 to 9
+move 2 from 8 to 2
+move 1 from 2 to 4
+move 4 from 4 to 2
+move 1 from 2 to 1
+move 1 from 9 to 8
+move 4 from 6 to 4
+move 3 from 2 to 6
+move 1 from 2 to 6
+move 8 from 4 to 3
+move 1 from 1 to 3
+move 6 from 6 to 1
+move 1 from 3 to 6
+move 5 from 1 to 7
+move 10 from 5 to 9
+move 3 from 9 to 8
+move 7 from 6 to 2
+move 1 from 7 to 8
+move 3 from 5 to 8
+move 3 from 6 to 2
+move 6 from 8 to 9
+move 1 from 5 to 3
+move 2 from 3 to 1
+move 2 from 4 to 8
+move 6 from 6 to 9
+move 1 from 1 to 4
+move 17 from 9 to 2
+move 1 from 4 to 1
+move 2 from 7 to 8
+move 1 from 9 to 8
+move 3 from 8 to 4
+move 3 from 1 to 4
+move 9 from 8 to 2
+move 1 from 8 to 4
+move 12 from 2 to 7
+move 4 from 7 to 4
+move 1 from 8 to 1
+move 10 from 4 to 2
+move 3 from 3 to 2
+move 1 from 9 to 7
+move 11 from 7 to 3
+move 1 from 3 to 1
+move 2 from 3 to 9
+move 1 from 3 to 7
+move 2 from 1 to 9
+move 1 from 6 to 5
+move 7 from 3 to 6
+move 1 from 7 to 3
+move 3 from 3 to 4
+move 1 from 5 to 7
+move 2 from 4 to 3
+move 2 from 4 to 8
+move 1 from 7 to 6
+move 2 from 6 to 8
+move 1 from 9 to 2
+move 1 from 9 to 5
+move 1 from 5 to 1
+move 1 from 8 to 6
+move 1 from 3 to 2
+move 4 from 6 to 1
+move 5 from 1 to 4
+move 11 from 2 to 4
+move 2 from 8 to 2
+move 1 from 8 to 9
+move 27 from 2 to 5
+move 4 from 6 to 3
+move 3 from 2 to 4
+move 2 from 5 to 9
+move 1 from 5 to 7
+move 2 from 9 to 5
+move 14 from 4 to 7
+move 2 from 4 to 7
+move 3 from 4 to 8
+move 4 from 3 to 1
+move 4 from 1 to 8
+move 2 from 3 to 9
+move 2 from 9 to 3
+move 7 from 8 to 9
+move 1 from 3 to 8
+move 2 from 3 to 2
+move 25 from 5 to 9
+move 1 from 5 to 8
+move 1 from 8 to 7
+move 26 from 9 to 1
+move 23 from 1 to 5
+move 7 from 9 to 7
+move 1 from 9 to 8
+move 1 from 9 to 2
+move 5 from 7 to 1
+move 20 from 5 to 6
+move 1 from 7 to 6
+move 2 from 5 to 3
+move 1 from 8 to 6
+move 21 from 6 to 8
+move 1 from 6 to 4
+move 1 from 1 to 7
+move 2 from 1 to 6
+move 1 from 1 to 3
+move 1 from 2 to 5
+move 1 from 2 to 6
+move 2 from 7 to 6
+move 6 from 7 to 9
+move 3 from 1 to 2
+move 17 from 8 to 1
+move 1 from 4 to 1
+move 2 from 6 to 9
+move 3 from 8 to 9
+move 2 from 3 to 7
+move 2 from 9 to 8
+move 4 from 7 to 3
+move 4 from 3 to 4
+move 2 from 5 to 8
+move 4 from 8 to 4
+move 3 from 6 to 8
+move 18 from 1 to 5
+move 1 from 3 to 4
+move 3 from 2 to 4
+move 5 from 9 to 1
+move 10 from 7 to 5
+move 5 from 1 to 3
+move 5 from 3 to 5
+move 5 from 4 to 3
+move 2 from 4 to 2
+move 5 from 8 to 3
+move 25 from 5 to 2
+move 3 from 3 to 6
+move 1 from 1 to 3
+move 3 from 6 to 7
+move 1 from 4 to 2
+move 1 from 5 to 8
+move 2 from 4 to 9
+move 1 from 8 to 1
+move 20 from 2 to 7
+move 10 from 7 to 1
+move 1 from 1 to 7
+move 4 from 7 to 8
+move 5 from 5 to 4
+move 4 from 8 to 6
+move 1 from 1 to 3
+move 5 from 7 to 4
+move 2 from 1 to 5
+move 4 from 9 to 1
+move 3 from 2 to 5
+move 5 from 5 to 1
+move 1 from 9 to 1
+move 11 from 1 to 3
+move 1 from 6 to 2
+move 7 from 3 to 5
+move 11 from 3 to 7
+move 1 from 2 to 6
+move 7 from 7 to 8
+move 1 from 9 to 1
+move 2 from 3 to 1
+move 1 from 5 to 3
+move 4 from 1 to 6
+move 4 from 6 to 3
+move 9 from 4 to 5
+move 2 from 8 to 2
+move 4 from 6 to 9
+move 3 from 2 to 4
+move 1 from 8 to 6`;
+#+end_src
+
+[fn:1] It's possible to write a "pure" solution using immutable data structures or with side-effect-free operations, but for simplicity's sake I'm sticking with the mutable style today.

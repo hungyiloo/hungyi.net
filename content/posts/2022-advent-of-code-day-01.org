@@ -1,9 +1,11 @@
-#+TITLE: 2022 Advent of Code: Day 1
+#+TITLE: Advent of Code 2022: Day 1
 #+SLUG: 2022-advent-of-code-day-01
 #+DATE: 2022-12-03T21:09:19+07:00
-#+DESCRIPTION: A TypeScript solution for the 2022 Advent of Code, Day 1 puzzle: beginning the journey with basic grouping, sorting and summation.
+#+DESCRIPTION: A TypeScript solution for the Advent of Code 2022, Day 1 puzzle: beginning the journey with basic grouping, sorting and summation.
 
-[[https://adventofcode.com/2022/day/1][Today's puzzle]] input looks something like this.
+[[https://adventofcode.com/2022/day/1][Today's puzzle]] asks us to sum up groups of numbers and find the largest N groups.
+
+The puzzle input looks something like this.
 #+begin_example
 1000
 2000
@@ -48,7 +50,7 @@ For part 2, we want the top 3 elves, so we might as well ~sort~ the list. We can
 #+name: sol3
 #+begin_src typescript :exports code :results code :eval never
 const part2 = elves
-  .sort()
+  .sort((a, b) => a - b)
   .slice(-3)
   .reduce((sum, x) => sum + x, 0);
 #+end_src
