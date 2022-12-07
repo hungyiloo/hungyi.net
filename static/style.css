@@ -609,8 +609,9 @@ li li .org-src-container {
 }
 pre.example {
   margin: calc(var(--rhythm) * 1.2) 0;
-  max-width: calc(100vw - var(--rhythm)*2.5);
+  max-width: calc(100vw - var(--rhythm)*1.5);
   font-size: 0.9rem;
+  overflow: auto;
 }
 .noligatures, .NOLIGATURES { font-variant-ligatures: none; }
 .demo {
