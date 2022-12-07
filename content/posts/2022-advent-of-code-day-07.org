@@ -2,6 +2,7 @@
 #+SLUG: 2022-advent-of-code-day-07
 #+DATE: 2022-12-07T18:01:32+07:00
 #+DESCRIPTION: A TypeScript solution for the Advent of Code 2022, Day 7 puzzle: simulating an imaginary file system by inspecting terminal input & ouput.
+#+OPTIONS: \n:t
 
 [[https://adventofcode.com/2022/day/7][Today's puzzle]] asks us to inspect the input and output of =cd= and =ls= commands in a made-up terminal session in order to calculate the directory structure and sizes of an imaginary file system.
 
@@ -33,201 +34,97 @@ $ ls
 7214296 k
 #+end_example
 
-* Differentiating Between Terminal Input & Output
-We start by defining an ~Action~ type, which represents a single action with a command, an optional argument, and an array of output strings.
-#+name: sol1a
+One of the challenges with this puzzle is that directory sizes need to account for the sizes of all children, including nested directories.
+
+To help with this aspect, we define an ~ancestors()~ function, which takes a path string as an argument and returns an array of ancestor paths leading up to that path. We achieve this by splitting the path into individual segments using the ~split()~ method, then removing the first and last segments using the ~slice()~ method. This is because the first segment is always the root directory / and the last segment is the current directory, which is not an ancestor.[fn:2]
+
+#+name: sol1
 #+begin_src typescript :exports code :results code :eval never
-type Action = { cmd: string, arg?: string, out: string[] };
-#+end_src
-
-To convert the puzzle input into an array of ~actions~, split the input into individual lines and ~reduce()~ over them:
-#+begin_comfy
-- If a line starts with a =$= symbol, then the code extracts the command and argument from the line and adds a new ~Action~ object to the actions array with the extracted values and an empty ~out~ array.
-- If the line does not start with a =$= symbol, then it is assumed to be output for the previous action and is added to the ~out~ array of the previous action in the ~actions~ array.
-#+end_comfy
-
-#+name: sol1b
-#+begin_src typescript :exports code :results code :eval never
-const actions = puzzleInput.split('\n').reduce(
-  (actions, line) => {
-    if (line.startsWith("$")) {
-      const [,cmd,arg] = line.split(' ');
-      actions.push({ cmd, arg, out: [] });
-    } else {
-      const prev = actions.length - 1;
-      actions[prev].out.push(line);
-    }
-    return actions;
-  },
-  [] as Action[]
-);
-#+end_src
-
-For example, with the input at the top of the post, the resulting ~actions~ array would contain the following values:
-#+begin_src typescript :exports results :results example :noweb yes :cache yes
-const puzzleInput = `$ cd /
-$ ls
-dir a
-14848514 b.txt
-8504156 c.dat
-dir d
-$ cd a
-$ ls
-dir e
-29116 f
-2557 g
-62596 h.lst
-$ cd e
-$ ls
-584 i
-$ cd ..
-$ cd ..
-$ cd d
-$ ls
-4060174 j
-8033020 d.log
-5626152 d.ext
-7214296 k`;
-<<sol1a>>
-<<sol1b>>
-console.log(actions);
-#+end_src
-
-#+RESULTS[381a3847e17d387a639539276e9626cab39dbb15]:
-#+begin_example
-[
-  { cmd: 'cd', arg: '/', out: [] },
-  {
-    cmd: 'ls',
-    arg: undefined,
-    out: [ 'dir a', '14848514 b.txt', '8504156 c.dat', 'dir d' ]
-  },
-  { cmd: 'cd', arg: 'a', out: [] },
-  {
-    cmd: 'ls',
-    arg: undefined,
-    out: [ 'dir e', '29116 f', '2557 g', '62596 h.lst' ]
-  },
-  { cmd: 'cd', arg: 'e', out: [] },
-  { cmd: 'ls', arg: undefined, out: [ '584 i' ] },
-  { cmd: 'cd', arg: '..', out: [] },
-  { cmd: 'cd', arg: '..', out: [] },
-  { cmd: 'cd', arg: 'd', out: [] },
-  {
-    cmd: 'ls',
-    arg: undefined,
-    out: [ '4060174 j', '8033020 d.log', '5626152 d.ext', '7214296 k' ]
-  }
-]
-#+end_example
-
-* The Problem of Nested Directories
-To solve this, we define an ~ancestors()~ function, which takes a path string as an argument and returns an array of ancestor paths leading up to that path. We achieve this by splitting the path into individual segments using the ~split()~ method, then removing the first and last segments using the ~slice()~ method. This is because the first segment is always the root directory / and the last segment is the current directory, which is not an ancestor.[fn:2]
-
-The function uses ~reduce()~ to create an array of paths, calling the ~pathJoin()~[fn:1] function on each directory name and the previous path to create a new *absolute* path, which is added to the array of paths and returned. Note that we start with the root directory =/= as the initial value for the accumulator.
-#+name: sol2
-#+begin_src typescript :exports code :results code :eval never
+// Returns ancestor paths of a given file or directory path.
 const ancestors = (path: string) => path
   .split('/')
   .slice(1, -1)
   .reduce(
     (acc, curr) => [...acc, pathJoin(acc[acc.length - 1], curr)],
     ['/']
-  )
+  );
+#+end_src
 
+The function uses ~reduce()~ to create an array of paths, calling the ~pathJoin()~ function on each directory name and the previous path to create a new *absolute* path, which is added to the array of paths and returned. Note that we start with the root directory =/= as the initial value for the accumulator.
+
+For example, calling the ~ancestors()~ function with the path ="/one/two/three"= would return the following array of ancestor paths:
+#+begin_example
+["/", "/one", "/one/two"]
+#+end_example
+
+We also need to implement ~pathJoin()~, a utility function that takes a variable number of paths as arguments and joins them together into a single path. The function first uses the ~map()~ method to remove any trailing =/= characters from the paths and then uses the join() method to combine the paths into a single string with =/= as the separator.
+#+name: sol2
+#+begin_src typescript :exports code :results code :eval never
+// Joins the given path segments
+// and removes trailing slashes from each segment.
 const pathJoin = (...paths: string[]) => paths
   .map(path => path?.replace(/\/$/, '') ?? '')
   .join('/');
 #+end_src
 
-For example, calling the ~ancestors()~ function with the path ="/a/b/c"= would return the following array of ancestor paths:
-#+begin_example
-["/", "/a", "/a/b"]
-#+end_example
-
-It may not be clear right now, but we can use ~ancestors()~ later when we're adding up file sizes such that the directory sizes will track all of their children, including nested children.
-
-* Parsing the Output of =ls=
-Now we should deal with the ~out~ lines of the ~actions~ array we parsed out from before. Remember that these lines represent the output of =ls=, which are file and directory entries, so we define an ~Entry~ type as an object with two properties: size (an optional number representing the size of the entry) and path (the *full* path of the entry).
-
-#+name: sol3a
-#+begin_src typescript :exports code :results code :eval never
-type Entry = { size?: number, path: string };
-#+end_src
-
-We then define a ~parseEntry()~ function that takes two arguments: a ~line~ string and a ~cwd~ string representing the /current working directory/. To parse an output line, the function first splits the line on the space character and inspects the ~left~ segment to determine whether the entry is a directory or a file.
+Now we're ready to parse. We split the puzzle input into lines and ~reduce()~ over them with the following rules:
 #+begin_comfy
-- If ~left~ isn't "dir", it is a file, so set the ~size~ property to the integer value which is contained in the ~left~ segment, passing it through ~parseInt()~.
-- Always set path property using ~right~ and ~cwd~ with the ~pathJoin()~ function (which we defined earlier) to get the full, absolute path.
+1. *Terminal Input*: if the line starts with =$= \\
+   Split the line on the space character to extract the command ~cmd~ and its argument ~arg~. If the command is "cd", update the current working directory ~cwd~ based on the ~arg~, with special handling for ".." and "/". If the command is something other than "cd", leave the ~cwd~ unchanged. In either case, then return an object containing the updated ~cwd~ and the original ~dirSizeMap~.
+
+2. *Terminal Output*: if the line does not start with =$= \\
+   Split the line on the space character to extract the ~left~ and ~right~ segments. If ~left~ is a size (i.e. the line is not a directory), find all of the ancestors of the path using the ~ancestors()~ function, then update those ancestor paths in ~dirSizeMap~ by adding the file size to each of them. Finally, return an object containing the unchanged ~cwd~ and the updated ~dirSizeMap~.
 #+end_comfy
 
-#+name: sol3b
+#+name: sol3
 #+begin_src typescript :exports code :results code :eval never
-const parseEntry = (line: string, cwd: string): Entry => {
-  const [left, right] = line.split(' ');
-  return {
-    size: left !== 'dir' ? parseInt(left) : undefined,
-    path: pathJoin(cwd, right)
-  }
-}
-#+end_src
-
-For example, calling ~parseEntry()~ with a ~line~ of ="dir b"= and a ~cwd~ of ="/a"= would just result in:
-#+begin_example
-{ path: "/a/b" }
-#+end_example
-
-But calling ~parseEntry()~ with a ~line~ of ="14848514 b.txt"= and a ~cwd~ of ="/a"= would result in:
-#+begin_example
-{ size: 14848514, path: "/a/b.txt" }
-#+end_example
-
-* Building the Directory Structure & Collecting Sizes
-We're ready to combine everything to run the final simulation. ~reduce()~ over the ~actions~ array and calculate the size of each directory in the puzzle input. As we traverse through the file system, we track the /current working directory/ in ~cwd~ and the directory sizes in ~dirSizeMap~ (a ~Map~ object that maps directory paths to their sizes).
-
-The ~cwd~ value is updated in the accumulated state by essentially simulating simple =cd= navigation through the file system:
-#+begin_comfy
-- If the ~cmd~ is "cd", the ~cwd~ is set to the ~arg~ property of the ~Action~ object, with some special handling for the "/" and ".." arguments;
-- If the ~cmd~ is anything other than "cd", the ~cwd~ remains unchanged.
-#+end_comfy
-
-For the directory sizes:
-1. ~map()~ to convert the output lines into ~Entry~ objects using ~parseEntry()~
-2. ~filter()~ the entries to those that have a size (i.e. file entries only)
-3. Call ~ancestors()~ on the file path, ~map()~ to a list of pairs of =[ancestorPath, fileSizeToAdd]= then flatten to a giant list of pairs using ~flatMap()~
-4. ~reduce()~ the pairs onto ~dirSizeMap~ to accumulate the file sizes onto the correct paths
-#+name: sol4
-#+begin_src typescript :exports code :results code :eval never
-const { dirSizeMap } = actions.reduce(
-  ({ cwd, dirSizeMap }, { cmd, arg, out }) => ({
-    cwd: cmd === 'cd'
-      ? arg === '/'
-        ? '/'
-        : arg === '..'
-          ? ancestors(cwd).slice(-1)[0]
-          : pathJoin(cwd, arg)
-      : cwd,
-    dirSizeMap: out
-      .map(line => parseEntry(line, cwd))
-      .filter(entry => !!entry.size)
-      .flatMap(({ path, size }) =>
-        ancestors(path).map(path => [path, size] as const))
-      .reduce(
-        (map, [path, size]) =>
-          map.set(path, (map.get(path) ?? 0) + size),
+// This code processes a string containing a sequence of
+// commands and files/directories, and returns an array
+// of sizes for each directory in the file system.
+const { dirSizeMap } = puzzleInput.split('\n').reduce(
+  ({ cwd, dirSizeMap }, line) => {
+    if (line.startsWith("$")) {
+      // Terminal Input
+      const [,cmd,arg] = line.split(' ');
+      return {
+        cwd: cmd === 'cd'
+          ? arg === '/'
+            ? '/'
+            : arg === '..'
+              ? ancestors(cwd).slice(-1)[0]
+              : pathJoin(cwd, arg)
+          : cwd,
         dirSizeMap
-      )
-  }),
+      }
+    } else {
+      // Terminal Output
+      const [left, right] = line.split(' ');
+      const size = left !== 'dir' ? parseInt(left) : undefined;
+      const path = pathJoin(cwd, right);
+      return {
+        cwd,
+        dirSizeMap: !!size
+          ? ancestors(path)
+            .map(path => [path, size] as const)
+            .reduce(
+              (map, [path, size]) =>
+                map.set(path, (map.get(path) ?? 0) + size),
+              dirSizeMap
+            )
+          : dirSizeMap
+      }
+    }
+  },
   { cwd: '', dirSizeMap: new Map<string, number>() }
 );
+
 const dirSizes = [...dirSizeMap.values()];
 #+end_src
 
 At the end, we convert ~dirSizeMap~ into an array of numbers using the ~Map.prototype.values()~ method and the spread operator =...=, and assign the result to the ~dirSizes~ variable. We do this because the directory path information is no longer relevant to our final answers.
 
-* Calculating the Answers
-For part 1, we filter the ~dirSizes~ array and keep only the sizes that are less than or equal to 100,000. We then ~reduce()~ to sum up the remaining sizes.
-#+name: sol5
+For the part 1 solution, we filter the ~dirSizes~ array and keep only the sizes that are less than or equal to 100,000. We then ~reduce()~ to sum up the remaining sizes.
+#+name: sol4
 #+begin_src typescript :exports code :results code :eval never
 const part1 = dirSizes
   .filter(s => s <= 100_000)
@@ -242,7 +139,7 @@ For part 2, we first define some constants that are used in the calculation of t
 - and ~diskSpaceToFree~ represents the amount of disk space that must be freed up in order to install the new software.
 
 This time we ~filter()~ the ~dirSizes~ array and keep only the sizes that are greater than or equal to the ~diskSpaceToFree~. We then find the minimum value in this list using ~Math.min()~, which is the smallest directory that satisfies the ~diskSpaceToFree~.
-#+name: sol6
+#+name: sol5
 #+begin_src typescript :exports code :results code :eval never
 const totalDiskSpace = 70_000_000;
 const usedDiskSpace = dirSizeMap.get('/');
@@ -258,19 +155,15 @@ const part2 = Math.min(
 * Final Solution
 #+name: solution
 #+begin_src typescript :exports code :results code :eval never :noweb yes
-<<sol1a>>
-<<sol1b>>
+<<sol1>>
 
 <<sol2>>
 
-<<sol3a>>
-<<sol3b>>
+<<sol3>>
 
 <<sol4>>
 
 <<sol5>>
-
-<<sol6>>
 
 console.log("Part 1:", part1);
 console.log("Part 2:", part2);
@@ -282,7 +175,7 @@ console.log("Part 2:", part2);
 <<solution>>
 #+end_src
 
-#+RESULTS[cef479ca8488ba8bc68191c1d6460e78efaddf95]: code
+#+RESULTS[c53c8022eb1521bc87350d0b129a093af3b5136c]: code
 #+begin_src typescript
 Part 1: 1915606
 Part 2: 5025657
@@ -1302,7 +1195,5 @@ $ ls
 302711 tbhb
 173182 tmj.frb`;
 #+end_src
-
-[fn:1] The ~pathJoin()~ function is a utility function that takes a variable number of paths as arguments and joins them together into a single path. The function first uses the ~map()~ method to remove any trailing =/= characters from the paths and then uses the join() method to combine the paths into a single string with =/= as the separator.
 
 [fn:2] Note that the ~ancestors()~ function only returns ancestor paths up to but not including the current directory. The current directory is not considered an ancestor because it is not "above" the current path in the file system hierarchy.
