@@ -43,17 +43,17 @@ const within = (x: number, range: Range) =>
 Define a function ~isRedundant~ that checks a =Pair= of ranges to see if one of them is redundant (i.e. one entirely contains the other). To check, we see if *both of* the low/high values of range =left= are within range =right=, or vice versa.
 #+name: sol3
 #+begin_src typescript :exports code :results code :eval never
-const isRedundant = (p: Pair) =>
-  (within(p.left.lo, p.right) && within(p.left.hi, p.right))
-  || (within(p.right.lo, p.left) && within(p.right.hi, p.left));
+const isRedundant = ({ left, right }: Pair) =>
+  (within(left.lo, right) && within(left.hi, right))
+  || (within(right.lo, left) && within(right.hi, left));
 #+end_src
 
 Define a function ~isOverlap~ that checks if a =Pair='s ranges overlap at all.  To check, we see if *either of* the low/high values of range =left= are within range =right=, or vice versa.
 #+name: sol4
 #+begin_src typescript :exports code :results code :eval never
-const isOverlap = (p: Pair) =>
-  (within(p.left.lo, p.right) || within(p.left.hi, p.right))
-  || (within(p.right.lo, p.left) || within(p.right.hi, p.left));
+const isOverlap = ({ left, right }: Pair) =>
+  (within(left.lo, right) || within(left.hi, right))
+  || (within(right.lo, left) || within(right.hi, left));
 #+end_src
 
 For part 1, ~filter~ the pairs to where ranges are redundant, then interrogate ~length~ to get a count.
@@ -93,8 +93,8 @@ console.log("Part 2:", part2);
 <<solution>>
 #+end_src
 
-#+RESULTS[5879f5f7488e06e1453e6a5e2b2c873925f4e74a]: code
-#+begin_src typescript eval never
+#+RESULTS[f39243018e86d0366941ed4ccd922c0a524b8cfa]: code
+#+begin_src typescript
 Part 1: 560
 Part 2: 839
 #+end_src
