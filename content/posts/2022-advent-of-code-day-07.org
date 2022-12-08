@@ -34,10 +34,7 @@ $ ls
 7214296 k
 #+end_example
 
-One of the challenges with this puzzle is that directory sizes need to account for the sizes of all children, including nested directories.
-
-To help with this aspect, we define an ~ancestors()~ function, which takes a path string as an argument and returns an array of ancestor paths leading up to that path. We achieve this by splitting the path into individual segments using the ~split()~ method, then removing the first and last segments using the ~slice()~ method. This is because the first segment is always the root directory / and the last segment is the current directory, which is not an ancestor.[fn:2]
-
+To calculate the size of a directory, /including the sizes of all its children/, we can define a helper function called ~ancestors()~. It takes a path string as an argument and returns an array of ancestor paths leading up to that path.[fn:2] To do this, we split the path into segments using ~split()~, then remove the first and last segments with ~slice()~.[fn:1] We then use ~reduce()~ to create an array of paths by calling ~pathJoin()~ (which we will implement next) on each directory name and the previous path.
 #+name: sol1
 #+begin_src typescript :exports code :results code :eval never
 // Returns ancestor paths of a given file or directory path.
@@ -50,14 +47,12 @@ const ancestors = (path: string) => path
   );
 #+end_src
 
-The function uses ~reduce()~ to create an array of paths, calling the ~pathJoin()~ function on each directory name and the previous path to create a new *absolute* path, which is added to the array of paths and returned. Note that we start with the root directory =/= as the initial value for the accumulator.
-
 For example, calling the ~ancestors()~ function with the path ="/one/two/three"= would return the following array of ancestor paths:
 #+begin_example
 ["/", "/one", "/one/two"]
 #+end_example
 
-We also need to implement ~pathJoin()~, a utility function that takes a variable number of paths as arguments and joins them together into a single path. The function first uses the ~map()~ method to remove any trailing =/= characters from the paths and then uses the join() method to combine the paths into a single string with =/= as the separator.
+For joining multiple paths into a single path, we implement the ~pathJoin()~ utility function. It takes a variable number of paths as arguments and joins them together. We use ~map()~ to remove any trailing =/= characters from the paths and ~join()~ to combine them into a single string with =/= as the separator.
 #+name: sol2
 #+begin_src typescript :exports code :results code :eval never
 // Joins the given path segments
@@ -175,7 +170,7 @@ console.log("Part 2:", part2);
 <<solution>>
 #+end_src
 
-#+RESULTS[c53c8022eb1521bc87350d0b129a093af3b5136c]: code
+#+RESULTS[c73f1e43e642fa169a7c4515d22aeae9c60ef817]: code
 #+begin_src typescript
 Part 1: 1915606
 Part 2: 5025657
@@ -1195,5 +1190,7 @@ $ ls
 302711 tbhb
 173182 tmj.frb`;
 #+end_src
+
+[fn:1] This is because the first segment is always the root directory =/= and the last segment is the current directory, which is not an ancestor.
 
 [fn:2] Note that the ~ancestors()~ function only returns ancestor paths up to but not including the current directory. The current directory is not considered an ancestor because it is not "above" the current path in the file system hierarchy.
