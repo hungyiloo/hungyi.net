@@ -74,8 +74,8 @@ console.log("Part 2:", part2);
 <<solution>>
 #+end_src
 
-#+RESULTS[5631f7ce213fe10b4bf245fadf606ee900636b6e]: code
-#+begin_src typescript :eval never
+#+RESULTS[49f8cecabd461db494af64c1bd6fb4b81e857385]: code
+#+begin_src typescript
 Part 1: 67658
 Part 2: 200158
 #+end_src
