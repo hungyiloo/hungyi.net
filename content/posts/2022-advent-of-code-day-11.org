@@ -1,11 +1,10 @@
 #+TITLE: Advent of Code 2022: Day 11
 #+SLUG: 2022-advent-of-code-day-11
 #+DATE: 2022-12-11T18:51:34+07:00
-#+DESCRIPTION: A TypeScript solution for the Advent of Code 2022, Day 11 puzzle.
+#+DESCRIPTION: A TypeScript solution for the Advent of Code 2022, Day 11 puzzle: monkeys, classes, parsing gymanstics and one neat modulo trick.
 #+OPTIONS: \n:t
-#+DRAFT: t
 
-[[https://adventofcode.com/2022/day/11][Today's puzzle]]
+[[https://adventofcode.com/2022/day/11][Today's puzzle]] asks us to simulate a bunch of monkeys throwing items around, where the items are numbers that transform as they are being passed from monkey to monkey.
 
 The example input looks like this.
 #+name: example-input
@@ -39,6 +38,7 @@ Monkey 3:
     If false: throw to monkey 1
 #+end_example
 
+Let's use an object-oriented approach this time. We can model a monkey by defining a class called ~Monkey~ as follows:
 #+name: sol1
 #+begin_src typescript :exports code :results code :eval never
 class Monkey {
@@ -97,15 +97,15 @@ class Monkey {
       .replace('If false: throw to monkey ', '')
   }
 
-  play(anxiety: boolean, globalDivisor: number) {
+  play(relief: boolean, globalDivisor: number) {
     const transfers = this.items.map(item => {
       this.inspections++;
 
       item = this.operation(item);
 
-      // If we're not anxious (part 1),
+      // If we're not that anxious yet (part 1),
       // worry levels can be divided by 3 and floored
-      if (!anxiety) {
+      if (relief) {
         item /= 3;
         item = Math.floor(item);
       }
@@ -128,41 +128,64 @@ class Monkey {
     this.items.push(item);
   }
 }
+#+end_src
 
-const simulate = (rounds: number, anxiety: boolean) => {
+What this class does:
+#+begin_comfy
+1. In the ~constructor()~, it takes the puzzle input for *one* monkey and uses ~split()~, ~replace()~ and array deconstruction to parse all the monkey parameters into the class fields. We pay special attention to the ~operation~ field, which is a little complicated (we have to detect how many times =old= is referred to, and switch on the operation: +, -, *, /).
+2. The ~play()~ method takes two arguments (a ~relief~ boolean flag which toggles part 1 behavior, and a ~globalDivisor~ number which is a part 2 optimization). It processes they monkey's items, doing any arithmetic required, and outputs an object that represents a transfer of an item to another monkey.[fn:1] It also tracks the number of item ~inspections~ a monkey has done, which is required for the puzzle answers.
+3. The ~receive()~ method takes an item (number) and adds it to the monkey's list of items.
+#+end_comfy
+
+Finally, we can define a ~simulate()~ function which simulates the monkeys for a given number of ~rounds~ and has a ~relief~ flag to toggle the part 1 behavior on and off. See the code comments for explanations of each section 😃
+
+#+name: sol2
+#+begin_src typescript :exports code :results code :eval never
+const simulate = (rounds: number, relief: boolean) => {
+  // Split the puzzle input into input for each monkey
+  // based on the blank lines, then construct a Monkey
+  // object for each.
   const monkeys = puzzleInput
     .split('\n\n')
     .map(monkeyInput => new Monkey(monkeyInput));
 
+  // Create a Map of Monkeys, keyed by ID.
+  // This makes it easy for us to find a destination monkey
+  // when transferring items later.
   const monkeyMap = new Map(monkeys.map(m => [m.id, m]));
 
+  // Calculate the global divisor by getting the product
+  // of every monkey's divisor. When we mod by this global
+  // value, each monkey's divisor test will have the same
+  // pass/fail behavior but the actual numbers will be
+  // smaller and more manageable.
   const globalDivisor = monkeys
     .map(m => m.divisor)
     .reduce((p, x) => p * x);
 
+  // For each round, each monkey inspects its items,
+  // and each transfer needs to be received by the
+  // destination monkey.
   for (let round = 0; round < rounds; round++)
     for (const monkey of monkeys)
-      for (const { send, to } of monkey.play(anxiety, globalDivisor))
+      for (const { send, to } of monkey.play(relief, globalDivisor))
         monkeyMap.get(to).receive(send);
 
+  // Calculate the puzzle answer by getting the top 2
+  // monkeys by inspection count, then multiply.
   return monkeys
     .map(m => m.inspections)
     .sort((a, b) => b - a)
     .slice(0, 2)
     .reduce((p, x) => p * x, 1);
 }
-
-
-const part1 = simulate(20, false);
-const part2 = simulate(10000, true);
 #+end_src
 
-#+name: sol2
-#+begin_src typescript :exports code :results code :eval never
-#+end_src
-
+Now the only difference between part 1 and part 2 is the ~relief~ toggle, which is enabled for part 1, and the number of rounds, which is much higher for part 2.
 #+name: sol3
 #+begin_src typescript :exports code :results code :eval never
+const part1 = simulate(20, true);
+const part2 = simulate(10000, false);
 #+end_src
 
 * Final Solution
@@ -184,7 +207,7 @@ console.log("Part 2:", part2);
 <<solution>>
 #+end_src
 
-#+RESULTS[51de8e3bedbb96910197f866a70f7d9995d2644a]: code
+#+RESULTS[495e3f6d6906285c0b4d24d32bc85cd1556c7a47]: code
 #+begin_src typescript
 Part 1: 58056
 Part 2: 15048718170
@@ -249,3 +272,5 @@ Monkey 7:
     If true: throw to monkey 2
     If false: throw to monkey 3`;
 #+end_src
+
+[fn:1] Note that an individual ~Monkey~ doesn't know about the other monkeys' existence, other than a string ID reference. This is by design, as it adheres to the "single responsibility" principle of object oriented design.
