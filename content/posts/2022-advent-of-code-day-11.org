@@ -1,0 +1,251 @@
+#+TITLE: Advent of Code 2022: Day 11
+#+SLUG: 2022-advent-of-code-day-11
+#+DATE: 2022-12-11T18:51:34+07:00
+#+DESCRIPTION: A TypeScript solution for the Advent of Code 2022, Day 11 puzzle.
+#+OPTIONS: \n:t
+#+DRAFT: t
+
+[[https://adventofcode.com/2022/day/11][Today's puzzle]]
+
+The example input looks like this.
+#+name: example-input
+#+begin_example
+Monkey 0:
+  Starting items: 79, 98
+  Operation: new = old * 19
+  Test: divisible by 23
+    If true: throw to monkey 2
+    If false: throw to monkey 3
+
+Monkey 1:
+  Starting items: 54, 65, 75, 74
+  Operation: new = old + 6
+  Test: divisible by 19
+    If true: throw to monkey 2
+    If false: throw to monkey 0
+
+Monkey 2:
+  Starting items: 79, 60, 97
+  Operation: new = old * old
+  Test: divisible by 13
+    If true: throw to monkey 1
+    If false: throw to monkey 3
+
+Monkey 3:
+  Starting items: 74
+  Operation: new = old + 3
+  Test: divisible by 17
+    If true: throw to monkey 0
+    If false: throw to monkey 1
+#+end_example
+
+#+name: sol1
+#+begin_src typescript :exports code :results code :eval never
+class Monkey {
+  readonly id: string;
+  readonly items: number[];
+  private readonly operation: (old: number) => number;
+  readonly divisor: number;
+  private readonly passDestinationId: string;
+  private readonly failDestinationId: string;
+  private _inspections = 0;
+  get inspections(): number { return this._inspections; }
+  private set inspections(x: number) { this._inspections = x; }
+
+  constructor(input: string) {
+    const [
+      idInput, itemsInput, operationInput,
+      divisorInput, passInput, failInput
+    ] = input.split('\n');
+
+    this.id = idInput.replace(/[^\d]/g, '');
+
+    this.items = itemsInput
+      .trim()
+      .replace('Starting items: ', '')
+      .split(', ')
+      .map(Number);
+
+    const [left, op, right] = operationInput
+      .trim()
+      .replace('Operation: new = ', '')
+      .split(' ');
+
+    this.operation = (old: number) => {
+      const x = left === 'old' ? old : Number(left);
+      const y = right === 'old' ? old : Number(right);
+      switch (op) {
+        case '+': return x + y;
+        case '-': return x - y;
+        case '*': return x * y;
+        case '/': return x / y;
+      }
+    };
+
+    this.divisor = Number(
+      divisorInput
+        .trim()
+        .replace('Test: divisible by ', '')
+    );
+
+    this.passDestinationId = passInput
+      .trim()
+      .replace('If true: throw to monkey ', '')
+
+    this.failDestinationId = failInput
+      .trim()
+      .replace('If false: throw to monkey ', '')
+  }
+
+  play(anxiety: boolean, globalDivisor: number) {
+    const transfers = this.items.map(item => {
+      this.inspections++;
+
+      item = this.operation(item);
+
+      // If we're not anxious (part 1),
+      // worry levels can be divided by 3 and floored
+      if (!anxiety) {
+        item /= 3;
+        item = Math.floor(item);
+      }
+
+      // "keep your worry levels manageable"
+      item = item % globalDivisor;
+
+      return {
+        send: item,
+        to: item % this.divisor === 0
+          ? this.passDestinationId
+          : this.failDestinationId
+      };
+    });
+    this.items.length = 0;
+    return transfers;
+  }
+
+  receive(item: number) {
+    this.items.push(item);
+  }
+}
+
+const simulate = (rounds: number, anxiety: boolean) => {
+  const monkeys = puzzleInput
+    .split('\n\n')
+    .map(monkeyInput => new Monkey(monkeyInput));
+
+  const monkeyMap = new Map(monkeys.map(m => [m.id, m]));
+
+  const globalDivisor = monkeys
+    .map(m => m.divisor)
+    .reduce((p, x) => p * x);
+
+  for (let round = 0; round < rounds; round++)
+    for (const monkey of monkeys)
+      for (const { send, to } of monkey.play(anxiety, globalDivisor))
+        monkeyMap.get(to).receive(send);
+
+  return monkeys
+    .map(m => m.inspections)
+    .sort((a, b) => b - a)
+    .slice(0, 2)
+    .reduce((p, x) => p * x, 1);
+}
+
+
+const part1 = simulate(20, false);
+const part2 = simulate(10000, true);
+#+end_src
+
+#+name: sol2
+#+begin_src typescript :exports code :results code :eval never
+#+end_src
+
+#+name: sol3
+#+begin_src typescript :exports code :results code :eval never
+#+end_src
+
+* Final Solution
+#+name: solution
+#+begin_src typescript :exports code :results code :eval never :noweb yes
+<<sol1>>
+
+<<sol2>>
+
+<<sol3>>
+
+console.log("Part 1:", part1);
+console.log("Part 2:", part2);
+#+end_src
+
+#+name: code
+#+begin_src typescript :exports results :results code :noweb yes :cache yes
+<<input>>
+<<solution>>
+#+end_src
+
+#+RESULTS[51de8e3bedbb96910197f866a70f7d9995d2644a]: code
+#+begin_src typescript
+Part 1: 58056
+Part 2: 15048718170
+#+end_src
+
+#+name: input
+#+begin_src typescript :exports none :eval never
+const puzzleInput =
+`Monkey 0:
+  Starting items: 72, 97
+  Operation: new = old * 13
+  Test: divisible by 19
+    If true: throw to monkey 5
+    If false: throw to monkey 6
+
+Monkey 1:
+  Starting items: 55, 70, 90, 74, 95
+  Operation: new = old * old
+  Test: divisible by 7
+    If true: throw to monkey 5
+    If false: throw to monkey 0
+
+Monkey 2:
+  Starting items: 74, 97, 66, 57
+  Operation: new = old + 6
+  Test: divisible by 17
+    If true: throw to monkey 1
+    If false: throw to monkey 0
+
+Monkey 3:
+  Starting items: 86, 54, 53
+  Operation: new = old + 2
+  Test: divisible by 13
+    If true: throw to monkey 1
+    If false: throw to monkey 2
+
+Monkey 4:
+  Starting items: 50, 65, 78, 50, 62, 99
+  Operation: new = old + 3
+  Test: divisible by 11
+    If true: throw to monkey 3
+    If false: throw to monkey 7
+
+Monkey 5:
+  Starting items: 90
+  Operation: new = old + 4
+  Test: divisible by 2
+    If true: throw to monkey 4
+    If false: throw to monkey 6
+
+Monkey 6:
+  Starting items: 88, 92, 63, 94, 96, 82, 53, 53
+  Operation: new = old + 8
+  Test: divisible by 5
+    If true: throw to monkey 4
+    If false: throw to monkey 7
+
+Monkey 7:
+  Starting items: 70, 60, 71, 69, 77, 70, 98
+  Operation: new = old * 7
+  Test: divisible by 3
+    If true: throw to monkey 2
+    If false: throw to monkey 3`;
+#+end_src

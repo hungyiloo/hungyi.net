@@ -1,0 +1,264 @@
+#+TITLE: Advent of Code 2022: Day 10
+#+SLUG: 2022-advent-of-code-day-10
+#+DATE: 2022-12-10T11:44:40+07:00
+#+DESCRIPTION: A TypeScript solution for the Advent of Code 2022, Day 10 puzzle: emulating CPU instructions and rendering to a virtual screen.
+#+OPTIONS: \n:t
+
+[[https://adventofcode.com/2022/day/10][Today's puzzle]] asks us to read a set of CPU instructions that draw a signal to an imaginary CRT screen.
+
+The example input looks like this.
+#+name: example-input
+#+begin_example
+noop
+addx 3
+addx -5
+#+end_example
+
+What's challenging about today's puzzle conditions is that *the instructions vary in the duration of CPU cycles* (=noop= takes one cycle and =addx= takes two cycles), and because of timing issues, we have to track the cycle count carefully and separately from the instruction count.
+
+We start, as always, by splitting the puzzle input into a more manageable data structure: a list of instructions with a =cmd= and an optional integer =arg=.
+#+name: sol1
+#+begin_src typescript :exports code :results code :eval never
+const instructions = puzzleInput.split('\n')
+  .map(line => line.split(' '))
+  .map(([cmd, arg]) => ({cmd, arg: parseInt(arg)}));
+#+end_src
+
+Because I was trying to compete for time[fn:1] today, I went with a fully imperative approach in a giant block of code, similar in strategy to many of the top competitors. Check out the comments for more details 😃
+
+These variables track the state of the emulator, and accumulate values for our part 1 and part 2 answers.
+#+name: sol2
+#+begin_src typescript :exports code :results code :eval never
+let part1 = 0     // signal strength sum
+let part2 = '\n'; // CRT screen output
+let x = 1;        // X register value
+let cycles = 0;   // clock/cycles/ticks
+#+end_src
+
+And the emulation is basically a couple of nested loops: one to iterate through each instruction, and one to handle the individual cycles.
+#+name: sol3
+#+begin_src typescript :exports code :results code :eval never
+for (const { cmd, arg } of instructions) {
+  // Switch on the cmd to figure out how long
+  // the instruction will run
+  let duration = cmd === 'addx' ? 2 : 1;
+
+  // The inner loop simulates the instruction
+  // for its given number of cycles, and handles the
+  // cycle updating logic + answer accumulation
+  while (duration > 0) {
+    // Construct the sprite by drawing lit pixels
+    // at the X position and 1 pixel either side
+    const sprite = Array(40).fill(0)
+      .map((_, i) => [x-1,x,x+1].includes(i) ? '▓' : '░')
+
+    // Render the correct part of the sprite
+    // depending on the previous cycle
+    part2 += sprite[cycles % 40];
+
+    // Increment the cycle count
+    cycles++;
+
+    // In the middle of each line of 40 cycles,
+    // calculate signal strength and accumulate
+    if ((cycles - 20) % 40 === 0 && cycles <= 220)
+      part1 += x * cycles;
+
+    // After each line of 40 cycles,
+    // switch to a new line on the CRT output
+    if (cycles % 40 === 0)
+      part2 += '\n';
+
+    duration--;
+  }
+  // Updating the X value always occurs at the
+  // end of the duration of the 'addx' instruction
+  if (cmd === 'addx' && !!arg)
+    x += arg;
+}
+#+end_src
+
+* Final Solution
+#+name: solution
+#+begin_src typescript :exports code :results code :eval never :noweb yes
+<<sol1>>
+
+<<sol2>>
+
+<<sol3>>
+
+console.log("Part 1:", part1);
+console.log("Part 2:", part2);
+#+end_src
+
+#+name: code
+#+begin_src typescript :exports results :results code :noweb yes :cache yes
+<<input>>
+<<solution>>
+#+end_src
+
+#+RESULTS[ca7b42c62d24e484843fb070052dbba4ce3ecdd5]: code
+#+begin_src typescript
+Part 1: 14420
+Part 2:
+▓▓▓░░░▓▓░░▓░░░░▓▓▓░░▓▓▓░░▓▓▓▓░░▓▓░░▓░░▓░
+▓░░▓░▓░░▓░▓░░░░▓░░▓░▓░░▓░░░░▓░▓░░▓░▓░░▓░
+▓░░▓░▓░░░░▓░░░░▓░░▓░▓▓▓░░░░▓░░▓░░▓░▓░░▓░
+▓▓▓░░▓░▓▓░▓░░░░▓▓▓░░▓░░▓░░▓░░░▓▓▓▓░▓░░▓░
+▓░▓░░▓░░▓░▓░░░░▓░▓░░▓░░▓░▓░░░░▓░░▓░▓░░▓░
+▓░░▓░░▓▓▓░▓▓▓▓░▓░░▓░▓▓▓░░▓▓▓▓░▓░░▓░░▓▓░░
+
+#+end_src
+
+#+name: input
+#+begin_src typescript :exports none :eval never
+const puzzleInput =
+`noop
+noop
+addx 15
+addx -10
+noop
+noop
+addx 3
+noop
+noop
+addx 7
+addx 1
+addx 4
+addx -1
+addx 1
+addx 5
+addx 1
+noop
+noop
+addx 5
+addx -1
+noop
+addx 3
+noop
+addx 3
+addx -38
+noop
+addx 3
+addx 2
+addx 5
+addx 2
+addx 26
+addx -21
+addx -2
+addx 5
+addx 2
+addx -14
+addx 15
+noop
+addx 7
+noop
+addx 2
+addx -22
+addx 23
+addx 2
+addx 5
+addx -40
+noop
+noop
+addx 3
+addx 2
+noop
+addx 24
+addx -19
+noop
+noop
+noop
+addx 5
+addx 5
+addx 2
+noop
+noop
+noop
+noop
+addx 7
+noop
+addx 3
+noop
+addx 3
+addx -2
+addx 2
+addx 5
+addx -38
+noop
+noop
+noop
+addx 5
+addx 2
+addx -1
+addx 2
+addx 30
+addx -23
+noop
+noop
+noop
+noop
+addx 3
+addx 5
+addx -11
+addx 12
+noop
+addx 6
+addx 1
+noop
+addx 4
+addx 3
+noop
+addx -40
+addx 4
+addx 28
+addx -27
+addx 5
+addx 2
+addx 5
+noop
+noop
+addx -2
+addx 2
+addx 5
+addx 3
+noop
+addx 2
+addx -25
+addx 30
+noop
+addx 3
+addx -2
+addx 2
+addx 5
+addx -39
+addx 29
+addx -27
+addx 5
+noop
+noop
+noop
+addx 4
+noop
+addx 1
+addx 2
+addx 5
+addx 2
+noop
+noop
+noop
+noop
+addx 5
+addx 1
+noop
+addx 2
+addx 5
+addx -32
+addx 34
+noop
+noop
+noop
+noop`;
+#+end_src
+
+[fn:1] I got rank 2939 for part 1 in 00:16:29, and rank 1856 for part 2 in 00:27:43. Nowhere near the leaderboard 😅

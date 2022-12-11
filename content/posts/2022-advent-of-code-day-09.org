@@ -4,7 +4,7 @@
 #+DESCRIPTION: A TypeScript solution for the Advent of Code 2022, Day 9 puzzle: rope physics simulation.
 #+OPTIONS: \n:t
 
-[[https://adventofcode.com/2022/day/8][Today's puzzle]] asks us to model a rope as a string of knots, where each knot is a coordinate in 2D space, as they follow each other according to some simple movement rules.
+[[https://adventofcode.com/2022/day/9][Today's puzzle]] asks us to model a rope as a string of knots, where each knot is a coordinate in 2D space, as they follow each other according to some simple movement rules.
 
 The puzzle provides us with example input representing the movement of the head of the rope, which looks like this.
 #+name: example-input
