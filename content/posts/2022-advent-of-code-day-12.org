@@ -1,0 +1,194 @@
+#+TITLE: Advent of Code 2022: Day 12
+#+SLUG: 2022-advent-of-code-day-12
+#+DATE: 2022-12-12T16:40:20+07:00
+#+DESCRIPTION: A TypeScript solution for the Advent of Code 2022, Day 12 puzzle: Dijkstra's algorithm, and being sneaky with reversing the puzzle conditions.
+#+OPTIONS: \n:t
+
+[[https://adventofcode.com/2022/day/12][Today's puzzle]] asks us to search for the shortest path through an elevation map, where we are only able to ascend one unit at a time. We're supposed to search from a given starting point =S= to a given ending point =E=, but the trick to part 2 is actually to search in reverse!
+
+The example input looks like this.
+#+name: example-input
+#+begin_example
+Sabqponm
+abcryxxl
+accszExk
+acctuvwj
+abdefghi
+#+end_example
+
+Note the =S= and the =E= for the "start" and "end" points, and the lowercase letters represent heights (in alphabetical order).
+
+We start by defining a ~Point~ type that holds information related to our search.
+
+#+name: sol1
+#+begin_src typescript :exports code :results code :eval never
+type Point = {
+  x: number;
+  y: number;
+  letter: string;
+  height: string;
+  cost: number;
+  visited: boolean;
+};
+#+end_src
+
+Then we define a ~makeHeightmap()~ function that parses the puzzle input into a =Point[][]= data structure, using some ternary expressions to determine the height and starting cost for each point.
+
+#+name: sol2
+#+begin_src typescript :exports code :results code :eval never
+const makeHeightmap = () =>
+  puzzleInput
+    .split('\n')
+    .map((line, x) => line
+    .split('')
+    .map((letter, y) => ({
+      x, y, letter,
+      height: letter === 'S' ? 'a'
+        : letter === 'E' ? 'z'
+        : letter,
+      cost: letter === 'E' ? 0 : Infinity,
+      visited: false
+    } as Point)));
+#+end_src
+
+We implement a quick utility function that allows us to compare lowercase letters as numerical heights. This is trivial if we take advantage of the fact that the ASCII character codes of the lowercase letters are already in the numerical order that we need.
+
+#+name: sol3
+#+begin_src typescript :exports code :results code :eval never
+const compareHeight = (p: Point, q: Point) =>
+  q.height.charCodeAt(0) - p.height.charCodeAt(0);
+#+end_src
+
+Now, our eventual [[https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm][Dijkstra's search]] will require a way to find all the neighbors from a given point. We implement ~getNeighbors()~ by literally constructing an array for each direction (up, down, left, right) and filtering out the invalid positions, as well as any points that have been visited and any that aren't one step down from the current point (remembering that we're searching in reverse).
+
+#+name: sol4
+#+begin_src typescript :exports code :results code :eval never
+const getNeighbors = (p: Point, heightmap: Point[][]) =>
+  [
+    heightmap[p.x - 1]?.[p.y],
+    heightmap[p.x + 1]?.[p.y],
+    heightmap[p.x]?.[p.y - 1],
+    heightmap[p.x]?.[p.y + 1]
+  ].filter(q => !!q && !q.visited && compareHeight(q, p) <= 1);
+#+end_src
+
+Dijkstra's algorithm will perform a little faster with a priority queue to ensure we are searching optimally, so we implement a basic one by defining ~insertByMinCost()~ which puts a point into the queue in the right position, so that the points in the queue are all in ascending cost order.
+
+#+name: sol5
+#+begin_src typescript :exports code :results code :eval never
+const insertByMinCost = (ps: Point[], p: Point) => {
+  const queue = ps.filter(x => x !== p);
+  const pos = ps.findIndex(x => x.cost > p.cost);
+  queue.splice(pos === -1 ? queue.length : pos, 0, p);
+  return queue;
+}
+#+end_src
+
+Finally we implement the search algorithm, which takes a variable lambda function, letting us customize when the search will end. Once the search ends, we inspect the final point that we landed on and return the cost that it took us to reach it.
+
+#+name: sol6
+#+begin_src typescript :exports code :results code :eval never
+const dijkstra = (goal: (p: Point) => boolean) => {
+  const heightmap = makeHeightmap();
+  let queue = heightmap.flatMap(x => x).filter(p => p.letter === 'E');
+  let p: Point = null;
+  do {
+    p = queue.shift();
+    for (const neighbor of getNeighbors(p, heightmap)) {
+      neighbor.cost = p.cost + 1;
+      queue = insertByMinCost(queue, neighbor);
+    }
+    p.visited = true;
+  } while (!goal(p))
+
+  return p?.cost;
+}
+#+end_src
+
+Now the only difference between part 1 and part 2 is that we end on exactly the =S= point for part 1, whereas part 2 lets us end on any point with a height of =a=, including =S=.
+
+#+name: sol7
+#+begin_src typescript :exports code :results code :eval never
+const part1 = dijkstra(p => p.letter === 'S');
+const part2 = dijkstra(p => p.height === 'a');
+#+end_src
+
+* Final Solution
+#+name: solution
+#+begin_src typescript :exports code :results code :eval never :noweb yes
+<<sol1>>
+
+<<sol2>>
+
+<<sol3>>
+
+<<sol4>>
+
+<<sol5>>
+
+<<sol6>>
+
+<<sol7>>
+
+console.log("Part 1:", part1);
+console.log("Part 2:", part2);
+#+end_src
+
+#+name: code
+#+begin_src typescript :exports results :results code :noweb yes :cache yes
+<<input>>
+<<solution>>
+#+end_src
+
+#+RESULTS[960aac393b9c5030addaf6e2b353bb97c05a3e70]: code
+#+begin_src typescript
+Part 1: 383
+Part 2: 377
+#+end_src
+
+#+name: input
+#+begin_src typescript :exports none :eval never
+const puzzleInput =
+`abaaaaacaaaacccccccccaaaaaaccccccccccccccccccccccccccccccccccaaaaaa
+abaaaaacaaaaccccaaaaaaaaaacccccccccccccccccccccccccccccccccccaaaaaa
+abaaacccaaaaccccaaaaaaaaaaacccaacccccccccccaacccccccccccccccccaaaaa
+abaaaacccaacccccaaaaaaaaaaaaaaaaacccccccccccacccccccccccccccccccaaa
+abacaacccccccccccaaaaaaaaaaaaaaaaccccccccccaacccccccccccccccccccaaa
+abcccacccccccccccaaaaaaaccaaaaaaaccccccccccclllcccccacccccccccccaac
+abccccccccccccccccaaaaaccccccccccccccccccclllllllcccccccccccccccccc
+abaaacccccccccccccaaaaaccccccccccccccccaakklllllllcccccccccaacccccc
+abaaacccccccccccacccaaaccccccccccccccccakkklpppllllccddaaacaacccccc
+abaaacccaaacccccaacaaaccccccccccccccccckkkkpppppllllcddddaaaacccccc
+abaacccaaaacccccaaaaaccccccccccccccccckkkkpppppppllmmddddddaaaacccc
+abaaaccaaaaccccccaaaaaacaaacccccccccckkkkpppuuuppplmmmmdddddaaacccc
+abaaacccaaaccccaaaaaaaacaaaaccccccckkkkkoppuuuuuppqmmmmmmdddddacccc
+abcccccccccccccaaaaaaaacaaaacccccjkkkkkooppuuuuuuqqqmmmmmmmddddcccc
+abccccccccccccccccaaccccaaaccccjjjjkoooooouuuxuuuqqqqqqmmmmmddecccc
+abacaaccccccccccccaacccccccccccjjjjoooooouuuxxxuvvqqqqqqqmmmeeecccc
+abaaaacccccccacccaccccccccccccjjjjoootuuuuuuxxxyvvvvvqqqqmmmeeecccc
+abaaaaacccccaaacaaacccccccccccjjjoooottuuuuuxxyyvvvvvvvqqmnneeecccc
+abaaaaaccaaaaaaaaaaccccccccaccjjjooottttxxxxxxyyyyyyvvvqqnnneeecccc
+abaaaccccaaaaaaaaaacccccccaaccjjjoootttxxxxxxxyyyyyyvvqqqnnneeecccc
+SbcaaccccaaaaaaaaaaccccaaaaacajjjnnntttxxxxEzzzyyyyvvvrrqnnneeccccc
+abcccccccaaaaaaaaaaacccaaaaaaaajjjnnntttxxxxyyyyyvvvvrrrnnneeeccccc
+abcccccccaaaaaaaaaaacccccaaaaccjjjnnnnttttxxyyyyywvvrrrnnneeecccccc
+abcccccccccaaaaaaccaccccaaaaaccciiinnnnttxxyyyyyyywwrrnnnneeecccccc
+abccccccccccccaaacccccccaacaaaccciiinnnttxxyywwyyywwrrnnnffeccccccc
+abccccccccccccaaacccccccaccaaaccciiinnnttwwwwwwwwwwwrrrnnfffccccccc
+abccccccccccccccccccccccccccccccciiinnnttwwwwsswwwwwrrrnnfffccccccc
+abaaaccaaccccccccccccccccccccccccciinnnttswwwssswwwwrrroofffacccccc
+abaaccaaaaaacccccccccccccccccaaacciinnntssssssssssrrrrooofffacccccc
+abaccccaaaaacccccccaaacccccccaaaaciinnnssssssmmssssrrrooofffacccccc
+abaacaaaaaaacccccccaaaaccccccaaaaciiinmmmssmmmmmoosroooooffaaaacccc
+abaaaaaaaaaaaccccccaaaaccccccaaacciiimmmmmmmmmmmoooooooofffaaaacccc
+abcaaaaaaaaaaccccccaaaaccccccccccccihhmmmmmmmhggoooooooffffaaaccccc
+abcccccaaacaccccccccaaccccccccccccchhhhhhhhhhhggggggggggffaaacccccc
+abaccccaacccccccccccaaaccccccccccccchhhhhhhhhhgggggggggggcaaacccccc
+abaaaccccaccccccccccaaaacccaacccccccchhhhhhhaaaaaggggggcccccccccccc
+abaaaccccaaacaaaccccaaaacaaaacccccccccccccccaaaacccccccccccccccaaac
+abaacccccaaaaaaaccccaaaaaaaaacccccccccccccccaaacccccccccccccccccaaa
+abaaaccccaaaaaaccccaaaaaaaaccccccccccccccccccaacccccccccccccccccaaa
+abccccccaaaaaaaaaaaaaaaaaaacccccccccccccccccaaccccccccccccccccaaaaa
+abcccccaaaaaaaaaaaaaaaaaaaaacccccccccccccccccccccccccccccccccaaaaaa`;
+#+end_src
+
