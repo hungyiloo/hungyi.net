@@ -15,7 +15,13 @@ const Backlinks: QuartzComponent = ({
   return (
     <div class={classNames(displayClass, "backlinks")}>
       <h3>{i18n(cfg.locale).components.backlinks.title}</h3>
-      <ul class="overflow">
+
+      {/*
+       * NOTE: I changed the below list from class="overflow" to one without
+       *       because the popovers were broken. If this is fixed upstream,
+       *       maybe I can consider changing it back.
+       */}
+      <ul style={{ marginTop: "0.75rem" }}>
         {backlinkFiles.length > 0 ? (
           backlinkFiles.map((f) => (
             <li>

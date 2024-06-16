@@ -10,6 +10,7 @@ pre > code {
 // Custom scrollbar styling
 body ::-webkit-scrollbar {
   width: 8px;
+  height: 8px;
 }
 body ::-webkit-scrollbar-track {
   background: #80808020;
@@ -21,4 +22,14 @@ body ::-webkit-scrollbar-thumb {
 }
 body ::-webkit-scrollbar-thumb:hover {
   background-color: #808080a0;
+}
+body ::-webkit-scrollbar-corner {
+  background: rgba(0, 0, 0, 0);
+}
+
+#explorer-content .folder-outer.open li a,
+.backlinks li a {
+  display: block;
+  line-height: 1.1;
+  margin: 0.4rem 0;
 }
