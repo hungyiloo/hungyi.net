@@ -1,3 +1,24 @@
 @use "./base.scss";
 
 // put your custom CSS here!
+
+// Fix unnecessary horizontal scrollbar on code blocks
+pre > code {
+  overflow-x: auto; // was "scroll"
+}
+
+// Custom scrollbar styling
+body ::-webkit-scrollbar {
+  width: 8px;
+}
+body ::-webkit-scrollbar-track {
+  background: #80808020;
+  border-radius: 4px;
+}
+body ::-webkit-scrollbar-thumb {
+  background-color: #80808070;
+  border-radius: 4px;
+}
+body ::-webkit-scrollbar-thumb:hover {
+  background-color: #808080a0;
+}
