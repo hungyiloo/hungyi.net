@@ -28,7 +28,7 @@ export const defaultContentPageLayout: PageLayout = {
     Component.DesktopOnly(
       Component.Explorer({
         folderDefaultState: "collapsed",
-        useSavedState: false,
+        useSavedState: true,
       }),
     ),
   ],
