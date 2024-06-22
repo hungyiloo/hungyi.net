@@ -27,9 +27,17 @@ body ::-webkit-scrollbar-corner {
   background: rgba(0, 0, 0, 0);
 }
 
+// Better display of long link titles in explorer
 #explorer-content .folder-outer.open li a,
 .backlinks li a {
   display: block;
   line-height: 1.1;
   margin: 0.4rem 0;
+}
+
+// Fix weird word wrapping and line spacing in tables
+.table-container>table th, .table-container>table td {
+  overflow-wrap: break-word;
+  line-height: 1.5;
+  padding: 0.5rem 0.7rem;
 }
