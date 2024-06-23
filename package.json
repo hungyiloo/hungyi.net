@@ -14,13 +14,14 @@
   "scripts": {
     "start": "npx quartz build --serve",
     "build": "npx quartz build",
+    "postbuild": "shx cp ./static/* ./public/",
     "quartz": "./quartz/bootstrap-cli.mjs",
     "docs": "npx quartz build --serve -d docs",
     "check": "tsc --noEmit && npx prettier . --check",
     "format": "npx prettier . --write",
     "test": "tsx ./quartz/util/path.test.ts && tsx ./quartz/depgraph.test.ts",
     "profile": "0x -D prof ./quartz/bootstrap-cli.mjs build --concurrency=1",
-    "clean": "rimraf public && rimraf ./quartz/.quartz-cache/"
+    "clean": "shx rm -rf public && shx rm -rf ./quartz/.quartz-cache/"
   },
   "engines": {
     "npm": ">=9.3.1",
@@ -107,6 +108,7 @@
     "esbuild": "^0.19.9",
     "rimraf": "^5.0.7",
     "prettier": "^3.3.2",
+    "shx": "^0.3.4",
     "tsx": "^4.11.2",
     "typescript": "^5.4.5"
   }

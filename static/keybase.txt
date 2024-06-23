@@ -1,0 +1,56 @@
+==================================================================
+https://keybase.io/hungyiloo
+--------------------------------------------------------------------
+
+I hereby claim:
+
+  * I am an admin of https://hungyi.net
+  * I am hungyiloo (https://keybase.io/hungyiloo) on keybase.
+  * I have a public key ASDksoUEzB0dHnQN72lXtnisoh7hFj9a5tOqiHtD5PR6two
+
+To do so, I am signing this object:
+
+{
+  "body": {
+    "key": {
+      "eldest_kid": "0120e4b28504cc1d1d1e740def6957b678aca21ee1163f5ae6d3aa887b43e4f47ab70a",
+      "host": "keybase.io",
+      "kid": "0120e4b28504cc1d1d1e740def6957b678aca21ee1163f5ae6d3aa887b43e4f47ab70a",
+      "uid": "9d6db8174a05cc6137888023e9fb0e19",
+      "username": "hungyiloo"
+    },
+    "merkle_root": {
+      "ctime": 1553755459,
+      "hash": "b66a9b8d0d10d7b2acfa1a322cb74a628ea8cca18434074dd1d25141e0850438a816171b4e52a55af7a0af05b2796ec233da52213abc12fdd0c6d7f0fc5c5c28",
+      "hash_meta": "dbec0aa796bdbdb5a40174dd4e79e5bd155569b06d0642b2d5ee26e32e29ffd4",
+      "seqno": 5043598
+    },
+    "service": {
+      "entropy": "JZ6J5IpHz363iJc9574oODFs",
+      "hostname": "hungyi.net",
+      "protocol": "https:"
+    },
+    "type": "web_service_binding",
+    "version": 2
+  },
+  "client": {
+    "name": "keybase.io go client",
+    "version": "3.1.2"
+  },
+  "ctime": 1553755468,
+  "expire_in": 504576000,
+  "prev": "9b09b1e37832b5d8b3e57958959e01c2bcc27b0789569125ac19f0d2fc800d67",
+  "seqno": 7,
+  "tag": "signature"
+}
+
+which yields the signature:
+
+hKRib2R5hqhkZXRhY2hlZMOpaGFzaF90eXBlCqNrZXnEIwEg5LKFBMwdHR50De9pV7Z4rKIe4RY/WubTqoh7Q+T0ercKp3BheWxvYWTESpcCB8Qgmwmx43gytdiz5XlYlZ4BwrzCeweJVpElrBnw0vyADWfEIHUBi0oI5sEnr53U3MIzbQxXcIIhmrkbT84GPxa6xCVnAgHCo3NpZ8RA3wxbkt54ZoWRK7OsiRhwc4mIU7O/fmzETza2WjlFz+qPKzrmT87ImZMLGGZSD4aYbnuQUqCWPtaiC+zGLp65DqhzaWdfdHlwZSCkaGFzaIKkdHlwZQildmFsdWXEIOJrve1IsaISFzt/wLu5UdKd9w7mCDP4c4lczkSlqysdo3RhZ80CAqd2ZXJzaW9uAQ==
+
+And finally, I am proving ownership of this host by posting or
+appending to this document.
+
+View my publicly-auditable identity here: https://keybase.io/hungyiloo
+
+==================================================================
