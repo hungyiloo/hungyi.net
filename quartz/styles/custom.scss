@@ -28,11 +28,11 @@ body ::-webkit-scrollbar-corner {
 }
 
 // Better display of long link titles in explorer
-#explorer-content .folder-outer.open li a,
-.backlinks li a {
-  display: block;
-  line-height: 1.1;
-  margin: 0.4rem 0;
+.folder-outer.open, #toc-content, .backlinks {
+  > ul > li {
+    margin: 0.5rem 0;
+    line-height: 1.1;
+  }
 }
 
 // Fix weird word wrapping and line spacing in tables
