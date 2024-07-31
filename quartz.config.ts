@@ -28,23 +28,23 @@ const config: QuartzConfig = {
       },
       colors: {
         lightMode: {
-          light: "#e6e9ef", // Mantle
+          light: "#eff1f5", // Base
           lightgray: "#ccd0da", // Surface 0
           gray: "#9ca0b0",
           darkgray: "#5c5f77",
           dark: "#4c4f69",
-          secondary: "#179299", // Teal
+          secondary: "#179299",
           tertiary: "#7287fd", // Lavender
           highlight: "#7c7f9311",
           textHighlight: "#df8e1d88",
         },
         darkMode: {
-          light: "#11111b", // Crust
+          light: "#181825", // Mantle
           lightgray: "#45475a", // Surface 1
           gray: "#6c7086", // Overlay 0
           darkgray: "#bac2de", // Subtext 1
           dark: "#cdd6f4", // Text
-          secondary: "#89b4fa", // Blue
+          secondary: "#70b6c2", // Sky, luminance set to 0.6, saturation set to 0.4
           tertiary: "#cba6f7", // Mauve
           highlight: "#9399b218", // Overlay 2
           textHighlight: "#f9e2af88", // Yellow
