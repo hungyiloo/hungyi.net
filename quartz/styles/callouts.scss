@@ -101,9 +101,9 @@
   }
 
   &[data-callout="example"] {
-    --color: #7a43b5;
-    --border: #7a43b544;
-    --bg: #7a43b510;
+    --color: #bf57dd; /* mix between catppuccin latte pink and mauve */ 
+    --border: #bf57dd44;
+    --bg: #bf57dd10;
     --callout-icon: var(--callout-icon-example);
   }
 
