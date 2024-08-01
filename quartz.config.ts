@@ -29,8 +29,8 @@ const config: QuartzConfig = {
       colors: {
         lightMode: {
           light: "#eff1f5", // Base
-          lightgray: "#ccd0da", // Surface 0
-          gray: "#9ca0b0",
+          lightgray: "#dce0e8", // Crust 0
+          gray: "#9ca0b0", // Overlay 0
           darkgray: "#5c5f77",
           dark: "#4c4f69",
           secondary: "#179299",
@@ -40,8 +40,8 @@ const config: QuartzConfig = {
         },
         darkMode: {
           light: "#181825", // Mantle
-          lightgray: "#45475a", // Surface 1
-          gray: "#6c7086", // Overlay 0
+          lightgray: "#313244", // Surface 0
+          gray: "#585b70", // Surface 2
           darkgray: "#bac2de", // Subtext 1
           dark: "#cdd6f4", // Text
           secondary: "#70b6c2", // Sky, luminance set to 0.6, saturation set to 0.4

@@ -66,7 +66,7 @@ h6 {
 // Fix overflow fade out on sidebar toc by giving it more room.
 // NOTE: this may be fixed upstream one day
 #toc-content ul.overflow > li:last-child {
-  margin-bottom: 2rem; 
+  margin-bottom: 2rem;
 }
 
 // Better display of long link titles in explorer
@@ -85,4 +85,32 @@ h6 {
   overflow-wrap: break-word;
   line-height: 1.5;
   padding: 0.5rem 0.7rem;
+}
+
+// Better word breaking
+article {
+  word-break: auto-phrase;
+}
+
+// Background contrast and border tweaks for code blocks
+pre,
+code[data-theme*="\\"],
+figure[data-rehype-pretty-code-figure] > [data-rehype-pretty-code-title],
+.graph-outer,
+.graph > #global-graph-outer > #global-graph-container {
+  background-color: #f9fafb;
+}
+[saved-theme="dark"] {
+  pre,
+  code[data-theme*="\\"],
+  figure[data-rehype-pretty-code-figure] > [data-rehype-pretty-code-title],
+  .graph-outer,
+  .graph > #global-graph-outer > #global-graph-container {
+    background-color: #11111b;
+  }
+}
+
+// More compact spacing in sidebars
+.page > #quartz-body .sidebar {
+  gap: 1rem;
 }
