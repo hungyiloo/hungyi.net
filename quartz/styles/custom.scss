@@ -63,9 +63,10 @@ h6 {
   opacity: 0.2;
 }
 
-// Don't show overflow fade out on sidebar toc
-#toc-content ul.overflow::after {
-  display: none;
+// Fix overflow fade out on sidebar toc by giving it more room.
+// NOTE: this may be fixed upstream one day
+#toc-content ul.overflow > li:last-child {
+  margin-bottom: 2rem; 
 }
 
 // Better display of long link titles in explorer
