@@ -27,8 +27,51 @@ body ::-webkit-scrollbar-corner {
   background: rgba(0, 0, 0, 0);
 }
 
+// Custom heading font weight.
+// Adjust this based on what heading font is set in config.
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 600;
+}
+
+// Customize page-title typography
+.page-title {
+  font-size: 140%;
+  a {
+    font-weight: 400;
+    color: var(--bodyColor);
+  }
+}
+
+// Bigger article title size
+.article-title {
+  font-size: 200%;
+}
+
+// Don't use heading typography for explorer/folder expansion
+.folder-container div > button {
+  font-weight: normal;
+  font-family: var(--bodyFont);
+}
+
+// De-emphasize breadcrumb chevrons
+.breadcrumb-element p {
+  opacity: 0.2;
+}
+
+// Don't show overflow fade out on sidebar toc
+#toc-content ul.overflow::after {
+  display: none;
+}
+
 // Better display of long link titles in explorer
-.folder-outer.open, #toc-content, .backlinks {
+.folder-container + .folder-outer.open,
+#toc-content,
+.backlinks {
   > ul > li {
     margin: 0.5rem 0;
     line-height: 1.1;
@@ -36,7 +79,8 @@ body ::-webkit-scrollbar-corner {
 }
 
 // Fix weird word wrapping and line spacing in tables
-.table-container>table th, .table-container>table td {
+.table-container > table th,
+.table-container > table td {
   overflow-wrap: break-word;
   line-height: 1.5;
   padding: 0.5rem 0.7rem;
