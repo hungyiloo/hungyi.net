@@ -114,3 +114,9 @@ figure[data-rehype-pretty-code-figure] > [data-rehype-pretty-code-title],
 .page > #quartz-body .sidebar {
   gap: 1rem;
 }
+
+// Superscript shouldn't make the line any taller
+sup {
+  display: inline-block;
+  margin-top: -0.5em;
+}
