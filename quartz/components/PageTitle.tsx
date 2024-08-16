@@ -18,12 +18,13 @@ const PageTitle: QuartzComponent = ({ fileData, cfg, displayClass }: QuartzCompo
         </div>
       </div>
       <a href={baseDir}>{title}</a>
-    </h1>
+    </h2>
   )
 }
 
 PageTitle.css = `
 .page-title {
+  font-size: 1.75rem;
   margin: 0;
 }
 `
