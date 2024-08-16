@@ -7,7 +7,7 @@ const PageTitle: QuartzComponent = ({ fileData, cfg, displayClass }: QuartzCompo
   const title = cfg?.pageTitle ?? i18n(cfg.locale).propertyDefaults.title
   const baseDir = pathToRoot(fileData.slug!)
   return (
-    <h1 class={classNames(displayClass, "page-title")}>
+    <h2 class={classNames(displayClass, "page-title")}>
       <div style={{ display: "inline-block", position: "relative", bottom: "0.1em" }}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "1em", width: "1em", marginRight: "0.35em", padding: "0.1em", background: "#11111b", borderRadius: "1em" }}>
           <img
