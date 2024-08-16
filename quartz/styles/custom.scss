@@ -110,6 +110,22 @@ figure[data-rehype-pretty-code-figure] > [data-rehype-pretty-code-title],
   }
 }
 
+// kbd element styling for distinct "keyboard" look
+kbd {
+  color: var(--dark);
+  font-size: .9em;
+  font-family: var(--codeFont);
+  background-color: #f9fafb;
+  border: 1px solid var(--lightgray);
+  border-bottom-width: 3px;
+  border-radius: 5px;
+  padding: 0 0.2rem 1px 0.2rem;
+  font-size: 90%;
+}
+[saved-theme="dark"] kbd {
+  background-color: #11111b;
+}
+
 // More compact spacing in sidebars
 .page > #quartz-body .sidebar {
   gap: 1rem;
