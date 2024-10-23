@@ -21,7 +21,7 @@
     "format": "npx prettier . --write",
     "test": "tsx ./quartz/util/path.test.ts && tsx ./quartz/depgraph.test.ts",
     "profile": "0x -D prof ./quartz/bootstrap-cli.mjs build --concurrency=1",
-    "clean": "shx rm -rf public && shx rm -rf ./quartz/.quartz-cache/"
+    "clean": "shx rm -rf public && shx rm -rf ./.quartz-cache/"
   },
   "engines": {
     "npm": ">=9.3.1",
