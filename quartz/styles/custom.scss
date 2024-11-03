@@ -136,3 +136,8 @@ sup {
   display: inline-block;
   margin-top: -0.5em;
 }
+
+// tag section shouldn't be right aligned
+.tags {
+  justify-self: start;
+}
