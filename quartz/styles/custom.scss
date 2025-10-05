@@ -1,3 +1,143 @@
 @use "./base.scss";
 
 // put your custom CSS here!
+
+// Fix unnecessary horizontal scrollbar on code blocks
+pre > code {
+  overflow-x: auto; // was "scroll"
+}
+
+// Custom scrollbar styling
+body ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+body ::-webkit-scrollbar-track {
+  background: #80808020;
+  border-radius: 4px;
+}
+body ::-webkit-scrollbar-thumb {
+  background-color: #80808070;
+  border-radius: 4px;
+}
+body ::-webkit-scrollbar-thumb:hover {
+  background-color: #808080a0;
+}
+body ::-webkit-scrollbar-corner {
+  background: rgba(0, 0, 0, 0);
+}
+
+// Custom heading font weight.
+// Adjust this based on what heading font is set in config.
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 700;
+}
+
+// Customize page-title typography
+.page-title {
+  font-size: 140%;
+  a {
+    font-weight: 500;
+    color: var(--bodyColor);
+  }
+}
+
+// Bigger article title size
+.article-title {
+  font-size: 200%;
+}
+
+// Don't use heading typography for explorer/folder expansion
+.folder-container div > button {
+  font-weight: normal;
+  font-family: var(--bodyFont);
+}
+
+// De-emphasize breadcrumb chevrons
+.breadcrumb-element p {
+  opacity: 0.2;
+}
+
+// Fix overflow fade out on sidebar toc by giving it more room.
+// NOTE: this may be fixed upstream one day
+#toc-content ul.overflow > li:last-child {
+  margin-bottom: 2rem;
+}
+
+// Better display of long link titles in explorer
+.folder-container + .folder-outer.open,
+#toc-content,
+.backlinks {
+  > ul > li {
+    margin: 0.5rem 0;
+    line-height: 1.1;
+  }
+}
+
+// Fix weird word wrapping and line spacing in tables
+.table-container > table th,
+.table-container > table td {
+  overflow-wrap: break-word;
+  line-height: 1.5;
+  padding: 0.5rem 0.7rem;
+}
+
+// Better word breaking
+article {
+  word-break: auto-phrase;
+}
+
+// Background contrast and border tweaks for code blocks
+pre,
+code[data-theme*="\\"],
+figure[data-rehype-pretty-code-figure] > [data-rehype-pretty-code-title],
+.graph-outer,
+.graph > #global-graph-outer > #global-graph-container {
+  background-color: #f9fafb;
+}
+[saved-theme="dark"] {
+  pre,
+  code[data-theme*="\\"],
+  figure[data-rehype-pretty-code-figure] > [data-rehype-pretty-code-title],
+  .graph-outer,
+  .graph > #global-graph-outer > #global-graph-container {
+    background-color: #11111b;
+  }
+}
+
+// kbd element styling for distinct "keyboard" look
+kbd {
+  color: var(--dark);
+  font-size: .9em;
+  font-family: var(--codeFont);
+  background-color: #f9fafb;
+  border: 1px solid var(--lightgray);
+  border-bottom-width: 3px;
+  border-radius: 5px;
+  padding: 0 0.2rem 1px 0.2rem;
+  font-size: 90%;
+}
+[saved-theme="dark"] kbd {
+  background-color: #11111b;
+}
+
+// More compact spacing in sidebars
+.page > #quartz-body .sidebar {
+  gap: 1rem;
+}
+
+// Superscript shouldn't make the line any taller
+sup {
+  display: inline-block;
+  margin-top: -0.5em;
+}
+
+// tag section shouldn't be right aligned
+.tags {
+  justify-self: start;
+}

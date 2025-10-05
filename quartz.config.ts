@@ -8,47 +8,46 @@ import * as Plugin from "./quartz/plugins"
  */
 const config: QuartzConfig = {
   configuration: {
-    pageTitle: "Quartz 4",
-    pageTitleSuffix: "",
+    pageTitle: "Hung-Yi’s Notes",
     enableSPA: true,
     enablePopovers: true,
     analytics: {
       provider: "plausible",
     },
     locale: "en-US",
-    baseUrl: "quartz.jzhao.xyz",
+    baseUrl: "hungyi.net",
     ignorePatterns: ["private", "templates", ".obsidian"],
     defaultDateType: "modified",
     theme: {
       fontOrigin: "googleFonts",
       cdnCaching: true,
       typography: {
-        header: "Schibsted Grotesk",
-        body: "Source Sans Pro",
-        code: "IBM Plex Mono",
+        header: "Figtree",
+        body: "Assistant",
+        code: "JetBrains Mono",
       },
       colors: {
         lightMode: {
-          light: "#faf8f8",
-          lightgray: "#e5e5e5",
-          gray: "#b8b8b8",
-          darkgray: "#4e4e4e",
-          dark: "#2b2b2b",
-          secondary: "#284b63",
-          tertiary: "#84a59d",
-          highlight: "rgba(143, 159, 169, 0.15)",
-          textHighlight: "#fff23688",
+          light: "#eff1f5", // Base
+          lightgray: "#dce0e8", // Crust 0
+          gray: "#9ca0b0", // Overlay 0
+          darkgray: "#5c5f77",
+          dark: "#4c4f69",
+          secondary: "#179299",
+          tertiary: "#7287fd", // Lavender
+          highlight: "#7c7f9311",
+          textHighlight: "#df8e1d88",
         },
         darkMode: {
-          light: "#161618",
-          lightgray: "#393639",
-          gray: "#646464",
-          darkgray: "#d4d4d4",
-          dark: "#ebebec",
-          secondary: "#7b97aa",
-          tertiary: "#84a59d",
-          highlight: "rgba(143, 159, 169, 0.15)",
-          textHighlight: "#b3aa0288",
+          light: "#181825", // Mantle
+          lightgray: "#313244", // Surface 0
+          gray: "#585b70", // Surface 2
+          darkgray: "#bac2de", // Subtext 1
+          dark: "#cdd6f4", // Text
+          secondary: "#70b6c2", // Sky, luminance set to 0.6, saturation set to 0.4
+          tertiary: "#cba6f7", // Mauve
+          highlight: "#9399b218", // Overlay 2
+          textHighlight: "#f9e2af88", // Yellow
         },
       },
     },
@@ -61,8 +60,8 @@ const config: QuartzConfig = {
       }),
       Plugin.SyntaxHighlighting({
         theme: {
-          light: "github-light",
-          dark: "github-dark",
+          light: "catppuccin-latte",
+          dark: "catppuccin-mocha",
         },
         keepBackground: false,
       }),
@@ -73,7 +72,7 @@ const config: QuartzConfig = {
       Plugin.Description(),
       Plugin.Latex({ renderEngine: "katex" }),
     ],
-    filters: [Plugin.RemoveDrafts()],
+    filters: [Plugin.RemoveDrafts(), Plugin.ExplicitPublish()],
     emitters: [
       Plugin.AliasRedirects(),
       Plugin.ComponentResources(),
